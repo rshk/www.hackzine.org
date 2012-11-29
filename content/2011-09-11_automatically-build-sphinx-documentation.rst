@@ -3,6 +3,7 @@ Automatically build Sphinx documentation
 
 :date: 2011-09-11 05:18:00
 :tags: Bash, documentation, Python, Sphinx
+:category: Development
 
 This is a short bash script I wrote in order to automatically build the HTML
 version of some documentation using the `Sphinx`_ documentation system upon

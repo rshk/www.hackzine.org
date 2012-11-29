@@ -3,6 +3,7 @@ SVG Image Tiler
 
 :tags: utility, scripts
 :date: 2009-07-09 00:00:00
+:category: Tools
 
 Here it is a small Bash script I wrote in order to easily "cut out"
 and rasterize to PNG parts from a SVG file.

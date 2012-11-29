@@ -3,6 +3,7 @@ Convert FLV video to MP3 audio
 
 :tags: Linux, Multimedia, Utility
 :date: 2010-01-04 14:49:00
+:category: Tools
 
 Many times we download a song we like from YouTube, or other sites, as a
 FLV video. But how to convert it to a regulare audio-only MP3 file?

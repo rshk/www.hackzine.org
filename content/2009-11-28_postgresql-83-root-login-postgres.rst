@@ -3,6 +3,7 @@ Make root log in as postgres user on PostgreSQL
 
 :tags: sysadmin, postgresql
 :date: 2009-11-29 00:50:00
+:category: Sysadmin
 
 I am writing some backup scripts for a server, and I needed a way to let the
 root user on the machine to login to PostgreSQL as 'postgres' user to perform

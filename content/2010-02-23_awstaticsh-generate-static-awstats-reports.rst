@@ -3,6 +3,7 @@ awstatic.sh - Generate static awstats reports
 
 :tags: Linux, SysAdmin, scripts
 :date: 2010-02-23 01:47:00
+:category: Tools
 
 This is the script I use to generate static reports from awstats
 

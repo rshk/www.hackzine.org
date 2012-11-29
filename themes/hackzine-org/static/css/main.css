@@ -13,8 +13,8 @@
 @import url("typogrify.css");
 
 /*@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&subset=latin);*/
-@import url(http://fonts.googleapis.com/css?family=Architects+Daughter);
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+@import url(http://fonts.googleapis.com/css?family=Luckiest+Guy);
 
 
 /***** Global *****/
@@ -23,7 +23,7 @@ body {
     /*background: #F5F4EF;*/
     /*color: #000305;*/
     color: #eee;
-    font-size: 87.5%; /* Base font size: 14px */
+    font-size: 14px; /* Base font size: 14px */
     /*font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;*/
     font-family: "Droid Sans", helvetica, arial, sans-serif;
     line-height: 1.429;
@@ -59,7 +59,27 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.1;
     margin-bottom: .8em;
     /*font-family: 'Yanone Kaffeesatz', arial, serif;*/
-    font-family: 'Architects Daughter', arial, serif;
+
+    color: #333;
+
+}
+
+#featured h1 {
+    font-family: 'Luckiest Guy', cursive;
+    font-weight: normal;
+    font-size: 4em;
+}
+
+article header {
+    margin-bottom: 5px;
+}
+
+article header h1 {
+    border-bottom: dotted 1px rgba(0,0,0,.2);
+    margin-bottom: 3px;
+    font-family: 'Luckiest Guy', cursive;
+    font-weight: normal;
+    font-size: 3em;
 }
 
 h3, h4, h5, h6 { margin-top: .8em; }
@@ -70,19 +90,20 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
 h1 a:link, h2 a:link, h3 a:link, h4 a:link, h5 a:link, h6 a:link,
 h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
     text-decoration: none;
+    color: #333;
 }
 
 /* Anchors */
 a {outline: 0;}
 a img {border: 0px; text-decoration: none;}
 a:link, a:visited {
-    color: hsl(20,100%,40%);
+    color: hsl(220,100%,40%);
     /*padding: 0 1px;*/
     text-decoration: underline;
 }
 a:hover, a:active {
     /*background-color: #C74350;*/
-    color: hsl(20,100%,50%);
+    color: hsl(220,100%,50%);
     text-decoration: none;
     /*text-shadow: 1px 1px 1px #333;*/
 }
@@ -108,14 +129,24 @@ ol {
     margin: 1em 0 1.5em 1.5em;
 }
 
+/*
 .post-info {
     float:right;
-    margin:10px;
-    padding:5px;
+    margin: 0 10px;
+    padding:10px;
+    background: #fff;
+    border-radius: 10px;
+}
+*/
+
+.post-info {
+    font-size: 80%;
+    opacity: .8;
+    /*text-align: right;*/
 }
 
-.post-info p{
-    margin-bottom: 1px;
+.post-info *{
+    display: inline;
 }
 
 .readmore { float: right }
@@ -167,7 +198,7 @@ aside, nav, article, figure {
 }
 
 /***** Layout *****/
-.body {clear: both; margin: 0 auto; width: 800px;}
+.body {clear: both; margin: 0 auto; width: 960px;}
 img.right, figure.right {float: right; margin: 0 0 2em 2em;}
 img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 
@@ -176,18 +207,30 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 *****************/
 #banner {
     margin: 0 auto;
-    padding: 2.5em 0 0 0;
+    /*padding: 2.5em 0 0 0;*/
+
 }
 
     /* Banner */
-    #banner h1 {font-size: 3.571em; line-height: 0;}
+    #banner h1 {
+        font-size: 3.5em;
+        margin:0;
+        padding: 30px;
+        background: #222;
+        /*font-family: 'Architects Daughter', arial, serif;*/
+        /*padding: 0 2em;*/
+        /*line-height: 30px;*/
+        /*line-height: 0;*/
+    }
     #banner h1 a:link, #banner h1 a:visited {
         /*color: #000305;*/
-        color: hsl(20,100%,50%);
+        /*color: hsl(20,100%,50%);*/
+        color: #fff;
         display: block;
-        font-weight: bold;
-        margin: 0 0 .6em .2em;
+        font-weight: normal;
+        /*margin: 0 0 .6em .2em;*/
         text-decoration: none;
+
     }
     #banner h1 a:hover, #banner h1 a:active {
         background: none;
@@ -206,14 +249,17 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
         margin: 0 auto 2em auto;
         padding: 0;
         text-align: center;
-        width: 800px;
+        width: 960px;
 
-        border-radius: 5px;
+        /*border-radius: 5px;
         -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
+        -webkit-border-radius: 5px;*/
+
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 
-    #banner nav ul {list-style: none; margin: 0 auto; width: 800px;}
+    #banner nav ul {list-style: none; margin: 0 auto; width: 960px;}
     #banner nav li {float: left; display: inline; margin: 0;}
 
     #banner nav a:link, #banner nav a:visited {
@@ -244,12 +290,12 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
     Featured
 *****************/
 #featured {
-    background: #fff9ed;
+    background: #fffcf7;
     color: #333;
     margin-bottom: 2em;
     overflow: hidden;
     padding: 20px;
-    width: 760px;
+    width: 920px;
 
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -264,8 +310,11 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 }
 #featured figure img {display: block; float: right;}
 
-#featured h2 {
-    color: hsl(20,100%,40%); font-size: 1.714em; margin-bottom: 0.333em;}
+/*#featured h2 {
+    color: hsl(220, 100%, 40%);
+    font-size: 1.714em;
+    margin-bottom: 0.333em;
+}*/
 #featured h3 {font-size: 1.429em; margin-bottom: .5em;}
 
 #featured h3 a:link, #featured h3 a:visited {color: #000305; text-decoration: none;}
@@ -280,7 +329,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
     margin-bottom: 2em;
     overflow: hidden;
     padding: 20px 20px;
-    width: 760px;
+    width: 920px;
 
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -297,9 +346,9 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 }
 
 #extras ul {list-style: none; margin: 0;}
-#extras li {border-bottom: 1px solid #fff;}
+#extras li {border-bottom: 1px solid #333;}
 #extras h2 {
-    color: hsl(20,100%,40%);
+    color: #444;
     font-size: 1.429em;
     margin-bottom: .25em;
     padding: 0 3px;
@@ -308,7 +357,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 #extras a:link, #extras a:visited {
     color: #ccc;
     display: block;
-    border-bottom: 1px solid #F4E3E3;
+    /*border-bottom: 1px solid #444;*/
     text-decoration: none;
     padding: .3em .25em;
 }
@@ -350,24 +399,29 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
     About
 *****************/
 #about {
-    background: #fff9ed;
-    color: #333;
+    /*background: #fff9ed;*/
+    background: #444;
+    color: #eee;
+    /*color: #333;*/
     font-style: normal;
     margin-bottom: 2em;
     overflow: hidden;
     padding: 20px;
     text-align: left;
-    width: 760px;
+    width: 920px;
 
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
 }
+#about a {
+    color: hsl(220,100%,80%);
+}
 
 #about .primary {float: left; width: 165px;}
 
 #about .primary strong {
-    color: hsl(20, 100%, 40%);
+    /*color: hsl(20, 100%, 40%);*/
     display: block;
     font-size: 1.286em;
 }
@@ -387,7 +441,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 .hentry {
     display: block;
     clear: both;
-    border-bottom: 1px solid #eee;
+    /*border-bottom: 1px solid #eee;*/
     padding: 1.5em 0;
 }
 li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
@@ -400,21 +454,21 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 .hentry .post-info * {font-style: normal;}
 
     /* Content */
-    .hentry footer {margin-bottom: 2em;}
+    /*.hentry footer {margin-bottom: 2em;}
     .hentry footer address {display: inline;}
-    #posts-list footer address {display: block;}
+    #posts-list footer address {display: block;}*/
 
     /* Blog Index */
     #posts-list {list-style: none; margin: 0;}
     #posts-list .hentry {padding-left: 10px; position: relative;}
 
-    #posts-list footer {
+    /*#posts-list footer {
         left: 10px;
         position: relative;
         float: left;
         top: 0.5em;
         width: 190px;
-    }
+    }*/
 
     /* About the Author */
     #about-author {
@@ -430,7 +484,7 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
     }
 
     #about-author strong {
-        color: hsl(20,100%,40%);
+        /*color: hsl(20,100%,40%);*/
         clear: both;
         display: block;
         font-size: 1.429em;

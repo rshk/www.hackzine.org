@@ -3,6 +3,7 @@ Minimal LUKS Guide
 
 :tags: linux, sysadmin
 :date: 2009-12-24 21:25:00
+:category: Sysadmin
 
 .. warning::
     This is a really short guide, to be used only by users with some experience

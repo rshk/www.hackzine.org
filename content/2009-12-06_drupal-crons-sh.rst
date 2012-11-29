@@ -3,6 +3,7 @@ Drupal crons run script
 
 :tags: Drupal, SysAdmin, scripts
 :date: 2009-12-06 14:22:00
+:category: Sysadmin
 
 This is the script I use to run cronjobs on all the sites in a given
 Drupal installation:

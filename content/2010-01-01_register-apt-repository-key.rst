@@ -3,6 +3,7 @@ Register APT repository key
 
 :tags: Linux, debian
 :date: 2010-01-01 19:45:00
+:category: Sysadmin
 
 Here is an useful script to register APT keys, to avoid the
 ``"There are no public key available for the following key IDs"`` warning message.

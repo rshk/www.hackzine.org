@@ -3,6 +3,7 @@
 
 :tags: Python, Challenges, Development
 :date: 2011-09-10 23:14:00
+:category: Development
 
 Do you know the popular programming challenge of generating the lyrics of the 99 Bottles of beer song using the shortest code possible?
 There's even a websites that collects these scripts in many different languages: http://www.99-bottles-of-beer.net/.

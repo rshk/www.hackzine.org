@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- #
 
 AUTHOR = u"Samuele Santi"
-SITENAME = u"Hackzine"
+SITENAME = u"Hackzine.org"
 SITEURL = 'http://www.hackzine.org'
 
 TIMEZONE = 'Europe/Rome'
@@ -22,3 +22,6 @@ SOCIAL = (('You can add links in your config file', '#'),
 DEFAULT_PAGINATION = 10
 
 THEME = 'hackzine-org'
+
+DISQUS_SITENAME='hackzineorg'
+TWITTER_USERNAME = 'hackzine'

@@ -3,6 +3,7 @@ Automatic screenshot + upload
 
 :tags: linux, scripts, utility
 :date: 2009-08-05 13:57:00
+:category: Tools
 
 .. code:: bash
 

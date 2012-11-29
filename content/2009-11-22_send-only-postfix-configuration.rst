@@ -3,6 +3,7 @@ Send-only Postfix configuration
 
 :tags: sysadmin, postfix
 :date: 2009-11-23 00:42:00
+:category: Sysadmin
 
 I just configured postfix on a machine to send-only mode (just send emails, do not receive).
 I cut-and-paste the configuration here. Maybe it is not so cool, but it works.

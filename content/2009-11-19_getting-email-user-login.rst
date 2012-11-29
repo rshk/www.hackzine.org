@@ -3,6 +3,7 @@ How to get an e-mail on user login
 
 :tags: sysadmin, linux, security
 :date: 2009-11-19 01:05:00
+:category: Sysadmin
 
 Yeah, maybe I am a bit paranoid, but I want to know in real-time who logs into
 and from which address to my machines.

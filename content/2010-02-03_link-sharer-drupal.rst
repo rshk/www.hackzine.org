@@ -3,6 +3,7 @@ Link sharer on Drupal
 
 :tags: Development, Drupal, Projects
 :date: 2010-02-03 09:38:00
+:category: Development
 
 I just wanted something like the "share on facebook" button, but to post
 links on my (this) blog. I thought I would have to write a module to do that

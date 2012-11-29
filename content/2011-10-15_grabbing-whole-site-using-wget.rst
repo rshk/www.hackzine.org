@@ -3,6 +3,7 @@ Grabbing whole site using wget
 ##############################
 
 :date: 2011-10-15 17:22:00
+:category: Tools
 
 Recently, I needed an off-line copy of some documentation, available only as web pages. That's how I managed to clone entire parts of websites using wget.
 
