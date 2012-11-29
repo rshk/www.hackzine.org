@@ -5,4 +5,5 @@ source /opt/virtualenvs/staticsite-build/bin/activate
 export GEM_HOME=/opt/virtualenvs/staticsite-build/
 export GEM_PATH=""
 
-make clean all
+make clean html
+
