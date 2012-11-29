@@ -2,4 +2,5 @@
 *.pyc
 /*.pid
 /.idea/
-/output/
+/output/*
+!/output/.keep
