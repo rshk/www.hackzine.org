@@ -3,12 +3,14 @@
 # This section should match your Makefile
 ##
 PELICAN=pelican
-PELICANOPTS=
 
 BASEDIR=$(pwd)
 INPUTDIR=$BASEDIR/content
 OUTPUTDIR=$BASEDIR/output
+THEMEDIR=$BASEDIR/themes/hackzine-org
 CONFFILE=$BASEDIR/pelicanconf.py
+
+PELICANOPTS="-t $THEMEDIR"
 
 ###
 # Don't change stuff below here unless you are sure

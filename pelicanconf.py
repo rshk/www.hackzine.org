@@ -21,4 +21,4 @@ SOCIAL = (('You can add links in your config file', '#'),
 
 DEFAULT_PAGINATION = 10
 
-#THEME = 'hackzine-org'
+THEME = 'hackzine-org'
