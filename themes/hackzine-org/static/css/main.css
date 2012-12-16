@@ -12,6 +12,7 @@
 @import url("pygment.css");
 @import url("typogrify.css");
 
+/* Fonts */
 /*@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&subset=latin);*/
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans);
 @import url(http://fonts.googleapis.com/css?family=Luckiest+Guy);
@@ -155,7 +156,14 @@ dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
 
-pre{background-color: #000; padding: 10px; color: #fff; margin: 10px; overflow: auto;}
+pre {
+    background-color: #111;
+    padding: 10px;
+    color: #fff;
+    margin: 10px 0;
+    overflow: auto;
+    border-radius: 10px;
+}
 
 /* Quotes */
 blockquote {
@@ -208,7 +216,9 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 #banner {
     margin: 0 auto;
     /*padding: 2.5em 0 0 0;*/
-
+    background: #222;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
     /* Banner */
@@ -216,7 +226,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
         font-size: 3.5em;
         margin:0;
         padding: 30px;
-        background: #222;
+        /*background: #222;*/
         /*font-family: 'Architects Daughter', arial, serif;*/
         /*padding: 0 2em;*/
         /*line-height: 30px;*/
@@ -295,7 +305,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
     margin-bottom: 2em;
     overflow: hidden;
     padding: 20px;
-    width: 920px;
+    /*width: 920px;*/
 
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -329,11 +339,56 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
     margin-bottom: 2em;
     overflow: hidden;
     padding: 20px 20px;
-    width: 920px;
+    /*width: 920px;*/
 
     border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
+    /*-moz-border-radius: 10px;*/
+    /*-webkit-border-radius: 10px;*/
+
+    width: 100%;
+}
+
+.content-wrapper {
+    width: 960px;
+    margin: 0 auto;
+}
+
+.column-content{
+    width: 660px;
+    display: inline-block;
+}
+.column-sidebar{
+    width: 240px;
+    float: right;
+}
+#sidebar {
+    padding: 20px;
+    background: #222;
+    color: #fff;
+    border-radius: 10px;
+}
+#sidebar h1,
+#sidebar h2,
+#sidebar h3,
+#sidebar h4,
+#sidebar h5,
+#sidebar h6 {
+    color: #eee;
+    font-family: 'Luckiest Guy', cursive;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+#sidebar a {
+    color: #eee;
+}
+#sidebar .menu-tags a {
+    color: #888;
+}
+#sidebar .menu-tags a:hover {
+    color: #fff;
+}
+#sidebar .block {
+    margin-bottom: 10px;
 }
 
 /*
@@ -341,9 +396,14 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 *****************/
 #extras {
     color: #fff;
-    margin: 0 auto 3em auto;
+    margin: 0 auto 20px auto;
     overflow: hidden;
+    width: 920px;
+    background: #080808;
+    border-radius: 10px;
+    padding: 20px;
 }
+
 
 #extras ul {list-style: none; margin: 0;}
 #extras li {border-bottom: 1px solid #333;}
@@ -378,10 +438,19 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
         width: 175px;
     }
 
-    #extras div[class='social'] a {
+    .social,
+    .social li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .social a {
         background-repeat: no-repeat;
         background-position: 3px 6px;
         padding-left: 25px;
+        display: block;
+        line-height: 24px;
     }
 
         /* Icons */
@@ -400,19 +469,24 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 *****************/
 #about {
     /*background: #fff9ed;*/
-    background: #444;
+    background: #000;
     color: #eee;
     /*color: #333;*/
     font-style: normal;
-    margin-bottom: 2em;
+    /*margin-bottom: 2em;*/
+    margin-bottom: 0;
     overflow: hidden;
     padding: 20px;
     text-align: left;
     width: 920px;
 
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+/*    -moz-border-radius: 10px;
     -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
+    -webkit-border-radius: 10px;*/
+
+
 }
 #about a {
     color: hsl(220,100%,80%);
@@ -434,7 +508,10 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 /*
     Footer
 *****************/
-#contentinfo {padding-bottom: 2em; text-align: right;}
+#contentinfo {
+    /*padding-bottom: 2em;*/
+    text-align: right;
+}
 
 /***** Sections *****/
 /* Blog */
@@ -521,3 +598,55 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 
     #add-comment input[type='submit'] {float: right; margin: 0 .5em;}
     #add-comment * {margin-bottom: .5em;}
+
+
+.menu-vertical,
+.menu-vertical li {
+    list-style: disc;
+}
+.menu-vertical li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+.menu-tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.menu-tags li {
+    display: inline;
+}
+.menu-tags li a {
+    text-decoration: none;
+}
+
+.cool-date {
+    background: #fff;
+    display: inline-block;
+    border: solid 1px #ddd;
+}
+.cool-date .year {
+    background: #800;
+    color: #fff;
+    font-weight: bold;
+}
+.cool-date .day,
+.cool-date .year,
+.cool-date .wday,
+.cool-date .month {
+    display: block;
+    text-align: center;
+    padding: 2px;
+    margin: 0;
+    line-height: 1em;
+}
+.cool-date .day {
+    font-size: 200%;
+}
+article header .cool-date {
+    float: right;
+    font-size: 80%;
+    width: 60px;
+    margin-right: 10px;
+}
