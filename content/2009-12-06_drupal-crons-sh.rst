@@ -1,7 +1,7 @@
 Drupal crons run script
 #######################
 
-:tags: Drupal, SysAdmin, scripts
+:tags: drupal, sysadmin, scripts
 :date: 2009-12-06 14:22:00
 :category: Sysadmin
 

@@ -2,7 +2,7 @@ Automatically build Sphinx documentation
 ########################################
 
 :date: 2011-09-11 05:18:00
-:tags: Bash, documentation, Python, Sphinx
+:tags: bash, documentation, python, sphinx
 :category: Development
 
 This is a short bash script I wrote in order to automatically build the HTML

@@ -1,7 +1,7 @@
 Convert FLV video to MP3 audio
 ##############################
 
-:tags: Linux, Multimedia, Utility
+:tags: linux, multimedia, utility
 :date: 2010-01-04 14:49:00
 :category: Tools
 

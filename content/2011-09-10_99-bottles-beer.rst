@@ -1,7 +1,7 @@
 99 Bottles of beer
 ##################
 
-:tags: Python, Challenges, Development
+:tags: python, challenges, development
 :date: 2011-09-10 23:14:00
 :category: Development
 

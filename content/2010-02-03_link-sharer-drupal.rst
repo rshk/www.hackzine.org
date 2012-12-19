@@ -1,7 +1,7 @@
 Link sharer on Drupal
 #####################
 
-:tags: Development, Drupal, Projects
+:tags: development, drupal, projects
 :date: 2010-02-03 09:38:00
 :category: Development
 

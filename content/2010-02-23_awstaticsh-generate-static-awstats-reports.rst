@@ -1,7 +1,7 @@
 awstatic.sh - Generate static awstats reports
 #############################################
 
-:tags: Linux, SysAdmin, scripts
+:tags: linux, sysadmin, scripts
 :date: 2010-02-23 01:47:00
 :category: Tools
 

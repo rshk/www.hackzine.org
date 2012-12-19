@@ -1,7 +1,7 @@
 Register APT repository key
 ###########################
 
-:tags: Linux, debian
+:tags: linux, debian
 :date: 2010-01-01 19:45:00
 :category: Sysadmin
 
