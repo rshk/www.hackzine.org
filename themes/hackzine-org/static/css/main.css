@@ -455,7 +455,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 
         /* Icons */
         .social a[href*='delicious.com'] {background-image: url('../images/icons/delicious.png');}
-        .social a[href*='digg.com'] {background-image: url('../images/icons/digg.png');}
+        /*.social a[href*='digg.com'] {background-image: url('../images/icons/digg.png');}*/
         .social a[href*='facebook.com'] {background-image: url('../images/icons/facebook.png');}
         .social a[href*='last.fm'], .social a[href*='lastfm.'] {background-image: url('../images/icons/lastfm.png');}
         .social a[type$='atom+xml'], .social a[type$='rss+xml'] {background-image: url('../images/icons/rss.png');}
@@ -624,7 +624,8 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 .cool-date {
     background: #fff;
     display: inline-block;
-    border: solid 1px #ddd;
+    /*border: solid 1px #aaa;*/
+    box-shadow: rgba(0,0,0,.2) 2px 2px 6px;
 }
 .cool-date .year {
     background: #800;
