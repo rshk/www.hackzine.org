@@ -25,3 +25,7 @@ THEME = 'hackzine-org'
 
 DISQUS_SITENAME='hackzineorg'
 TWITTER_USERNAME = 'hackzine'
+
+FEED_DOMAIN = SITEURL
+FEED_ATOM = 'feeds/atom.xml'
+FEED_RSS = 'feeds/rss.xml'
