@@ -57,13 +57,16 @@ let's say ``/etc/ssl/localcerts/``.
 Configure nginx
 ===============
 
-First of all, I took great advantage of the new `Server Name Indication`_
+For this, I took great advantage of the new `Server Name Indication`_
 feature, that allows clients to specify the requested domain name during
-the TSL handshake, thus allowing per-domain cerficates.
+the TLS handshake, thus allowing per-domain cerficates.
 
-Then, once I made sure the nginx I was using had SNI support (the one shipped
-with Debian Squeeze does), I put this configuration in my host configuration
-file and restarted nginx::
+The installation is simple, just make sure both your OpenSSL library
+and nginx are built with SNI support (the ones shipped with Debian Squeeze are),
+then configure nginx as you normally would, but feel free to specify per-domain
+certificates.
+
+Example configuration::
 
     server {
         listen   443;
