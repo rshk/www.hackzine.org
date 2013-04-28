@@ -20,6 +20,10 @@ SSH_TARGET_DIR=/var/www
 
 DROPBOX_DIR=~/Dropbox/Public/
 
+SCSS := scss --compass -tcompressed
+THEME_DIR := themes/hackzine-org/static
+CSS_FILES := $(THEME_DIR)/css/main.css
+
 help:
 	@echo 'Makefile for a pelican Web site                                        '
 	@echo '                                                                       '
@@ -38,7 +42,7 @@ help:
 	@echo '                                                                       '
 
 
-html: clean $(OUTPUTDIR)/index.html
+html: clean css_files $(OUTPUTDIR)/index.html
 	@echo 'Done'
 
 $(OUTPUTDIR)/%.html:
@@ -75,4 +79,9 @@ github: publish
 	ghp-import $(OUTPUTDIR)
 	git push origin gh-pages
 
-.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github
+css_files: $(CSS_FILES)
+
+$(CSS_FILES): $(THEME_DIR)/css/%.css: $(THEME_DIR)/scss/%.scss
+	$(SCSS) --compass $< > $@
+
+.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github css_files

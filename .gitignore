@@ -4,3 +4,4 @@
 /.idea/
 /output/*
 !/output/.keep
+.sass-cache

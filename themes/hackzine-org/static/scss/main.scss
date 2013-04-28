@@ -1,0 +1,692 @@
+/*!
+    Name: Hackzine.org Theme
+    Date: April 2013
+    Author: Samuele Santi
+
+    Theme designed for use on http://www.hackzine.org.
+    As-is use on other websites is discouraged for "branding reasons", however,
+    feel free to take pieces from it or use as a base for your own theme.
+*/
+
+// CSS Properties order
+//======================
+// * position
+// * display / box model
+// * font, led color, text
+// * background, border
+// * css3 properties and other visual only stuff
+
+
+// Libraries -------------------------------------------------------------------
+@import "compass/css3";
+
+
+// Reset and base typography ---------------------------------------------------
+@import "reset";
+@import "typogrify";
+@import "pygment";
+
+
+// Include google fonts --------------------------------------------------------
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+@import url(http://fonts.googleapis.com/css?family=Boogaloo);
+
+
+// Configuration variables -----------------------------------------------------
+$title-font: 'Boogaloo', cursive;
+$normal-font: "Droid Sans", helvetica, arial, sans-serif;
+$font-size: 14px;
+
+
+// HTML elements styling -------------------------------------------------------
+body {
+    margin: 0;
+    padding: 0;
+    color: #eee;
+    font-family: $normal-font;
+    font-size: $font-size;
+    line-height: 1.5em;
+    text-align: left;
+    background: #222;
+}
+
+h1 { font-size: 2em }
+h2 { font-size: 1.571em } /* 22px */
+h3 { font-size: 1.429em } /* 20px */
+h4 { font-size: 1.286em } /* 18px */
+h5 { font-size: 1.143em } /* 16px */
+h6 { font-size: 1em }     /* 14px */
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: .8em;
+    margin-top: .8em;
+    //color: #333;
+    font-weight: bold;
+    line-height: 1.1;
+    a, a:link, a:visited {
+        text-decoration: none;
+        //color: #333;
+    }
+}
+
+#featured h1 {
+    font-family: $title-font;
+    font-weight: normal;
+    font-size: 4em;
+}
+
+hr { border: 2px solid #EEEEEE; }
+
+/* Anchors */
+a {
+    outline: 0;
+    img {
+        border: 0px;
+        text-decoration: none;
+    }
+    &:link, &:visited {
+        color: hsl(220, 100%, 40%);
+        text-decoration: underline;
+    }
+    &:hover, &:active {
+        color: hsl(220, 100%, 50%);
+        text-decoration: none;
+    }
+}
+
+h1 a:hover {
+    background-color: inherit
+}
+
+/* Paragraphs */
+p {
+    margin-bottom: 1.143em;
+}
+
+strong, b {font-weight: bold;}
+em, i {font-style: italic;}
+
+/* Lists */
+ul {
+    list-style: outside disc;
+    margin: 1em 0 1.5em 1.5em;
+}
+
+ol {
+    list-style: outside decimal;
+    margin: 1em 0 1.5em 1.5em;
+}
+
+.post-info {
+    display: inline;
+    font-size: 80%;
+    opacity: .3;
+    @include transition(opacity linear 300ms);
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.readmore { float: right }
+
+dl {margin: 0 0 1.5em 0;}
+dt {font-weight: bold;}
+dd {margin-left: 1.5em;}
+
+pre {
+    margin: 10px 0;
+    padding: 10px;
+    color: #fff;
+    overflow: auto;
+    background-color: #111;
+    border-radius: 10px;
+}
+
+// Quotes
+blockquote {
+    margin: 20px;
+    font-style: italic;
+}
+
+cite {}
+
+q {}
+
+div.note {
+   float: right;
+   margin: 5px;
+   font-size: 85%;
+   max-width: 300px;
+}
+
+/* Tables */
+table {
+    margin: .5em auto 1.5em auto;
+    width: 98%;
+
+    thead {
+        th {
+            padding: .5em .4em;
+            text-align: left;
+        }
+        td {}
+    }
+
+    tbody {
+        th {}
+        td {
+            padding: .5em .4em;
+        }
+        .alt {
+            td, th {}
+        }
+    }
+
+    tfoot {
+        td, th {}
+    }
+}
+
+header, section, footer,
+aside, nav, article, figure {
+    display: block;
+}
+
+// Layout
+.body {}
+
+img.right, figure.right {
+    float: right;
+    margin: 0 0 2em 2em;
+}
+img.left, figure.left {
+    float: left;
+    margin: 0 2em 2em 0;
+}
+
+
+// Banner, aka the site header -------------------------------------------------
+#banner {
+    width: 980px;
+    margin: 0 auto;
+
+    h1 {
+        margin:0;
+        padding: 30px;
+        font-size: 3.5em;
+        @include background-image(linear-gradient(#f40, #fa0));
+
+        a:link, a:visited {
+            display: block;
+            color: #fff;
+            font-weight: normal;
+            text-decoration: none;
+
+        }
+        a:hover, a:active {
+            background: none;
+            text-shadow: none;
+        }
+
+        strong {
+            font-size: 0.36em;
+            font-weight: normal;
+        }
+    }
+
+    // Main Nav
+    nav {
+        height: 40px;
+        margin: 0 auto;
+        padding: 0;
+
+        font-size: 1.143em;
+        line-height: 30px;
+        text-align: center;
+
+        background: #000;
+
+        @include border-radius(0 0 10px 10px);
+
+        ul {
+            list-style: none;
+            margin: 0 auto;
+            width: 960px;
+        }
+        li {
+            float: left;
+            display: inline;
+            margin: 0;
+        }
+
+        a:link, a:visited {
+            color: #fff;
+            display: inline-block;
+            height: 30px;
+            padding: 5px 1.5em;
+            text-decoration: none;
+        }
+        a:hover, a:active, a:focus,
+        .active a:link, .active a:visited {
+            background: #333;
+            color: #f90;
+            text-shadow: none !important;
+        }
+    }
+}
+
+// Featured post ---------------------------------------------------------------
+#featured {
+    margin-bottom: 2em;
+    padding: 20px;
+    color: #333;
+    background: #fffcf7;
+    @include border-radius(10px);
+    overflow: hidden;
+
+    figure {
+        border: 2px solid #eee;
+        float: right;
+        margin: 0.786em 2em 0 5em;
+        width: 248px;
+        img {display: block; float: right;}
+    }
+
+    h3 {
+        font-size: 1.429em;
+        margin-bottom: .5em;
+        a:link, a:visited {
+            color: #000305;
+            text-decoration: none;
+        }
+        a:hover, a:active {
+            color: #fff;
+        }
+    }
+}
+
+
+// Page content ----------------------------------------------------------------
+.content-wrapper {
+    width: 960px;
+    margin: 0 auto;
+}
+
+.column-content{
+    width: 700px;
+    display: inline-block;
+}
+.column-sidebar{
+    width: 240px;
+    float: right;
+}
+
+#content {
+    margin: 2em auto;
+    padding: 20px 20px;
+    color: #eee;
+    background: #282828;
+    @include border-radius(10px);
+    @include box-shadow(
+        inset rgba(0,0,0,.4) 1px 1px 3px,
+        inset rgba(255,255,255,.2) -1px -1px 1px);
+    overflow: hidden;
+
+    a, a:link, a:visited {
+        color: #ffc44d;
+    }
+
+    h1,h2,h3,h4,h5,h6 {
+        a, a:link, a:visited {
+            color: #f90;
+        }
+        a:hover, a:focus {
+            color: #ffcc80;
+        }
+    }
+}
+
+#sidebar {
+    padding: 20px;
+    color: #ddd;
+    background: #111;
+    @include border-radius(0 0 10px 10px);
+
+    h1, h2, h3, h4, h5, h6 {
+        margin-bottom: 2px;
+        font-family: $title-font;
+        font-weight: normal;
+    }
+    a, a:link, a:visited {
+        color: #888;
+    }
+    a:hover, a:focus {
+        color: #f90;
+    }
+    .block {
+        margin-bottom: 10px;
+    }
+}
+
+// Extras ----------------------------------------------------------------------
+#extras {
+    width: 920px;
+    margin: 0 auto 20px auto;
+    padding: 20px;
+    color: #fff;
+    overflow: hidden;
+    background: #080808;
+    border-radius: 10px;
+
+    ul {
+        list-style: none;
+        margin: 0;
+    }
+    li {
+        border-bottom: 1px solid #333;
+    }
+    h2 {
+        margin-bottom: .25em;
+        padding: 0 3px;
+        color: #444;
+        font-size: 1.429em;
+    }
+
+    a:link, a:visited {
+        display: block;
+        padding: .3em .25em;
+        color: #ccc;
+        text-decoration: none;
+    }
+
+    a:hover,
+    a:active {
+        color: #fff;
+    }
+
+    // Blogroll
+    .blogroll {
+        //width: 615px;
+        float: left;
+        li {
+            float: left;
+            margin: 0 20px 0 0;
+            width: 185px;
+        }
+    }
+
+    .social {
+        float: right;
+        //width: 175px;
+        &, li {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        a {
+            display: block;
+            padding-left: 25px;
+            line-height: 24px;
+            background-repeat: no-repeat;
+            background-position: 3px 6px;
+        }
+
+        // Icons
+        a[href*='delicious.com'] {background-image: url('../images/icons/delicious.png');}
+        /*a[href*='digg.com'] {background-image: url('../images/icons/digg.png');}*/
+        a[href*='facebook.com'] {background-image: url('../images/icons/facebook.png');}
+        a[href*='last.fm'], a[href*='lastfm.'] {background-image: url('../images/icons/lastfm.png');}
+        a[type$='atom+xml'], a[type$='rss+xml'] {background-image: url('../images/icons/rss.png');}
+        a[href*='twitter.com'] {background-image: url('../images/icons/twitter.png');}
+        a[href*='linkedin.com'] {background-image: url('../images/icons/linkedin.png');}
+        a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.png');}
+        a[href*='gittip.com'] {background-image: url('../images/icons/gittip.png');}
+    }
+}
+
+
+// About -----------------------------------------------------------------------
+#about {
+    /*background: #fff9ed;*/
+    width: 920px;
+    padding: 20px;
+    margin-bottom: 0;
+
+    color: #eee;
+    font-style: normal;
+    text-align: left;
+
+    background: #000;
+    overflow: hidden;
+
+    @include border-radius(10px 10px 0 0);
+
+    a {
+        color: hsl(220,100%,80%);
+    }
+
+    .primary {
+        float: left;
+        width: 165px;
+        strong {
+            display: block;
+            font-size: 1.286em;
+        }
+    }
+
+    .photo {float: left; margin: 5px 20px;}
+    .url:link, .url:visited {text-decoration: none;}
+    .bio {float: right; width: 500px;}
+}
+
+
+// Footer ----------------------------------------------------------------------
+#site-footer {
+    width: 980px;
+    margin: 20px auto 0;
+    color:#ddd;
+    a, a:link, a:visited {
+        color: #ffc44d;
+    }
+    text-align: center;
+    background: #111;
+    @include border-radius(10px 10px 0 0);
+    p {
+        padding: .5em 1em;
+        margin: 0;
+    }
+}
+
+
+// Blog ------------------------------------------------------------------------
+article header {
+    margin-bottom: 5px;
+    h1 {
+        margin-bottom: 3px;
+        margin-top: 0; // We already have article margin
+        font-family: $title-font;
+        font-size: 3em;
+        font-weight: normal;
+        border-bottom: dotted 1px #555;
+    }
+}
+
+.hentry {
+    display: block;
+    clear: both;
+    padding: 1.5em 0;
+    img {
+        display: none;
+    }
+}
+li:last-child .hentry,
+#content > .hentry {
+    border: 0;
+    margin: 0;
+}
+#content > .hentry {
+    padding: 1em 0;
+}
+.entry-title {
+    font-size: 3em;
+    margin-bottom: 10px;
+    margin-top: 0;
+    a:link,
+    a:visited {
+        text-decoration: none;
+        color: #333;
+    }
+    a:visited {
+        background-color: #fff;
+    }
+}
+
+.hentry .post-info * {
+    font-style: normal;
+}
+#posts-list {
+    margin: 0;
+    list-style: none;
+    .hentry {
+        position: relative;
+        padding-left: 10px;
+    }
+}
+
+// About the Author
+#about-author {
+    clear: both;
+    margin: 2em 0;
+    padding: 10px 20px 15px 20px;
+    font-style: normal;
+    background: #f9f9f9;
+    @include border-radius(5px);
+    strong {
+        display: block;
+        clear: both;
+        font-size: 1.429em;
+    }
+    .photo {
+        float: left;
+        margin: 5px 1em 0 0;
+        border: 1px solid #ddd;
+    }
+}
+
+// Comments
+#comments-list {
+    margin: 0 1em;
+    list-style: none;
+    blockquote {
+        clear: both;
+        margin: 0;
+        padding: 15px 20px;
+        font-style: normal;
+        background: #f8f8f8;
+        @include border-radius(5px);
+    }
+    footer {
+        padding: .5em 1em 0 0;
+        color: #888;
+        text-align: right;
+    }
+    li:nth-child(2n) blockquote {
+        background: #F5f5f5;
+    }
+}
+
+// Add a Comment
+#add-comment {
+    label {
+        float: left;
+        clear: left;
+        width: 150px;
+        text-align: left;
+    }
+    input[type='text'], input[type='email'], input[type='url'] {
+        float: left;
+        width: 200px;
+    }
+    textarea {
+        float: left;
+        width: 495px;
+        height: 150px;
+    }
+    p.req {
+        clear: both;
+        margin: 0 .5em 1em 0;
+        text-align: right;
+    }
+    input[type='submit'] {
+        float: right;
+        margin: 0 .5em;
+    }
+    * {
+        margin-bottom: .5em;
+    }
+}
+
+.menu-vertical {
+    list-style: disc;
+    li {
+        a, a:link, a:visited {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+        a:hover, a:focus {
+            color: #f90;
+        }
+    }
+}
+
+.menu-tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+        display: inline;
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+// Cool dates, displayed as calendars ------------------------------------------
+.cool-date {
+    color: #444;
+    background: #fffbe6;
+    display: inline-block;
+    //box-shadow: rgba(0,0,0,.2) 2px 2px 6px;
+
+    .year {
+        background: #800;
+        color: #fff;
+        font-weight: bold;
+    }
+    .day, .year, .wday, .month {
+        display: block;
+        text-align: center;
+        padding: 2px;
+        margin: 0;
+        line-height: 1em;
+    }
+    .day {
+        font-size: 200%;
+    }
+
+}
+article header .cool-date {
+    float: right;
+    width: 60px;
+    margin-right: 10px;
+    font-size: 80%;
+}
+
+// Cool transitions ------------------------------------------------------------
+a {
+    @include transition(
+        color ease 300ms,
+        background ease 500ms);
+}

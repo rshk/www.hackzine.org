@@ -5,5 +5,10 @@ source /opt/virtualenvs/staticsite-build/bin/activate
 export GEM_HOME=/opt/virtualenvs/staticsite-build/
 export GEM_PATH=""
 
-make clean html
 
+export PELICAN_SITEURL="http://www.hackzine.org"
+
+pip install -U -r requirements.txt
+gem install sass compass
+
+make clean css_files html
