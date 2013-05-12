@@ -36,6 +36,31 @@
 $title-font: 'Boogaloo', cursive;
 $normal-font: "Droid Sans", helvetica, arial, sans-serif;
 $font-size: 14px;
+$title-color: #f60;
+
+
+// Mixins ----------------------------------------------------------------------
+@mixin alert-striped-box($color) {
+    $stripe-col-1: lighten($color, 8%);
+    $stripe-col-2: lighten($color, 3%);
+
+    background-color: $color;
+    border-color: desaturate(darken($color, 40%), 10%);
+    color: darken($color, 70%);
+
+    @include background-image(
+            linear-gradient(rgba($stripe-col-2, 0), $stripe-col-2 100%),
+            linear-gradient(
+                45deg,
+                $stripe-col-1 25%,
+                $stripe-col-2 25%, $stripe-col-2 50%,
+                $stripe-col-1 50%,
+                $stripe-col-1 75%,
+                $stripe-col-2 75%, $stripe-col-2)
+    );
+
+    background-size: 100% 100%, 40px 40px;
+}
 
 
 // HTML elements styling -------------------------------------------------------
@@ -47,7 +72,29 @@ body {
     font-size: $font-size;
     line-height: 1.5em;
     text-align: left;
-    background: #222;
+    //background: #222;
+    //@include background-image(linear-gradient(#111, #333));
+
+    @include alert-striped-box(#111);
+    background-size: 100% 100%, 20px 20px;
+
+    $stripe-col-1: #222;
+    $stripe-col-2: #111;
+    background-color: #111;
+
+    @include background-image(
+        linear-gradient(rgba($stripe-col-2, 0), rgba($stripe-col-2, .8) 50%, $stripe-col-2 100%),
+        linear-gradient(
+            -45deg,
+            $stripe-col-1 25%,
+            $stripe-col-2 25%, $stripe-col-2 50%,
+            $stripe-col-1 50%,
+            $stripe-col-1 75%,
+            $stripe-col-2 75%, $stripe-col-2)
+    );
+
+    background-size: 100% 100%, 10px 10px;
+    background-attachment: fixed;
 }
 
 h1 { font-size: 2em }
@@ -206,33 +253,49 @@ img.left, figure.left {
 
 
 // Banner, aka the site header -------------------------------------------------
+//@mixin text-border($size, $color) {
+//    @include text-shadow(
+//        $size    $size    1px $color,
+//        (-$size) (-$size) 1px $color,
+//        (-$size) $size    1px $color,
+//        $size    (-$size) 1px $color);
+//}
+
 #banner {
     width: 980px;
     margin: 0 auto;
 
-    h1 {
+    header {
+        //@include background-image(linear-gradient(#f40, #ff7e00));
+        @include alert-striped-box(#f40);
         margin:0;
         padding: 30px;
-        font-size: 3.5em;
-        @include background-image(linear-gradient(#f40, #fa0));
 
-        a:link, a:visited {
-            display: block;
-            color: #fff;
-            font-weight: normal;
-            text-decoration: none;
+        h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 4.5em;
+            font-family: $title-font;
 
-        }
-        a:hover, a:active {
-            background: none;
-            text-shadow: none;
-        }
+            a:link, a:visited {
+                display: block;
+                color: #fff;
+                color: #000;
+                font-weight: normal;
+                text-decoration: none;
 
-        strong {
-            font-size: 0.36em;
-            font-weight: normal;
+            }
+            a:hover, a:active {
+                background: none;
+                text-shadow: none;
+            }
+            strong {
+                font-size: 0.36em;
+                font-weight: normal;
+            }
         }
     }
+
 
     // Main Nav
     nav {
@@ -268,9 +331,12 @@ img.left, figure.left {
         }
         a:hover, a:active, a:focus,
         .active a:link, .active a:visited {
-            background: #333;
-            color: #f90;
+            background: #222;
+            color: $title-color;
             text-shadow: none !important;
+        }
+        .active a:link, .active a:visited {
+            background: #111;
         }
     }
 }
@@ -325,12 +391,12 @@ img.left, figure.left {
     margin: 2em auto;
     padding: 20px 20px;
     color: #eee;
-    background: #282828;
+    background: #222;
     @include border-radius(10px);
-    @include box-shadow(
-        inset rgba(0,0,0,.4) 1px 1px 3px,
-        inset rgba(255,255,255,.2) -1px -1px 1px);
-    overflow: hidden;
+    //@include box-shadow(
+    //    inset rgba(0,0,0,.4) 1px 1px 3px,
+    //    inset rgba(255,255,255,.2) -1px -1px 1px);
+    //overflow: hidden;
 
     a, a:link, a:visited {
         color: #ffc44d;
@@ -338,7 +404,7 @@ img.left, figure.left {
 
     h1,h2,h3,h4,h5,h6 {
         a, a:link, a:visited {
-            color: #f90;
+            color: $title-color;
         }
         a:hover, a:focus {
             color: #ffcc80;
@@ -356,12 +422,14 @@ img.left, figure.left {
         margin-bottom: 2px;
         font-family: $title-font;
         font-weight: normal;
+        border-bottom: dotted 1px $title-color;
+        text-align: right;
     }
     a, a:link, a:visited {
         color: #888;
     }
     a:hover, a:focus {
-        color: #f90;
+        color: $title-color;
     }
     .block {
         margin-bottom: 10px;
@@ -636,7 +704,7 @@ li:last-child .hentry,
             display: block;
         }
         a:hover, a:focus {
-            color: #f90;
+            color: $title-color;
         }
     }
 }
@@ -655,22 +723,22 @@ li:last-child .hentry,
 
 // Cool dates, displayed as calendars ------------------------------------------
 .cool-date {
-    color: #444;
-    background: #fffbe6;
     display: inline-block;
-    //box-shadow: rgba(0,0,0,.2) 2px 2px 6px;
+    color: #888;
+    background: #222;
+    border: solid 1px #555;
 
     .year {
-        background: #800;
-        color: #fff;
+        color: #888;
         font-weight: bold;
+        background: #111;
     }
     .day, .year, .wday, .month {
         display: block;
-        text-align: center;
         padding: 2px;
         margin: 0;
         line-height: 1em;
+        text-align: center;
     }
     .day {
         font-size: 200%;

@@ -84,4 +84,7 @@ css_files: $(CSS_FILES)
 $(CSS_FILES): $(THEME_DIR)/css/%.css: $(THEME_DIR)/scss/%.scss
 	$(SCSS) --compass $< > $@
 
-.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github css_files
+clean_css_files: 
+	rm -f $(CSS_FILES)
+
+.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github css_files clean_css_files
