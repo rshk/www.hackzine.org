@@ -43,26 +43,29 @@ $link-hover-color: #f60;
 
 
 // Mixins ----------------------------------------------------------------------
-@mixin alert-striped-box($color) {
-    $stripe-col-1: lighten($color, 8%);
-    $stripe-col-2: lighten($color, 3%);
-
-    background-color: $color;
-    border-color: desaturate(darken($color, 40%), 10%);
-    color: darken($color, 70%);
+@mixin striped-background($base, $col1, $col2, $size: 40px) {
+    background-color: $base;
+    color: darken($base, 70%);
 
     @include background-image(
-            linear-gradient(rgba($stripe-col-2, 0), $stripe-col-2 100%),
+            linear-gradient(rgba($col2, 0), $col2 100%),
             linear-gradient(
                 45deg,
-                $stripe-col-1 25%,
-                $stripe-col-2 25%, $stripe-col-2 50%,
-                $stripe-col-1 50%,
-                $stripe-col-1 75%,
-                $stripe-col-2 75%, $stripe-col-2)
+                $col1 25%,
+                $col2 25%, $col2 50%,
+                $col1 50%,
+                $col1 75%,
+                $col2 75%, $col2)
     );
 
-    background-size: 100% 100%, 40px 40px;
+    background-size: 100% 100%, $size $size;
+}
+
+@mixin alert-striped-box($color) {
+    @include striped-background(
+            $color,
+            lighten($color, 8%),
+            lighten($color, 3%));
 }
 
 
@@ -75,28 +78,9 @@ body {
     font-size: $font-size;
     line-height: 1.5em;
     text-align: left;
-    //background: #222;
-    //@include background-image(linear-gradient(#111, #333));
 
-    @include alert-striped-box(#111);
-    background-size: 100% 100%, 20px 20px;
-
-    $stripe-col-1: #222;
-    $stripe-col-2: #111;
-    background-color: #111;
-
-    @include background-image(
-        linear-gradient(rgba($stripe-col-2, 0), rgba($stripe-col-2, .8) 50%, $stripe-col-2 100%),
-        linear-gradient(
-            -45deg,
-            $stripe-col-1 25%,
-            $stripe-col-2 25%, $stripe-col-2 50%,
-            $stripe-col-1 50%,
-            $stripe-col-1 75%,
-            $stripe-col-2 75%, $stripe-col-2)
-    );
-
-    background-size: 100% 100%, 10px 10px;
+    background-color: #181818;
+    @include background-image(linear-gradient(rgba(#000, .8), rgba(#000, 0) 50%));
     background-attachment: fixed;
 }
 
@@ -110,12 +94,10 @@ h6 { font-size: 1em }     /* 14px */
 h1, h2, h3, h4, h5, h6 {
     margin-bottom: .8em;
     margin-top: .8em;
-    //color: #333;
     font-weight: bold;
     line-height: 1.1;
     a, a:link, a:visited {
         text-decoration: none;
-        //color: #333;
     }
 }
 
@@ -269,7 +251,12 @@ img.left, figure.left {
     margin: 0 auto;
 
     header {
-        @include alert-striped-box(#f40);
+        //@include alert-striped-box(#f50);
+        @include striped-background(
+            #f50,
+            lighten(#f50, 10%),
+            #f50);
+
         margin:0;
         padding: 30px;
 
