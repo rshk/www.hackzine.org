@@ -19,7 +19,7 @@
 
 // Libraries -------------------------------------------------------------------
 @import "compass/css3";
-
+@import "compass/css3/user-interface";
 
 // Reset and base typography ---------------------------------------------------
 @import "reset";
@@ -36,7 +36,10 @@
 $title-font: 'Boogaloo', cursive;
 $normal-font: "Droid Sans", helvetica, arial, sans-serif;
 $font-size: 14px;
-$title-color: #f60;
+$title-color: #f80;
+$title-hover-color: lighten($title-color, 30%);
+$link-color: #fa0;
+$link-hover-color: #f60;
 
 
 // Mixins ----------------------------------------------------------------------
@@ -132,11 +135,11 @@ a {
         text-decoration: none;
     }
     &:link, &:visited {
-        color: hsl(220, 100%, 40%);
+        color: $link-color;
         text-decoration: underline;
     }
     &:hover, &:active {
-        color: hsl(220, 100%, 50%);
+        color: $link-hover-color;
         text-decoration: none;
     }
 }
@@ -266,7 +269,6 @@ img.left, figure.left {
     margin: 0 auto;
 
     header {
-        //@include background-image(linear-gradient(#f40, #ff7e00));
         @include alert-striped-box(#f40);
         margin:0;
         padding: 30px;
@@ -288,6 +290,7 @@ img.left, figure.left {
             a:hover, a:active {
                 background: none;
                 text-shadow: none;
+                color: #eee;
             }
             strong {
                 font-size: 0.36em;
@@ -315,28 +318,39 @@ img.left, figure.left {
             list-style: none;
             margin: 0 auto;
             width: 960px;
+            padding: 3px 0;
+            line-height: 30px;
+
         }
         li {
             float: left;
             display: inline;
             margin: 0;
+
         }
 
-        a:link, a:visited {
+        a, a:link, a:visited {
             color: #fff;
             display: inline-block;
             height: 30px;
-            padding: 5px 1.5em;
+            margin: 3px 2px;
+            padding: 0 1.5em;
             text-decoration: none;
+            border-radius: 10px;
         }
-        a:hover, a:active, a:focus,
-        .active a:link, .active a:visited {
+        a:hover, a:active, a:focus {
             background: #222;
-            color: $title-color;
-            text-shadow: none !important;
+            color: $link-color;
+            text-shadow: none;
+            box-shadow: inset -1px -1px 0 rgba(255,255,255,.2), 1px 1px 2px #000;
         }
-        .active a:link, .active a:visited {
-            background: #111;
+        .active {
+            a, a:link, a:visited, a:hover, a:active, a:focus {
+                background: #111;
+                color: $link-color;
+                text-shadow: none;
+                box-shadow: none;
+            }
         }
     }
 }
@@ -393,13 +407,12 @@ img.left, figure.left {
     color: #eee;
     background: #222;
     @include border-radius(10px);
-    //@include box-shadow(
-    //    inset rgba(0,0,0,.4) 1px 1px 3px,
-    //    inset rgba(255,255,255,.2) -1px -1px 1px);
-    //overflow: hidden;
 
     a, a:link, a:visited {
-        color: #ffc44d;
+        color: $link-color;
+    }
+    a:hover, a:focus, a:active {
+        color: $link-hover-color;
     }
 
     h1,h2,h3,h4,h5,h6 {
@@ -407,7 +420,7 @@ img.left, figure.left {
             color: $title-color;
         }
         a:hover, a:focus {
-            color: #ffcc80;
+            color: $title-hover-color;
         }
     }
 }
@@ -555,7 +568,7 @@ img.left, figure.left {
     margin: 20px auto 0;
     color:#ddd;
     a, a:link, a:visited {
-        color: #ffc44d;
+        color: lighten($link-color, 10%);
     }
     text-align: center;
     background: #111;
@@ -704,7 +717,7 @@ li:last-child .hentry,
             display: block;
         }
         a:hover, a:focus {
-            color: $title-color;
+            color: $link-color;
         }
     }
 }
@@ -724,12 +737,18 @@ li:last-child .hentry,
 // Cool dates, displayed as calendars ------------------------------------------
 .cool-date {
     display: inline-block;
-    color: #888;
+    color: #aaa;
     background: #222;
-    border: solid 1px #555;
+    border: solid 1px #666;
+    opacity: .5;
+    @include transition(opacity linear 300ms);
+    cursor: default;
+    @include user-select(none);
+    
+    &:hover { opacity: 1; }
 
     .year {
-        color: #888;
+        color: #aaa;
         font-weight: bold;
         background: #111;
     }
@@ -755,6 +774,7 @@ article header .cool-date {
 // Cool transitions ------------------------------------------------------------
 a {
     @include transition(
-        color ease 300ms,
-        background ease 500ms);
+        color ease 400ms,
+        background ease 500ms,
+        box-shadow ease 500ms);
 }
