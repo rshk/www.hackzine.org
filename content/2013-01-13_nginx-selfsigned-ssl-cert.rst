@@ -19,40 +19,68 @@ self-signed certificates. This is roughly the procedure I followed to:
 Generating the CA certificate
 =============================
 
-First of all, generate the master CA certificate::
+First of all, generate the master CA certificate:
 
+.. code-block:: bash
+
+    # Create the CA key
     openssl genrsa -des3 -out ca.orig.key 4096
+
+    # Remove passphrase from CA key (optional)
     openssl rsa -in ca.orig.key -out ca.key
 
-Then, generate the delegate authority certificate, and sign it::
+    # Create certificate (will create signing request + sign it)
+    openssl req -new -x509 -days 365 -key ca.key -out ca.crt
 
-    openssl genrsa -out ia.key 4096
+    # Initialize the serial number for signing
+    echo 01 > ca.srl
+
+Then, generate a delegate authority certificate, and sign it:
+
+.. code-block:: bash
+
+    openssl genrsa -des3 -out ia.key 4096
+
+    # Create a signing request
     openssl req -new -key ia.key -out ia.csr
-    openssl x509 -req -days 730 -in ia.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out ia.crt
 
-Prepare the serial counter for generated certificates (only once)::
+    # Sign the request
+    openssl x509 -req -days 730 -in ia.csr -CA ca.crt -CAkey ca.key -out ia.crt
 
+    # Initialize the serial number for signed certificates
     echo 01 > ia.srl
 
-Generating the signing request
-==============================
+Generate certificate for a domain
+=================================
 
-::
+.. code-block:: bash
 
     MYDOMAIN="www.example.com"
+
+    # Create the key (w/o passphrase..)
     openssl genrsa -des3 -out "$MYDOMAIN".orig.key 2048
     openssl rsa -in "$MYDOMAIN".orig.key -out "$MYDOMAIN".key
+
+    # Create the signing request
     openssl req -new -key "$MYDOMAIN".key -out "$MYDOMAIN".csr
 
-Sign the request and generate the certificate
-=============================================
+
+Use the IA to sign the request and generate the certificate
+-----------------------------------------------------------
 
 ::
 
-    openssl x509 -req -days 1825 -in "$MYDOMAIN".csr -CA ia.crt -CAkey ia.key -out "$MYDOMAIN".crt
+    openssl x509 -req -days 365 -in "$MYDOMAIN".csr -CA ia.crt -CAkey ia.key -out "$MYDOMAIN".crt
 
-And then copy ``$MYDOMAIN.key`` and ``$MYDOMAIN.crt`` somewhere on the server,
-let's say ``/etc/ssl/localcerts/``.
+
+Installing certificates on the server
+=====================================
+
+To install the certificates on the web server, just place them somewhere,
+eg in ``/etc/ssl/localcerts/``.
+
+You will need to copy ``$MYDOMAIN.key`` and ``$MYDOMAIN.crt``.
+
 
 Configure nginx
 ===============
@@ -80,10 +108,12 @@ Example configuration::
 
     }
 
-That's it!
+That's it! Now you should be able to simply import the CA certificate (.crt) in your browser
+and start using the server right away.
 
 .. _`Server Name Indication`: http://en.wikipedia.org/wiki/Server_Name_Indication
 
+See also: `OpenSSL Basics and commands <http://wiki.hackzine.org/sysadmin/openssl-commands.html>`_.
 
 More references
 ===============
