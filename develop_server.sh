@@ -11,6 +11,7 @@ THEMEDIR=$BASEDIR/themes/hackzine-org
 CONFFILE=$BASEDIR/pelicanconf.py
 
 PELICANOPTS="-t $THEMEDIR"
+PELICAN_SERVER_PORT=8099
 
 ###
 # Don't change stuff below here unless you are sure
@@ -64,7 +65,7 @@ function start_up(){
   $PELICAN --debug --autoreload -r $INPUTDIR -o $OUTPUTDIR -s $CONFFILE $PELICANOPTS &
   echo $! > $PELICAN_PID
   cd $OUTPUTDIR
-  python -m SimpleHTTPServer &
+  python -m SimpleHTTPServer "$PELICAN_SERVER_PORT" &
   echo $! > $SRV_PID
   cd $BASEDIR
   sleep 1 && echo 'Pelican and SimpleHTTPServer processes now running in background.'
