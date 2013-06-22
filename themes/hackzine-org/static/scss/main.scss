@@ -70,6 +70,10 @@ $link-hover-color: #f60;
 
 
 // HTML elements styling -------------------------------------------------------
+html {
+    min-height: 100%;
+    background: #111;
+}
 body {
     margin: 0;
     padding: 0;
@@ -79,9 +83,12 @@ body {
     line-height: 1.5em;
     text-align: left;
 
-    background-color: #181818;
-    @include background-image(linear-gradient(rgba(#000, .8), rgba(#000, 0) 50%));
-    background-attachment: fixed;
+    //background-color: #181818;
+    background-color: #222;
+    //@include background-image(linear-gradient(rgba(#000, .8), rgba(#000, 0) 50%));
+    //background-attachment: fixed;
+
+    //height: 100%;
 }
 
 h1 { font-size: 2em }
@@ -101,11 +108,11 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-#featured h1 {
-    font-family: $title-font;
-    font-weight: normal;
-    font-size: 4em;
-}
+//#featured h1 {
+//    font-family: $title-font;
+//    font-weight: normal;
+//    font-size: 4em;
+//}
 
 hr { border: 2px solid #EEEEEE; }
 
@@ -150,13 +157,9 @@ ol {
 }
 
 .post-info {
-    display: inline;
     font-size: 80%;
-    opacity: .3;
-    @include transition(opacity linear 300ms);
-    &:hover {
-        opacity: 1;
-    }
+    text-align: right;
+    opacity: .6;
 }
 
 .readmore { float: right }
@@ -237,21 +240,8 @@ img.left, figure.left {
 }
 
 
-// Banner, aka the site header -------------------------------------------------
-//@mixin text-border($size, $color) {
-//    @include text-shadow(
-//        $size    $size    1px $color,
-//        (-$size) (-$size) 1px $color,
-//        (-$size) $size    1px $color,
-//        $size    (-$size) 1px $color);
-//}
-
 #banner {
-    width: 980px;
-    margin: 0 auto;
-
     header {
-        //@include alert-striped-box(#f50);
         @include striped-background(
             #f50,
             lighten(#f50, 10%),
@@ -265,6 +255,8 @@ img.left, figure.left {
             padding: 0;
             font-size: 4.5em;
             font-family: $title-font;
+            width: 960px;
+            margin: 0 auto;
 
             a:link, a:visited {
                 display: block;
@@ -299,7 +291,7 @@ img.left, figure.left {
 
         background: #000;
 
-        @include border-radius(0 0 10px 10px);
+        //@include border-radius(0 0 10px 10px);
 
         ul {
             list-style: none;
@@ -313,7 +305,6 @@ img.left, figure.left {
             float: left;
             display: inline;
             margin: 0;
-
         }
 
         a, a:link, a:visited {
@@ -323,17 +314,17 @@ img.left, figure.left {
             margin: 3px 2px;
             padding: 0 1.5em;
             text-decoration: none;
-            border-radius: 10px;
+            //border-radius: 10px;
         }
         a:hover, a:active, a:focus {
             background: #222;
             color: $link-color;
             text-shadow: none;
-            box-shadow: inset -1px -1px 0 rgba(255,255,255,.2), 1px 1px 2px #000;
+            //box-shadow: inset -1px -1px 0 rgba(255,255,255,.2), 1px 1px 2px #000;
         }
         .active {
             a, a:link, a:visited, a:hover, a:active, a:focus {
-                background: #111;
+                //background: #111;
                 color: $link-color;
                 text-shadow: none;
                 box-shadow: none;
@@ -375,25 +366,35 @@ img.left, figure.left {
 
 // Page content ----------------------------------------------------------------
 .content-wrapper {
+    display: table;
     width: 960px;
     margin: 0 auto;
+    padding:0;
+}
+.content-wrapper-inner {
+    //position: relative;
+    display: table-row;
 }
 
 .column-content{
     width: 700px;
     display: inline-block;
+    display: table-cell;
+    vertical-align: top;
 }
 .column-sidebar{
+    display: table-cell;
+    vertical-align: top;
     width: 240px;
-    float: right;
+    background: #111;
 }
 
 #content {
-    margin: 2em auto;
     padding: 20px 20px;
     color: #eee;
     background: #222;
     @include border-radius(10px);
+    min-height: 100%;
 
     a, a:link, a:visited {
         color: $link-color;
@@ -402,7 +403,7 @@ img.left, figure.left {
         color: $link-hover-color;
     }
 
-    h1,h2,h3,h4,h5,h6 {
+    h1, h2, h3, h4, h5, h6 {
         a, a:link, a:visited {
             color: $title-color;
         }
@@ -416,14 +417,14 @@ img.left, figure.left {
     padding: 20px;
     color: #ddd;
     background: #111;
-    @include border-radius(0 0 10px 10px);
 
     h1, h2, h3, h4, h5, h6 {
         margin-bottom: 2px;
+        padding-left: 5px;
         font-family: $title-font;
         font-weight: normal;
-        border-bottom: dotted 1px $title-color;
-        text-align: right;
+        border-bottom: dotted 1px #b05b00;
+        //text-align: right;
     }
     a, a:link, a:visited {
         color: #888;
@@ -437,10 +438,8 @@ img.left, figure.left {
 }
 
 // Extras ----------------------------------------------------------------------
-#extras {
+/*#extras {
     width: 920px;
-    margin: 0 auto 20px auto;
-    padding: 20px;
     color: #fff;
     overflow: hidden;
     background: #080808;
@@ -502,7 +501,7 @@ img.left, figure.left {
 
         // Icons
         a[href*='delicious.com'] {background-image: url('../images/icons/delicious.png');}
-        /*a[href*='digg.com'] {background-image: url('../images/icons/digg.png');}*/
+        *//*a[href*='digg.com'] {background-image: url('../images/icons/digg.png');}*//*
         a[href*='facebook.com'] {background-image: url('../images/icons/facebook.png');}
         a[href*='last.fm'], a[href*='lastfm.'] {background-image: url('../images/icons/lastfm.png');}
         a[type$='atom+xml'], a[type$='rss+xml'] {background-image: url('../images/icons/rss.png');}
@@ -511,7 +510,7 @@ img.left, figure.left {
         a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.png');}
         a[href*='gittip.com'] {background-image: url('../images/icons/gittip.png');}
     }
-}
+}*/
 
 
 // About -----------------------------------------------------------------------
@@ -551,15 +550,17 @@ img.left, figure.left {
 
 // Footer ----------------------------------------------------------------------
 #site-footer {
-    width: 980px;
-    margin: 20px auto 0;
     color:#ddd;
+    padding: 1em 0;
+    text-align: center;
+    border-top: dotted 1px #181818;
+    //@include background-image(linear-gradient(#111, #222));
+    //min-height: 100px;
+    background: #111;
+
     a, a:link, a:visited {
         color: lighten($link-color, 10%);
     }
-    text-align: center;
-    background: #111;
-    @include border-radius(10px 10px 0 0);
     p {
         padding: .5em 1em;
         margin: 0;
@@ -574,9 +575,10 @@ article header {
         margin-bottom: 3px;
         margin-top: 0; // We already have article margin
         font-family: $title-font;
-        font-size: 3em;
+        font-size: 2.4em;
         font-weight: normal;
-        border-bottom: dotted 1px #555;
+        border-bottom: dotted 1px #444;
+        padding-left: 5px;
     }
 }
 
@@ -724,20 +726,17 @@ li:last-child .hentry,
 // Cool dates, displayed as calendars ------------------------------------------
 .cool-date {
     display: inline-block;
-    color: #aaa;
+    color: #888;
     background: #222;
-    border: solid 1px #666;
-    opacity: .5;
+    border: solid 1px #444;
     @include transition(opacity linear 300ms);
     cursor: default;
     @include user-select(none);
     
-    &:hover { opacity: 1; }
-
     .year {
-        color: #aaa;
+        //color: #aaa;
         font-weight: bold;
-        background: #111;
+        background: #181818;
     }
     .day, .year, .wday, .month {
         display: block;
@@ -752,9 +751,9 @@ li:last-child .hentry,
 
 }
 article header .cool-date {
-    float: right;
+    float: left;
+    margin-left: -80px;
     width: 60px;
-    margin-right: 10px;
     font-size: 80%;
 }
 
