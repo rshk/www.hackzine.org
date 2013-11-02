@@ -4,10 +4,10 @@
 import os
 
 AUTHOR = u"Samuele Santi"
+DEFAULT_CATEGORY = 'Misc'
+#DEFAULT_DATE_FORMAT = '%a %d %B %Y'
 SITENAME = u"Hackzine.org"
-#SITEURL = 'http://www.hackzine.org'
-# todo: set this from the environment?
-SITEURL = os.environ.get('PELICAN_SITEURL') or ''
+SITEURL = os.environ.get('PELICAN_SITEURL') or 'http://www.hackzine.org'
 
 
 TIMEZONE = 'Europe/Rome'
@@ -32,6 +32,9 @@ THEME = os.path.join(os.path.dirname(__file__), 'themes/hackzine-org/')
 DISQUS_SITENAME='hackzineorg'
 TWITTER_USERNAME = 'hackzine'
 
-FEED_DOMAIN = SITEURL or 'http://www.hackzine.org'
+## Feed settings
+FEED_DOMAIN = SITEURL
 FEED_ATOM = 'feeds/atom.xml'
 FEED_RSS = 'feeds/rss.xml'
+CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
+CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
