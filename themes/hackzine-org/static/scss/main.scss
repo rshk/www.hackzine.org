@@ -28,13 +28,15 @@
 
 
 // Include google fonts --------------------------------------------------------
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
-@import url(http://fonts.googleapis.com/css?family=Boogaloo);
+@import url(http://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:400,700|Inconsolata);
 
 
 // Configuration variables -----------------------------------------------------
-$title-font: 'Boogaloo', cursive;
-$normal-font: "Droid Sans", helvetica, arial, sans-serif;
+/* $title-font: 'Boogaloo', cursive; */
+$title-font: 'Roboto Condensed', sans-serif;
+/* $normal-font: "Droid Sans", helvetica, arial, sans-serif; */
+$normal-font: 'Roboto', sans-serif;
+$monospace-font: Inconsolata, monospace;
 $font-size: 14px;
 $title-color: #f80;
 $title-hover-color: lighten($title-color, 30%);
@@ -171,10 +173,16 @@ dd {margin-left: 1.5em;}
 pre {
     margin: 10px 0;
     padding: 10px;
+    box-shadow: inset #000 1px 1px 0 0,
+                inset #333 -1px -1px 0 0;
     color: #fff;
     overflow: auto;
     background-color: #111;
-    border-radius: 10px;
+    border-radius: 0;
+}
+
+pre, code {
+    font-family: $monospace-font;
 }
 
 // Quotes
@@ -239,41 +247,50 @@ img.left, figure.left {
     margin: 0 2em 2em 0;
 }
 
+/* .fancy-orange-bar { */
+/*     @include striped-background(#f50, lighten(#f50, 10%), #f50); */
+/*     height: 10px; */
+/* } */
 
 #banner {
     header {
-        @include striped-background(
-            #f50,
-            lighten(#f50, 10%),
-            #f50);
+        /* @include striped-background( */
+        /*     #000, */
+        /*     lighten(#f50, 10%), */
+        /*     #f50); */
+	background: #111;
+	color: #f50;
 
         margin:0;
-        padding: 30px;
+        padding: 10px 30px -5px;
+	text-align: center;
 
         h1 {
             margin: 0;
             padding: 0;
-            font-size: 4.5em;
+            font-size: 120px;
             font-family: $title-font;
+	    font-weight: 700;
             width: 960px;
             margin: 0 auto;
 
             a:link, a:visited {
                 display: block;
-                color: #fff;
-                color: #000;
-                font-weight: normal;
+                /* color: #fff; */
+                /* color: #000; */
+		color: #ccc;
+                /* font-weight: normal; */
                 text-decoration: none;
 
             }
             a:hover, a:active {
                 background: none;
                 text-shadow: none;
-                color: #eee;
+                color: #fff;
             }
             strong {
                 font-size: 0.36em;
-                font-weight: normal;
+                /* font-weight: normal; */
             }
         }
     }
@@ -281,6 +298,8 @@ img.left, figure.left {
 
     // Main Nav
     nav {
+	@include striped-background(#f50, lighten(#f50, 10%), #f50);
+
         height: 40px;
         margin: 0 auto;
         padding: 0;
@@ -289,43 +308,38 @@ img.left, figure.left {
         line-height: 30px;
         text-align: center;
 
-        background: #000;
-
-        //@include border-radius(0 0 10px 10px);
-
         ul {
             list-style: none;
             margin: 0 auto;
             width: 960px;
-            padding: 3px 0;
+            padding: 0 0;
             line-height: 30px;
-
         }
         li {
+	    padding: 0;
             float: left;
             display: inline;
             margin: 0;
         }
 
         a, a:link, a:visited {
-            color: #fff;
+            color: #000;
             display: inline-block;
-            height: 30px;
-            margin: 3px 2px;
-            padding: 0 1.5em;
+            height: 40px;
+            line-height: 40px;
+            margin: 0;
+            padding: 0 15px;
             text-decoration: none;
-            //border-radius: 10px;
         }
         a:hover, a:active, a:focus {
             background: #222;
-            color: $link-color;
+	    background: rgba(0,0,0,0.4);
+            color: #fff;
             text-shadow: none;
-            //box-shadow: inset -1px -1px 0 rgba(255,255,255,.2), 1px 1px 2px #000;
         }
         .active {
             a, a:link, a:visited, a:hover, a:active, a:focus {
-                //background: #111;
-                color: $link-color;
+                color: #fff;
                 text-shadow: none;
                 box-shadow: none;
             }
@@ -378,6 +392,7 @@ img.left, figure.left {
 
 .column-content{
     width: 700px;
+    max-width: 700px;
     display: inline-block;
     display: table-cell;
     vertical-align: top;
@@ -727,16 +742,17 @@ li:last-child .hentry,
 .cool-date {
     display: inline-block;
     color: #888;
-    background: #222;
-    border: solid 1px #444;
-    @include transition(opacity linear 300ms);
+    /* background: #333; */
+    border-right: solid 1px #888;
+    padding: 0 0 20px;
+    /* @include transition(opacity linear 300ms); */
     cursor: default;
     @include user-select(none);
-    
+
     .year {
-        //color: #aaa;
         font-weight: bold;
-        background: #181818;
+        background: #888;
+	color: #000;
     }
     .day, .year, .wday, .month {
         display: block;
