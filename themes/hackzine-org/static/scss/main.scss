@@ -43,6 +43,8 @@ $title-hover-color: lighten($title-color, 30%);
 $link-color: #fa0;
 $link-hover-color: #f60;
 
+$site-background: #1c1c1c;
+
 
 // Mixins ----------------------------------------------------------------------
 @mixin striped-background($base, $col1, $col2, $size: 40px) {
@@ -86,7 +88,7 @@ body {
     text-align: left;
 
     //background-color: #181818;
-    background-color: #222;
+    background-color: $site-background;
     //@include background-image(linear-gradient(rgba(#000, .8), rgba(#000, 0) 50%));
     //background-attachment: fixed;
 
@@ -406,7 +408,7 @@ img.left, figure.left {
 #content {
     padding: 20px 20px;
     color: #eee;
-    background: #222;
+    background: $site-background;
     @include border-radius(10px);
     min-height: 100%;
 
@@ -492,9 +494,7 @@ img.left, figure.left {
     color:#ddd;
     padding: 1em 0;
     text-align: center;
-    border-top: dotted 1px #181818;
-    //@include background-image(linear-gradient(#111, #222));
-    //min-height: 100px;
+    font-size: .9em;
     background: #111;
 
     a, a:link, a:visited {
