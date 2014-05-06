@@ -38,3 +38,5 @@ FEED_ATOM = 'feeds/atom.xml'
 FEED_RSS = 'feeds/rss.xml'
 CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
+
+STATIC_PATHS = ['images']
