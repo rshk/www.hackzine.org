@@ -1,24 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
+from __future__ import unicode_literals
 
 import os
 
 AUTHOR = u"Samuele Santi"
-DEFAULT_CATEGORY = 'Misc'
-#DEFAULT_DATE_FORMAT = '%a %d %B %Y'
 SITENAME = u"Hackzine.org"
 SITEURL = os.environ.get('PELICAN_SITEURL') or 'http://www.hackzine.org'
 
+DEFAULT_CATEGORY = u'Misc'
+#DEFAULT_DATE_FORMAT = '%a %d %B %Y'
+
+DEFAULT_LANG = u'en'
 
 TIMEZONE = 'Europe/Rome'
 
-DEFAULT_LANG = 'en'
-
 # Blogroll
-LINKS =  (('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
-          ('Python.org', 'http://python.org'),
-          ('Jinja2', 'http://jinja.pocoo.org'),
-          )
+LINKS =  (('Pelican', 'http://getpelican.com/'),
+          ('Python.org', 'http://python.org/'),
+          ('Jinja2', 'http://jinja.pocoo.org/'),
+          ('You can modify those links in your config file', '#'),)
 
 # Social widget
 SOCIAL = (
@@ -46,3 +47,6 @@ CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 
 STATIC_PATHS = ['images']
+
+# Uncomment following line if you want document-relative URLs when developing
+#RELATIVE_URLS = True
