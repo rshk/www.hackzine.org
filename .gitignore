@@ -5,3 +5,4 @@
 /output/*
 !/output/.keep
 .sass-cache
+/.venv*
