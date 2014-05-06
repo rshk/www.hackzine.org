@@ -157,7 +157,7 @@ Using kibana to analyze the logs
 Tweak a couple settings, add some nice charts and.. here it is!
 
 .. image:: ./static/images/kibana-apache.png
-    :width: 600px
+    :width: 680px
     :align: center
 
 Find here the json configuration I used for that dashboard:
