@@ -1,6 +1,6 @@
 /*!
     Name: Hackzine.org Theme
-    Date: April 2013
+    Date: April 2013, May 2014
     Author: Samuele Santi
 
     Theme designed for use on http://www.hackzine.org.
@@ -262,7 +262,7 @@ img.left, figure.left {
 	color: #f50;
 
         margin:0;
-        padding: 10px 30px -5px;
+        padding: 10px 30px 0;
 	text-align: center;
 
         h1 {
@@ -271,15 +271,14 @@ img.left, figure.left {
             font-size: 120px;
             font-family: $title-font;
 	    font-weight: 700;
+	    line-height: 110px;
             width: 960px;
             margin: 0 auto;
+	    text-shadow: rgba(0,0,0,.7) 1px 1px 3px;
 
             a:link, a:visited {
                 display: block;
-                /* color: #fff; */
-                /* color: #000; */
 		color: #ccc;
-                /* font-weight: normal; */
                 text-decoration: none;
 
             }
@@ -342,6 +341,7 @@ img.left, figure.left {
                 color: #fff;
                 text-shadow: none;
                 box-shadow: none;
+		background: rgba(255,255,255,.2);
             }
         }
     }
@@ -386,7 +386,6 @@ img.left, figure.left {
     padding:0;
 }
 .content-wrapper-inner {
-    //position: relative;
     display: table-row;
 }
 
@@ -451,81 +450,6 @@ img.left, figure.left {
         margin-bottom: 10px;
     }
 }
-
-// Extras ----------------------------------------------------------------------
-/*#extras {
-    width: 920px;
-    color: #fff;
-    overflow: hidden;
-    background: #080808;
-    border-radius: 10px;
-
-    ul {
-        list-style: none;
-        margin: 0;
-    }
-    li {
-        border-bottom: 1px solid #333;
-    }
-    h2 {
-        margin-bottom: .25em;
-        padding: 0 3px;
-        color: #444;
-        font-size: 1.429em;
-    }
-
-    a:link, a:visited {
-        display: block;
-        padding: .3em .25em;
-        color: #ccc;
-        text-decoration: none;
-    }
-
-    a:hover,
-    a:active {
-        color: #fff;
-    }
-
-    // Blogroll
-    .blogroll {
-        //width: 615px;
-        float: left;
-        li {
-            float: left;
-            margin: 0 20px 0 0;
-            width: 185px;
-        }
-    }
-
-    .social {
-        float: right;
-        //width: 175px;
-        &, li {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        a {
-            display: block;
-            padding-left: 25px;
-            line-height: 24px;
-            background-repeat: no-repeat;
-            background-position: 3px 6px;
-        }
-
-        // Icons
-        a[href*='delicious.com'] {background-image: url('../images/icons/delicious.png');}
-        *//*a[href*='digg.com'] {background-image: url('../images/icons/digg.png');}*//*
-        a[href*='facebook.com'] {background-image: url('../images/icons/facebook.png');}
-        a[href*='last.fm'], a[href*='lastfm.'] {background-image: url('../images/icons/lastfm.png');}
-        a[type$='atom+xml'], a[type$='rss+xml'] {background-image: url('../images/icons/rss.png');}
-        a[href*='twitter.com'] {background-image: url('../images/icons/twitter.png');}
-        a[href*='linkedin.com'] {background-image: url('../images/icons/linkedin.png');}
-        a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.png');}
-        a[href*='gittip.com'] {background-image: url('../images/icons/gittip.png');}
-    }
-}*/
 
 
 // About -----------------------------------------------------------------------
@@ -742,10 +666,8 @@ li:last-child .hentry,
 .cool-date {
     display: inline-block;
     color: #888;
-    /* background: #333; */
     border-right: solid 1px #888;
     padding: 0 0 20px;
-    /* @include transition(opacity linear 300ms); */
     cursor: default;
     @include user-select(none);
 
