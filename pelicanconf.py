@@ -21,8 +21,14 @@ LINKS =  (('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
           )
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (
+    ('Blog', 'http://www.hackzine.org'),
+    ('Website', 'http://www.samuelesanti.com'),
+    ('GitHub', 'https://github.com/rshk'),
+    ('LinkedIn', 'https://www.linkedin.com/in/samuelesanti'),
+    ('Twitter', 'https://twitter.com/hackzine'),
+    ('StackOverflow', 'http://stackoverflow.com/users/148845/redshadow'),
+)
 
 DEFAULT_PAGINATION = 10
 
@@ -30,7 +36,7 @@ DEFAULT_PAGINATION = 10
 THEME = os.path.join(os.path.dirname(__file__), 'themes/hackzine-org/')
 
 DISQUS_SITENAME='hackzineorg'
-TWITTER_USERNAME = 'hackzine'
+TWITTER_USERNAME = '_rshk'
 
 ## Feed settings
 FEED_DOMAIN = SITEURL
