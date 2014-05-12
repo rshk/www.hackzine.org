@@ -16,10 +16,10 @@ somebody else.
 Machine configuration
 =====================
 
-**Machine:** Thinkpad W530
-**Graphics card:** NVIDIA Corporation GK107GLM [Quadro K2000M] (rev a1)
-**Operating System:** Debian Jessie (testing) - amd64
-**Kernel:** 3.13-1-amd64 (3.13.10-1)
+| **Machine:** Thinkpad W530
+| **Graphics card:** NVIDIA Corporation GK107GLM [Quadro K2000M] (rev a1)
+| **Operating System:** Debian Jessie (testing) - amd64
+| **Kernel:** 3.13-1-amd64 (3.13.10-1)
 
 The error message I got::
 
