@@ -2,7 +2,7 @@ Deploying an Elasticsearch cluster via SaltStack
 ################################################
 
 :tags: sysadmin, debian, linux, elasticsearch, saltstack
-:date: 2014-06-06 16:12:00
+:date: 2014-06-17 15:40:00
 :category: Sysadmin
 
 Here is a short guide covering the steps I followed in order to deploy
@@ -45,7 +45,9 @@ machines in the cluster::
     <host mac='52:54:00:ee:55:02' name='node-02.es-cluster.local' ip='10.55.2.232'/>
     <host mac='52:54:00:ee:55:03' name='node-03.es-cluster.local' ip='10.55.2.233'/>
 
-Now we can start the VMs::
+Now we can start the VMs:
+
+.. code-block:: bash
 
     virsh start es-cluster-salt-master
     for id in 01 02 03; do
@@ -61,7 +63,7 @@ You can make sure machines are responding::
 
 
 **Troubleshooting:** if the dhcp seems to be misbehaving, make sure
- you remove all the cached DNS leases::
+you remove all the cached DNS leases::
 
     virsh net-destroy default
     rm /var/lib/libvirt/dnsmasq/default.*
@@ -76,13 +78,17 @@ openssh certificates to have different ones on each machine.
 Preparing the machines
 ----------------------
 
-First of all, configure the FQDNs of machines::
+First of all, configure the FQDNs of machines:
+
+.. code-block:: bash
 
     hostname salt-master  # or node-XX, ...
     hostname > /etc/hostname
     sed 's/^127\.0\.1\.1\s.*/127.0.1.1\t'"$(hostname)"'.es-cluster.local '"$(hostname)"'/' -i /etc/hosts
 
-To check::
+To check:
+
+.. code-block:: console
 
     $ hostname -f
     node-01.es-cluster.local
@@ -95,7 +101,7 @@ Installing saltstack
 I just followed the official installation guide for Debian:
 http://docs.saltstack.com/en/latest/topics/installation/debian.html
 
-::
+.. code-block:: bash
 
     echo 'deb http://debian.saltstack.com/debian wheezy-saltstack main' > /etc/apt/sources.list.d/saltstack.list
     wget -q -O- "http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key" | apt-key add -
@@ -105,9 +111,11 @@ On the master::
 
     apt-get install salt-master
 
-On the minions::
+On the minions:
 
-    # If your don't have a DNS
+.. code-block:: bash
+
+    # If your don't have a proper DNS..
     echo '10.55.2.230 salt' >> /etc/hosts
 
     apt-get install salt-minion
@@ -119,7 +127,7 @@ Configure minions to reach the master
 -------------------------------------
 
 If you want to use a DNS name different from the default ``salt``, change
-``/etc/salt/minion``::
+``/etc/salt/minion``:
 
 .. code-block:: yaml
 
@@ -133,7 +141,7 @@ configuration).
 Register the minion keys on the master
 --------------------------------------
 
-::
+.. code-block:: console
 
     root@salt-master:~# salt-key -L
     Accepted Keys:
@@ -224,21 +232,20 @@ Creating the "top" file
 -----------------------
 
 This is used mostly to configure common stuff we want on each machine,
-for example editor, configuration files, etc. This is mine::
+for example editor, configuration files, etc. This is mine:
 
 .. code-block:: yaml
 
-    emacs23-nox:
-      pkg.installed
-
-    htop:
-      pkg.installed
-
-    etckeeper:
-      pkg.installed
-
-    git:
-      pkg.installed
+    common_packages:
+        pkg.installed:
+            - names:
+                - git
+                - etckeeper
+                - tmux
+                - htop
+                - tree
+                - emacs23-nox
+                - yaml-mode
 
     git://github.com/rshk/CommonScripts:
       git.latest:
@@ -260,7 +267,6 @@ And, of course, the bashrc file, in ``/srv/salt/conf/bashrc``:
     export EDITOR='emacs'
     alias e=emacs
 
-
     if [ -e /opt/CommonScripts/Configs/bash/bash_aliases ]; then
         . /opt/CommonScripts/Configs/bash/bash_aliases
     fi
@@ -273,6 +279,41 @@ And, of course, the bashrc file, in ``/srv/salt/conf/bashrc``:
         . ~/.bashrc_local
     fi
 
+
+Prerequisite: Oracle Java
+-------------------------
+
+Installing Java from Oracle on Debian is tricky, due to licensing
+problems, but luckily there is a command to generate java packages.
+
+Install the tools to build java packages::
+
+    apt-get install java-package
+
+Download an appropriate tarball, like this::
+
+    wget http://javadl.sun.com/webapps/download/AutoDL?BundleId=90216 -O jre-7u60-linux-x64.tar.gz
+
+As a **normal user** (root wouldn't work for security reasons), run
+this to create the .deb package::
+
+    make-jpkg jre-7u60-linux-x64.tar.gz
+
+then answer to the questions made interactively.
+
+After that, copy the resulting package to
+``/srv/salt/java/oracle-j2re1.7_1.7.0+update60_amd64.deb``
+
+Then configure ``/srv/salt/java/init.sls`` to install the package:
+
+.. code-block:: yaml
+
+    oracle_java_pkg:
+        pkg.installed:
+            - sources:
+                - oracle-j2re1.7: oracle-j2re1.7_1.7.0+update60_amd64.deb
+
+
 The elasticsearch configuration
 -------------------------------
 
@@ -280,10 +321,32 @@ The most important part is the ``/srv/salt/elasticsearch/init.sls`` file:
 
 .. code-block:: yaml
 
-    /etc/apt/sources.list.d/elasticsearch.list:
-      file:
-        - managed
-        - source: salt://elasticsearch/debian.list
+    # Include the ``java`` sls in order to use oracle_java_pkg
+    include:
+        - java
+
+    # Note: this is only valid for the Debian repo / package
+    # You should filter on grain['os'] conditional for yum-based distros
+    elasticsearch_repo:
+        pkgrepo.managed:
+            - humanname: Elasticsearch Official Debian Repository
+            - name: deb http://packages.elasticsearch.org/elasticsearch/1.2/debian stable main
+            - dist: stable
+            - key_url: salt://elasticsearch/GPG-KEY-elasticsearch
+            - file: /etc/apt/sources.list.d/elasticsearch.list
+
+    elasticsearch:
+        pkg:
+            - installed
+            - require:
+                - pkg: oracle_java_pkg
+                - pkgrepo: elasticsearch_repo
+        service:
+            - running
+            - enable: True
+            - require:
+                - pkg: elasticsearch
+                - file: /etc/elasticsearch/elasticsearch.yml
 
     /etc/elasticsearch/elasticsearch.yml:
       file:
@@ -294,29 +357,14 @@ The most important part is the ``/srv/salt/elasticsearch/init.sls`` file:
         - template: jinja
         - source: salt://elasticsearch/elasticsearch.yml
 
-    openjdk-7-jre-headless:
-      pkg:
-        - installed
 
-    elasticsearch:
-      pkg:
-        - installed
-        - require:
-          - file: /etc/apt/sources.list.d/elasticsearch.list
-      service:
-        - running
-        - enable: True
-        - require:
-          - pkg: elasticsearch
-          - pkg: openjdk-7-jre-headless
-          - file: /etc/elasticsearch/elasticsearch.yml
+Download the elasticsearch repository key and store it as
+``/srv/salt/elasticsearch/GPG-KEY-elasticsearch``::
 
-Then, we have ``debian.list``, containing the repositories for debian wheezy::
+    wget http://packages.elasticsearch.org/GPG-KEY-elasticsearch -O /srv/salt/elasticsearch/GPG-KEY-elasticsearch
 
-    # Debian repository for elasticsearch
-    deb http://packages.elasticsearch.org/elasticsearch/1.0/debian stable main
 
-Last but not least, ``elasticsearch/elasticsearch.yml``""
+Now, the elasticsearch configuration template, ``/srv/salt/elasticsearch/elasticsearch.yml``:
 
 .. code-block:: jinja
 
@@ -325,3 +373,32 @@ Last but not least, ``elasticsearch/elasticsearch.yml``""
 
     cluster.name: {{ grains['elasticsearch']['cluster'] }}
     node.name: "{{ grains['fqdn'] }}"
+
+
+Deploying configuration on minions
+==================================
+
+It's as easy as running::
+
+    salt '*' state.highstate
+
+If you want more compact output, you can add the
+``--state-output=terse`` argument to the above command.
+
+
+Once the command completes, you should have your Elasticsearch cluster
+deployed, up and running.
+
+
+Bonus: os-level targeting
+=========================
+
+If you need to match only a certain operating system in the
+``top.sls``, you can use compound matching like this:
+
+.. code-block:: yaml
+
+    'G@os:Debian and G@oscodename:wheezy':
+        - match: compound
+
+Will match all the minions running Debian Wheezy.
