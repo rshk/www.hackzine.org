@@ -40,14 +40,18 @@ Finally, how I solved
 I found a post recommending to add ``rcutree.rcu_idle_gp_delay=1``
 kernel boot parameter, and it seems to work just fine.
 
-To accomplish that, I modified ``/etc/default/grub``::
+To accomplish that, I modified ``/etc/default/grub``:
+
+.. code-block:: bash
 
     GRUB_CMDLINE_LINUX="nox2apic rcutree.rcu_idle_gp_delay=1"
 
 And, just because the nvidia driver is complaining about unsupported
-framebuffer, I also commented these two out::
+framebuffer, I also commented these two out:
 
-    #GRUB_GFXMODE=1920x1080x32
-    #GRUB_GFXPAYLOAD_LINUX=1920x1080x32
+.. code-block:: bash
+
+    # GRUB_GFXMODE=1920x1080x32
+    # GRUB_GFXPAYLOAD_LINUX=1920x1080x32
 
 Don't forget to run ``update-grub``, and then reboot.
