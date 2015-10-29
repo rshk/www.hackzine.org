@@ -28,6 +28,9 @@ SCSS := scss --compass -tcompressed
 THEME_DIR := themes/hackzine-org/static
 CSS_FILES := $(THEME_DIR)/css/main.css
 
+# For github-pages publication
+DOMAIN_NAME = blog.hackzine.org
+
 help:
 	@echo 'Makefile for a pelican Web site                                        '
 	@echo '                                                                       '
@@ -89,6 +92,7 @@ s3_upload: publish
 	s3cmd sync $(OUTPUTDIR)/ s3://$(S3_BUCKET) --acl-public --delete-removed
 
 github: publish
+	@echo $(DOMAIN_NAME) > $(OUTPUTDIR)/CNAME
 	ghp-import $(OUTPUTDIR)
 	git push origin gh-pages
 
@@ -97,7 +101,7 @@ css_files: $(CSS_FILES)
 $(CSS_FILES): $(THEME_DIR)/css/%.css: $(THEME_DIR)/scss/%.scss
 	$(SCSS) --compass $< > $@
 
-clean_css_files: 
+clean_css_files:
 	rm -f $(CSS_FILES)
 
 .PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload s3_upload github css_files clean_css_files
