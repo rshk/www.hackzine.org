@@ -2,4 +2,4 @@
 
 set -e
 cd ./output
-exec python -m SimpleHTTPServer 8090
+exec python3 -m http.server 8090
