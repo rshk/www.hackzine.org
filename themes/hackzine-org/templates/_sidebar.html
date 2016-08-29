@@ -1,0 +1,63 @@
+<div class="card">
+    <div class="card-image">
+        <img src="https://en.gravatar.com/avatar/0a9dbf11e725f19a1fc5601f958cbcf1?s=512">
+        <div class="card-title">
+            Samuele Santi
+        </div>
+    </div>
+    <div class="card-content">
+        <p>
+            Software engineer. Founder and CEO at <a href="https://www.bkno3.com/">BKNO3</a>.
+        </p>
+        <ul>
+            <li>
+                <span class="fa fa-twitter"></span>
+                <a href="https://twitter.com/_rshk">
+                    @_rshk
+                </a>
+            </li>
+            <li>
+                <span class="fa fa-linkedin"></span>
+                <a href="https://www.linkedin.com/in/samuelesanti">
+                    samuelesanti
+                </a>
+            </li>
+            <li>
+                <span class="fa fa-globe"></span>
+                <a href="https://www.samuelesanti.com">
+                    Personal website
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-content">
+        <div class="card-title">Tags</div>
+        <ul class="menu-tags">
+            {% for cat, null in tags %}
+            <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat.url }}">{{ cat }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-content">
+        <div class="card-title">Feeds</div>
+        <ul>
+            <li>
+                <span class="fa fa-rss"></span>
+                <a href="{{ FEED_DOMAIN }}/{{ FEED_ATOM }}" type="application/atom+xml" rel="alternate">Atom feed</a>
+            </li>
+            {% if FEED_RSS %}
+            <li>
+                <span class="fa fa-rss"></span>
+                <a href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate">RSS feed</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

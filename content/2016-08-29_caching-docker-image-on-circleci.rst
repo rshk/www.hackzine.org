@@ -70,8 +70,9 @@ between builds, and to use a custom script to build the dependencies:
 The image build script
 ======================
 
-Download the complete (up-to-date) script here:
-[rshk/build-docker-image.sh](https://gist.github.com/rshk/beecd2c49f81a380d805c8b461b4c704)
+Download the complete (up-to-date) script here: `rshk/build-docker-image.sh`_
+
+.. _rshk/build-docker-image.sh: https://gist.github.com/rshk/beecd2c49f81a380d805c8b461b4c704
 
 Below a description of the most relevant concepts from that script.
 

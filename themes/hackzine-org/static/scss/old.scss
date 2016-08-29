@@ -1,0 +1,704 @@
+/*!
+    Name: Hackzine.org Theme
+    Date: April 2013, May 2014
+    Author: Samuele Santi
+
+    Theme designed for use on https://www.hackzine.org.
+    As-is use on other websites is discouraged for "branding reasons", however,
+    feel free to take pieces from it or use as a base for your own theme.
+*/
+
+// CSS Properties order
+//======================
+// * position
+// * display / box model
+// * font, led color, text
+// * background, border
+// * css3 properties and other visual only stuff
+
+
+// Libraries -------------------------------------------------------------------
+@import "compass/css3";
+@import "compass/css3/user-interface";
+
+// Reset and base typography ---------------------------------------------------
+@import "reset";
+@import "typogrify";
+@import "pygment";
+
+
+// Include google fonts --------------------------------------------------------
+@import url(https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed:400,700|Inconsolata);
+
+
+// Configuration variables -----------------------------------------------------
+/* $title-font: 'Boogaloo', cursive; */
+$title-font: 'Roboto Condensed', sans-serif;
+/* $normal-font: "Droid Sans", helvetica, arial, sans-serif; */
+$normal-font: 'Roboto', sans-serif;
+$monospace-font: Inconsolata, monospace;
+$font-size: 14px;
+$title-color: #f80;
+$title-hover-color: lighten($title-color, 30%);
+$link-color: #fa0;
+$link-hover-color: #f60;
+
+$site-background: #1c1c1c;
+
+
+// Mixins ----------------------------------------------------------------------
+@mixin striped-background($base, $col1, $col2, $size: 40px) {
+    background-color: $base;
+    color: darken($base, 70%);
+
+    @include background-image(
+            linear-gradient(rgba($col2, 0), $col2 100%),
+            linear-gradient(
+                45deg,
+                $col1 25%,
+                $col2 25%, $col2 50%,
+                $col1 50%,
+                $col1 75%,
+                $col2 75%, $col2)
+    );
+
+    background-size: 100% 100%, $size $size;
+}
+
+@mixin alert-striped-box($color) {
+    @include striped-background(
+            $color,
+            lighten($color, 8%),
+            lighten($color, 3%));
+}
+
+
+// HTML elements styling -------------------------------------------------------
+html {
+    min-height: 100%;
+    background: #111;
+}
+body {
+    margin: 0;
+    padding: 0;
+    color: #eee;
+    font-family: $normal-font;
+    font-size: $font-size;
+    line-height: 1.5em;
+    text-align: left;
+
+    //background-color: #181818;
+    background-color: $site-background;
+    //@include background-image(linear-gradient(rgba(#000, .8), rgba(#000, 0) 50%));
+    //background-attachment: fixed;
+
+    //height: 100%;
+}
+
+h1 { font-size: 2em }
+h2 { font-size: 1.571em } /* 22px */
+h3 { font-size: 1.429em } /* 20px */
+h4 { font-size: 1.286em } /* 18px */
+h5 { font-size: 1.143em } /* 16px */
+h6 { font-size: 1em }     /* 14px */
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: .8em;
+    margin-top: .8em;
+    font-weight: bold;
+    line-height: 1.1;
+    a, a:link, a:visited {
+        text-decoration: none;
+    }
+}
+
+//#featured h1 {
+//    font-family: $title-font;
+//    font-weight: normal;
+//    font-size: 4em;
+//}
+
+hr { border: 2px solid #EEEEEE; }
+
+/* Anchors */
+a {
+    outline: 0;
+    img {
+        border: 0px;
+        text-decoration: none;
+    }
+    &:link, &:visited {
+        color: $link-color;
+        text-decoration: underline;
+    }
+    &:hover, &:active {
+        color: $link-hover-color;
+        text-decoration: none;
+    }
+}
+
+h1 a:hover {
+    background-color: inherit
+}
+
+/* Paragraphs */
+p {
+    margin-bottom: 1.143em;
+}
+
+strong, b {font-weight: bold;}
+em, i {font-style: italic;}
+
+/* Lists */
+ul {
+    list-style: outside disc;
+    margin: 1em 0 1.5em 1.5em;
+}
+
+ol {
+    list-style: outside decimal;
+    margin: 1em 0 1.5em 1.5em;
+}
+
+.post-info {
+    font-size: 80%;
+    text-align: right;
+    opacity: .6;
+}
+
+.readmore { float: right }
+
+dl {margin: 0 0 1.5em 0;}
+dt {font-weight: bold;}
+dd {margin-left: 1.5em;}
+
+pre {
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: inset #000 1px 1px 0 0,
+                inset #333 -1px -1px 0 0;
+    color: #fff;
+    overflow: auto;
+    background-color: #111;
+    border-radius: 0;
+}
+
+pre, code {
+    font-family: $monospace-font;
+}
+
+// Quotes
+blockquote {
+    margin: 20px;
+    font-style: italic;
+}
+
+cite {}
+
+q {}
+
+div.note {
+   float: right;
+   margin: 5px;
+   font-size: 85%;
+   max-width: 300px;
+}
+
+/* Tables */
+table {
+    margin: .5em auto 1.5em auto;
+    width: 98%;
+
+    thead {
+        th {
+            padding: .5em .4em;
+            text-align: left;
+        }
+        td {}
+    }
+
+    tbody {
+        th {}
+        td {
+            padding: .5em .4em;
+        }
+        .alt {
+            td, th {}
+        }
+    }
+
+    tfoot {
+        td, th {}
+    }
+}
+
+header, section, footer,
+aside, nav, article, figure {
+    display: block;
+}
+
+// Layout
+.body {}
+
+img.right, figure.right {
+    float: right;
+    margin: 0 0 2em 2em;
+}
+img.left, figure.left {
+    float: left;
+    margin: 0 2em 2em 0;
+}
+
+/* .fancy-orange-bar { */
+/*     @include striped-background(#f50, lighten(#f50, 10%), #f50); */
+/*     height: 10px; */
+/* } */
+
+#banner {
+    header {
+        /* @include striped-background( */
+        /*     #000, */
+        /*     lighten(#f50, 10%), */
+        /*     #f50); */
+	background: #111;
+	color: #f50;
+
+        margin:0;
+        padding: 10px 30px 0;
+	text-align: center;
+
+        h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 120px;
+            font-family: $title-font;
+	    font-weight: 700;
+	    line-height: 110px;
+            width: 960px;
+            margin: 0 auto;
+	    text-shadow: rgba(0,0,0,.7) 1px 1px 3px;
+
+            a:link, a:visited {
+                display: block;
+		color: #ccc;
+                text-decoration: none;
+
+            }
+            a:hover, a:active {
+                background: none;
+                text-shadow: none;
+                color: #fff;
+            }
+            strong {
+                font-size: 0.36em;
+                /* font-weight: normal; */
+            }
+        }
+    }
+
+
+    // Main Nav
+    nav {
+	@include striped-background(#f50, lighten(#f50, 10%), #f50);
+
+        height: 40px;
+        margin: 0 auto;
+        padding: 0;
+
+        font-size: 1.143em;
+        line-height: 30px;
+        text-align: center;
+
+        ul {
+            list-style: none;
+            margin: 0 auto;
+            width: 960px;
+            padding: 0 0;
+            line-height: 30px;
+        }
+        li {
+	    padding: 0;
+            float: left;
+            display: inline;
+            margin: 0;
+        }
+
+        a, a:link, a:visited {
+            color: #000;
+            display: inline-block;
+            height: 40px;
+            line-height: 40px;
+            margin: 0;
+            padding: 0 15px;
+            text-decoration: none;
+        }
+        a:hover, a:active, a:focus {
+            background: #222;
+	    background: rgba(0,0,0,0.4);
+            color: #fff;
+            text-shadow: none;
+        }
+        .active {
+            a, a:link, a:visited, a:hover, a:active, a:focus {
+                color: #fff;
+                text-shadow: none;
+                box-shadow: none;
+		background: rgba(255,255,255,.2);
+            }
+        }
+    }
+}
+
+// Featured post ---------------------------------------------------------------
+#featured {
+    margin-bottom: 2em;
+    padding: 20px;
+    color: #333;
+    background: #fffcf7;
+    @include border-radius(10px);
+    overflow: hidden;
+
+    figure {
+        border: 2px solid #eee;
+        float: right;
+        margin: 0.786em 2em 0 5em;
+        width: 248px;
+        img {display: block; float: right;}
+    }
+
+    h3 {
+        font-size: 1.429em;
+        margin-bottom: .5em;
+        a:link, a:visited {
+            color: #000305;
+            text-decoration: none;
+        }
+        a:hover, a:active {
+            color: #fff;
+        }
+    }
+}
+
+
+// Page content ----------------------------------------------------------------
+.content-wrapper {
+    display: table;
+    width: 960px;
+    margin: 0 auto;
+    padding:0;
+}
+.content-wrapper-inner {
+    display: table-row;
+}
+
+.column-content{
+    width: 700px;
+    max-width: 700px;
+    display: inline-block;
+    display: table-cell;
+    vertical-align: top;
+}
+.column-sidebar{
+    display: table-cell;
+    vertical-align: top;
+    width: 240px;
+    background: #111;
+}
+
+#content {
+    padding: 20px 20px;
+    color: #eee;
+    background: $site-background;
+    @include border-radius(10px);
+    min-height: 100%;
+
+    a, a:link, a:visited {
+        color: $link-color;
+    }
+    a:hover, a:focus, a:active {
+        color: $link-hover-color;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        a, a:link, a:visited {
+            color: $title-color;
+        }
+        a:hover, a:focus {
+            color: $title-hover-color;
+        }
+    }
+}
+
+#sidebar {
+    padding: 20px;
+    color: #ddd;
+    background: #111;
+
+    h1, h2, h3, h4, h5, h6 {
+        margin-bottom: 2px;
+        padding-left: 5px;
+        font-family: $title-font;
+        font-weight: normal;
+        border-bottom: dotted 1px #b05b00;
+        //text-align: right;
+    }
+    a, a:link, a:visited {
+        color: #888;
+    }
+    a:hover, a:focus {
+        color: $title-color;
+    }
+    .block {
+        margin-bottom: 10px;
+    }
+}
+
+
+// About -----------------------------------------------------------------------
+#about {
+    /*background: #fff9ed;*/
+    width: 920px;
+    padding: 20px;
+    margin-bottom: 0;
+
+    color: #eee;
+    font-style: normal;
+    text-align: left;
+
+    background: #000;
+    overflow: hidden;
+
+    @include border-radius(10px 10px 0 0);
+
+    a {
+        color: hsl(220,100%,80%);
+    }
+
+    .primary {
+        float: left;
+        width: 165px;
+        strong {
+            display: block;
+            font-size: 1.286em;
+        }
+    }
+
+    .photo {float: left; margin: 5px 20px;}
+    .url:link, .url:visited {text-decoration: none;}
+    .bio {float: right; width: 500px;}
+}
+
+
+// Footer ----------------------------------------------------------------------
+#site-footer {
+    color:#ddd;
+    padding: 1em 0;
+    text-align: center;
+    font-size: .9em;
+    background: #111;
+
+    a, a:link, a:visited {
+        color: lighten($link-color, 10%);
+    }
+    p {
+        padding: .5em 1em;
+        margin: 0;
+    }
+}
+
+
+// Blog ------------------------------------------------------------------------
+article header {
+    margin-bottom: 5px;
+    h1 {
+        margin-bottom: 3px;
+        margin-top: 0; // We already have article margin
+        font-family: $title-font;
+        font-size: 2.4em;
+        font-weight: normal;
+        border-bottom: dotted 1px #444;
+        padding-left: 5px;
+    }
+}
+
+.hentry {
+    display: block;
+    clear: both;
+    padding: 1.5em 0;
+    img {
+        display: none;
+    }
+}
+li:last-child .hentry,
+#content > .hentry {
+    border: 0;
+    margin: 0;
+}
+#content > .hentry {
+    padding: 1em 0;
+}
+.entry-title {
+    font-size: 3em;
+    margin-bottom: 10px;
+    margin-top: 0;
+    a:link,
+    a:visited {
+        text-decoration: none;
+        color: #333;
+    }
+    a:visited {
+        background-color: #fff;
+    }
+}
+
+.hentry .post-info * {
+    font-style: normal;
+}
+#posts-list {
+    margin: 0;
+    list-style: none;
+    .hentry {
+        position: relative;
+        padding-left: 10px;
+    }
+}
+
+// About the Author
+#about-author {
+    clear: both;
+    margin: 2em 0;
+    padding: 10px 20px 15px 20px;
+    font-style: normal;
+    background: #f9f9f9;
+    @include border-radius(5px);
+    strong {
+        display: block;
+        clear: both;
+        font-size: 1.429em;
+    }
+    .photo {
+        float: left;
+        margin: 5px 1em 0 0;
+        border: 1px solid #ddd;
+    }
+}
+
+// Comments
+#comments-list {
+    margin: 0 1em;
+    list-style: none;
+    blockquote {
+        clear: both;
+        margin: 0;
+        padding: 15px 20px;
+        font-style: normal;
+        background: #f8f8f8;
+        @include border-radius(5px);
+    }
+    footer {
+        padding: .5em 1em 0 0;
+        color: #888;
+        text-align: right;
+    }
+    li:nth-child(2n) blockquote {
+        background: #F5f5f5;
+    }
+}
+
+// Add a Comment
+#add-comment {
+    label {
+        float: left;
+        clear: left;
+        width: 150px;
+        text-align: left;
+    }
+    input[type='text'], input[type='email'], input[type='url'] {
+        float: left;
+        width: 200px;
+    }
+    textarea {
+        float: left;
+        width: 495px;
+        height: 150px;
+    }
+    p.req {
+        clear: both;
+        margin: 0 .5em 1em 0;
+        text-align: right;
+    }
+    input[type='submit'] {
+        float: right;
+        margin: 0 .5em;
+    }
+    * {
+        margin-bottom: .5em;
+    }
+}
+
+.menu-vertical {
+    list-style: disc;
+    li {
+        a, a:link, a:visited {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+        a:hover, a:focus {
+            color: $link-color;
+        }
+    }
+}
+
+.menu-tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+        display: inline;
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+// Cool dates, displayed as calendars ------------------------------------------
+.cool-date {
+    display: inline-block;
+    color: #888;
+    border-right: solid 1px #888;
+    padding: 0 0 20px;
+    cursor: default;
+    @include user-select(none);
+
+    .year {
+        font-weight: bold;
+        background: #888;
+	color: #000;
+    }
+    .day, .year, .wday, .month {
+        display: block;
+        padding: 2px;
+        margin: 0;
+        line-height: 1em;
+        text-align: center;
+    }
+    .day {
+        font-size: 200%;
+    }
+
+}
+article header .cool-date {
+    float: left;
+    margin-left: -80px;
+    width: 60px;
+    font-size: 80%;
+}
+
+// Cool transitions ------------------------------------------------------------
+a {
+    @include transition(
+        color ease 400ms,
+        background ease 500ms,
+        box-shadow ease 500ms);
+}

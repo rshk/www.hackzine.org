@@ -1,24 +1,30 @@
-<div class="post-info">
+{# -*- engine: jinja -*- #}
+<div class="article-info">
 
     {#<abbr class="published" title="{{ article.date.isoformat() }}">
-            {{ article.locale_date }}
+    {{ article.locale_date }}
     </abbr>#}
 
     {#{% if article.author %}
     <address class="vcard author">
-            By <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
+    By <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
     </address>
     {% endif %}#}
 
-    Category:
-    <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
+    <span class="fa fa-clock-o"></span>
+    <abbr title="{{ article.date.isoformat() }}">{{ article.locale_date }}</abbr>
 
+    &mdash;
+    <span class="fa fa-folder-open"></span>
+    <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
 
     {% if article.tags %}
         &mdash;
-        tags:
+        <span class="fa fa-tags"></span>
         {% for tag in article.tags %}
-            <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
+            <a href="{{ SITEURL }}/{{ tag.url }}">
+                {{ tag }}
+            </a>
         {% endfor %}
     {% endif %}
 

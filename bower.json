@@ -1,0 +1,21 @@
+{
+  "name": "www.hackzine.org",
+  "homepage": "https://github.com/rshk/www.hackzine.org",
+  "authors": [
+    "Samuele Santi <redshadow@hackzine.org>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "materialize": "^0.97.7"
+  }
+}

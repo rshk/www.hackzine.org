@@ -1,94 +1,66 @@
 {# -*- engine: jinja -*- #}
 <!DOCTYPE html>
 <html lang="{{ DEFAULT_LANG }}">
-<head>
+    <head>
         <meta charset="utf-8">
         <title>{% block title %}{{ SITENAME }}{%endblock%}</title>
         <link rel="stylesheet" href="{{ SITEURL }}/theme/css/{{ CSS_FILE }}">
         {% if FEED_ALL_ATOM %}
-        <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+            <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
         {% endif %}
         {% if FEED_ALL_RSS %}
-        <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+            <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
         {% endif %}
-</head>
+    </head>
 
-<body id="index" class="home">
-{#{% include 'github.html' %}#}
+    <body id="index" class="home">
+        {#{% include 'github.html' %}#}
 
-    <header id="banner" class="body">
-        <header>
-            <h1><a href="{{ SITEURL or '/' }}">{{ SITENAME }} {% if SITESUBTITLE %} <strong>{{ SITESUBTITLE }}</strong>{% endif %}</a></h1>
+        <header id="site-header" class="body">
+            <div class="container">
+                <h1 class="site-title"><a href="{{ SITEURL or '/' }}">{{ SITENAME }} {% if SITESUBTITLE %} <strong>{{ SITESUBTITLE }}</strong>{% endif %}</a></h1>
+            </div>
         </header>
-        <nav><ul>
-        {% for title, link in MENUITEMS %}
-            <li><a href="{{ link }}">{{ title }}</a></li>
-        {% endfor %}
-        {% if DISPLAY_PAGES_ON_MENU %}
-        {% for page in PAGES %}
-            <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
-        {% endfor %}
-        {% endif %}
-        {% for cat, null in categories %}
-            <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat.url }}">{{ cat }}</a></li>
-        {% endfor %}
-        </ul></nav>
-    </header><!-- /#banner -->
 
-    <div class="content-wrapper">
-    <div class="content-wrapper-inner">
-
-        <div class="column-content">
-            {% block content %}{% endblock %}
-        </div>
-
-        <div class="column-sidebar">
-            <aside id="sidebar">
-                <h2>About the author</h2>
-                <section class="block">
-                    ~redShadow~, aka Samuele Santi, is a developer, geek,
-                    hacker, inventor, and other stuff.
-                    <a href="http://www.samuelesanti.com">
-                        See my website for more information about me.
-                    </a>
-                </section>
-                <h2>Categories</h2>
-                <section class="block">
-                    <ul class="menu-vertical">
+        <nav class="site-nav">
+            <div class="container">
+                <ul>
+                    {% for title, link in MENUITEMS %}
+                        <li><a href="{{ link }}">{{ title }}</a></li>
+                    {% endfor %}
+                    {% if DISPLAY_PAGES_ON_MENU %}
+                        {% for page in PAGES %}
+                            <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
+                        {% endfor %}
+                    {% endif %}
                     {% for cat, null in categories %}
                         <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat.url }}">{{ cat }}</a></li>
                     {% endfor %}
-                    </ul>
-                </section>
-                <h2>Tags</h2>
-                <section class="block">
-                    <ul class="menu-tags">
-                    {% for cat, null in tags %}
-                        <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat.url }}">{{ cat }}</a></li>
-                    {% endfor %}
-                    </ul>
-                </section>
-                <h2>Feeds</h2>
-                <section class="block">
-                <ul class="social">
-                    <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ATOM }}" type="application/atom+xml" rel="alternate">atom feed</a></li>
-                    {% if FEED_RSS %}
-                    <li><a href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate">rss feed</a></li>
-                    {% endif %}
                 </ul>
-                </section>
-            </aside>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col m9">
+                    {% block content %}{% endblock %}
+                </div>
+                <div class="col m3">
+                    {% include "_sidebar.html" %}
+                </div>
+            </div>
         </div>
 
-    </div>
-    </div>
+        <footer class="page-footer">
+            <div class="footer-copyright">
+                <div class="container">
+                    Copyright &copy; 2009-2016 Samuele Santi
+                </div>
+            </div>
+        </footer>
 
-    <footer id="site-footer">
-        <p>Copyright &copy; 2009-2016 Samuele Santi</p>
-    </footer>
-
-    {#% include 'analytics.html' %#}
-    {#% include 'piwik.html' %#}
-    {% include '_disqus_script.html' %}
-</body>
+        {#% include 'analytics.html' %#}
+        {#% include 'piwik.html' %#}
+        {% include '_disqus_script.html' %}
+    </body>
 </html>

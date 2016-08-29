@@ -6,3 +6,4 @@
 !/output/.keep
 .sass-cache
 /.venv*
+bower_components
