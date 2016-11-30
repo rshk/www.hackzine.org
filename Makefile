@@ -29,7 +29,7 @@ THEME_DIR := themes/hackzine-org/static
 CSS_FILES := $(THEME_DIR)/css/main.css
 
 # For github-pages publication
-DOMAIN_NAME = blog.hackzine.org
+DOMAIN_NAME = www.hackzine.org
 
 help:
 	@echo 'Makefile for a pelican Web site                                        '
