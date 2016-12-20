@@ -8,7 +8,7 @@ mypy: function accepting type, returning instance
 I recently ended up with a function that looks a bit like this (most
 of the logic was removed for sake of example):
 
-.. code-block:: python
+.. code:: python
 
     def build(record, **kwargs):
         # Pretend we're doing stuff with the **kwargs here..
@@ -24,7 +24,7 @@ The problem
 At first, the most logical way to describe this to mypy was to use a
 ``TypeVar`` like this:
 
-.. code-block:: python
+.. code:: python
 
     from typing import Any, TypeVar, Type
 
@@ -56,7 +56,7 @@ If you think about it, another way to see the typing of that function is:
 
 In that case, type definition would be as follows:
 
-.. code-block:: python
+.. code:: python
 
     from typing import Any, Callable, NamedTuple, TypeVar
 
@@ -74,7 +74,7 @@ usage, I wrote a small test script.
 
 First, I declared a few callables to be passed in as ``record``:
 
-.. code-block:: python
+.. code:: python
 
     FooTuple = NamedTuple('FooTuple', [
         ('foo', int),
@@ -94,7 +94,7 @@ First, I declared a few callables to be passed in as ``record``:
 
 And a bunch of functions that expect a specific type:
 
-.. code-block:: python
+.. code:: python
 
     def accept_tuple(arg: FooTuple) -> None:
         pass
@@ -110,7 +110,7 @@ And a bunch of functions that expect a specific type:
 
 This now will happily pass type checking:
 
-.. code-block:: python
+.. code:: python
 
     accept_tuple(build(FooTuple, foo=123, bar=456))
     accept_class(build(FooClass, spam='SPAM', eggs='EGGS'))
@@ -118,7 +118,7 @@ This now will happily pass type checking:
 
 While this won't:
 
-.. code-block:: python
+.. code:: python
 
     accept_class(build(FooTuple, foo=123, bar=456))
     accept_tuple(build(FooClass, spam='SPAM', eggs='EGGS'))
@@ -138,7 +138,7 @@ Caveats
 Mypy still have problems figuring out the type of varargs / kwargs,
 and as such it's currently unable to spot the type errors here:
 
-.. code-block:: python
+.. code:: python
 
     build(FooTuple, invalid='SOMETHING')
     build(FooClass, spam=123, eggs=456)
@@ -161,7 +161,7 @@ even if that's just ``None``.
 
 For example, mypy won't catch the type error here:
 
-.. code-block:: python
+.. code:: python
 
     def hello(a: int) -> int:
         return a
@@ -172,7 +172,7 @@ For example, mypy won't catch the type error here:
 But it definitely does if we remember to specify the function's return
 type explicitly:
 
-.. code-block:: python
+.. code:: python
 
     def main() -> None:
         hello('not an int')
