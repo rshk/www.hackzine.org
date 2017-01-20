@@ -8,6 +8,8 @@ AUTHOR = u"Samuele Santi"
 SITENAME = u"Hackzine.org"
 SITEURL = os.environ.get('PELICAN_SITEURL') or 'https://www.hackzine.org'
 
+SUMMARY_MAX_LENGTH = 100
+
 DEFAULT_CATEGORY = u'Misc'
 # DEFAULT_DATE_FORMAT = '%a %d %B %Y'
 
@@ -31,7 +33,7 @@ SOCIAL = (
     ('StackOverflow', 'http://stackoverflow.com/users/148845/redshadow'),
 )
 
-DEFAULT_PAGINATION = 10
+DEFAULT_PAGINATION = 5
 
 # THEME = 'hackzine-org'
 THEME = os.path.join(os.path.dirname(__file__), 'themes/hackzine-org/')
