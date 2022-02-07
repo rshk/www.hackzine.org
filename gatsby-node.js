@@ -57,16 +57,15 @@ exports.createPages = ({ graphql, actions }) => {
 }
 
 
-// exports.createSchemaCustomization = ({ actions, schema }) => {
-//     const { createTypes } = actions;
-//     createTypes(`
-//         type Mdx implements Node {
-//             frontmatter: Frontmatter
-//             embeddedImagesRemote: [File] @link(from: "fields.embeddedImagesRemote")
-//         }
-//         type Frontmatter @dontInfer {
-//             ...
-//             embeddedImagesRemote: [String]
-//         }
-//     `);
-// };
+exports.createSchemaCustomization = ({ actions }) => {
+    const { createTypes } = actions;
+    createTypes(`
+        type Mdx implements Node {
+            frontmatter: Frontmatter
+            embeddedImagesLocal: [File] @link(from: "fields.embeddedImagesLocal")
+        }
+        type Frontmatter {
+           embeddedImagesRemote: [String]
+        }
+    `);
+};

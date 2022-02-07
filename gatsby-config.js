@@ -77,5 +77,27 @@ module.exports = {
                 // pages: path.join(__dirname, "src/pages")
             }
         },
+        {
+            resolve: "gatsby-plugin-amplitude-analytics",
+            options: {
+                apiKey: "bd7218e4c8a8fb675c97992c5610dd05",
+                respectDNT: true,
+                // exclude: ["/preview/**", "/do-not-track/me/too/"],
+                // eventTypes: {
+                //     outboundLinkClick: "OUTBOUND_LINK_CLICK",
+                //     pageView: "PAGE_VIEW",
+                // },
+
+                // Amplitude JS SDK configuration options (optional)
+                amplitudeConfig: {
+                    saveEvents: true,
+                    includeUtm: true,
+                    includeReferrer: true
+                },
+
+                // Specify NODE_ENVs in which the plugin should be loaded (optional)
+                environments: ["production"],
+            },
+        },
     ]
 };
