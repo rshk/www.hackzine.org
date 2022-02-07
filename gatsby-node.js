@@ -10,17 +10,22 @@ exports.createPages = ({ graphql, actions }) => {
     return graphql(`
     query loadBlogPosts {
         allMdx {
-          edges {
-            node {
-              id
-              frontmatter {
-                formattedDate: date(formatString: "MMMM DD, YYYY")
-                title
-              }
-              slug
-              body
+            edges {
+                node {
+                  id
+                  frontmatter {
+                      formattedDate: date(formatString: "MMMM DD, YYYY")
+                      title
+                      embeddedImagesLocal {
+                          childImageSharp {
+                              gatsbyImageData(layout: FULL_WIDTH)
+                          }
+                      }
+                  }
+                  slug
+                  body
+                }
             }
-          }
         }
     }
     `).then(result => {
@@ -50,3 +55,18 @@ exports.createPages = ({ graphql, actions }) => {
         })
     })
 }
+
+
+// exports.createSchemaCustomization = ({ actions, schema }) => {
+//     const { createTypes } = actions;
+//     createTypes(`
+//         type Mdx implements Node {
+//             frontmatter: Frontmatter
+//             embeddedImagesRemote: [File] @link(from: "fields.embeddedImagesRemote")
+//         }
+//         type Frontmatter @dontInfer {
+//             ...
+//             embeddedImagesRemote: [String]
+//         }
+//     `);
+// };

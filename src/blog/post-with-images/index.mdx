@@ -1,0 +1,19 @@
+---
+date: "2022-02-07"
+title: "A post with images"
+embeddedImagesLocal:
+  - image1.jpg
+---
+
+import { getImage, GatsbyImage } from 'gatsby-plugin-image';
+
+
+# This post will contain images
+
+Hello world
+
+import DemoComponent from "ui/demo";
+
+<DemoComponent />
+
+<GatsbyImage alt="green doggo" image={getImage(props.localImages[0])} />

@@ -2,8 +2,8 @@ const path = require("path");
 
 module.exports = {
     siteMetadata: {
-        title: `Hackzine`,
-        siteUrl: `https://www.hackzine.org`,
+        title: "Hackzine",
+        siteUrl: "https://www.hackzine.org",
         authorName: "Sam Santi",
         twitterUrl: "https://twitter.com/_rshk",
         githubUrl: "https://github.com/rshk",
@@ -15,7 +15,7 @@ module.exports = {
         "gatsby-plugin-react-helmet",
         "gatsby-plugin-sitemap",
         {
-            resolve: 'gatsby-plugin-manifest',
+            resolve: "gatsby-plugin-manifest",
             options: {
                 "icon": "src/images/icon.png"
             }
@@ -24,12 +24,30 @@ module.exports = {
             resolve: "gatsby-plugin-mdx",
             options: {
                 extensions: [".mdx", ".md"],
+                gatsbyRemarkPlugins: [
+                    {
+                        resolve: "gatsby-remark-images",
+                        options: {
+                            maxWidth: 1200,
+                        },
+                    },
+                ],
             },
         },
-        "gatsby-plugin-sharp",
-        "gatsby-transformer-sharp",
         {
-            resolve: 'gatsby-source-filesystem',
+            resolve: "gatsby-plugin-sharp",
+            options: {
+                defaults: {
+                    quality: 70,
+                    formats: ["auto", "webp", "avif"],
+                    placeholder: "blurred",
+                }
+            },
+        },
+        "gatsby-transformer-sharp",
+        "gatsby-remark-images",
+        {
+            resolve: "gatsby-source-filesystem",
             options: {
                 "name": "images",
                 "path": "./src/images/"
@@ -37,7 +55,7 @@ module.exports = {
             __key: "images"
         },
         {
-            resolve: 'gatsby-source-filesystem',
+            resolve: "gatsby-source-filesystem",
             options: {
                 "name": "pages",
                 "path": "./src/pages/"
@@ -45,7 +63,7 @@ module.exports = {
             __key: "pages"
         },
         {
-            resolve: 'gatsby-source-filesystem',
+            resolve: "gatsby-source-filesystem",
             options: {
                 "name": "blog-posts",
                 "path": "./src/blog/"
@@ -53,10 +71,10 @@ module.exports = {
             __key: "blog"
         },
         {
-            resolve: 'gatsby-plugin-root-import',
+            resolve: "gatsby-plugin-root-import",
             options: {
-                src: path.join(__dirname, 'src'),
-                // pages: path.join(__dirname, 'src/pages')
+                src: path.join(__dirname, "src"),
+                // pages: path.join(__dirname, "src/pages")
             }
         },
     ]
