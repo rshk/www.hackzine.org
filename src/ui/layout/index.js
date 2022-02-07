@@ -4,6 +4,8 @@ import { Helmet } from "react-helmet";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+
+import "style/index.scss";
 import * as styles from "./layout.module.scss";
 
 

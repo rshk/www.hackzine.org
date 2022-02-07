@@ -3,19 +3,19 @@
 @import "style/vars";
 
 
-body {
-    font-family: 'Lato', sans-serif;
-    font-size: 16px;
-    background: $background-color;
-    color: $text-color;
-}
+// body {
+//     font-family: 'Lato', sans-serif;
+//     font-size: 16px;
+//     background: $background-color;
+//     color: $text-color;
+// }
 
-a {
-    color: $text-color;
-    &:hover {
-        color: $text-bright-color;
-    }
-}
+// a {
+//     color: $text-color;
+//     &:hover {
+//         color: $text-bright-color;
+//     }
+// }
 
 .container {
     width: 90%;
