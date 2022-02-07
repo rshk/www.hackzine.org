@@ -23,7 +23,10 @@ export default function BlogPostsIndex() {
     return (
         <div>
             {data.allMdx.edges.map(({node}) =>
-                <div key={node.id} className={styles.blogPostIndexItem}>
+                <div key={node.id} className={[
+                    styles.blogPostIndexItem,
+                    "d-md-flex align-items-center my-3"
+                ].join(" ")}>
                     <h2 style={{flex: 1}} className={styles.title}>
                         <Link to={`/blog/${node.slug}`}>
                             {node.frontmatter.title}

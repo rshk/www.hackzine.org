@@ -4,14 +4,15 @@ import { Helmet } from "react-helmet";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { Container } from "reactstrap";
 
-import "style/index.scss";
+//import "style/index.scss";
 import * as styles from "./layout.module.scss";
 
 
 export default function Layout({ children }) {
     return (
-        <div className={styles.container}>
+        <Container>
             <Helmet>
                 <title>Hackzine.org</title>
             </Helmet>
@@ -20,7 +21,7 @@ export default function Layout({ children }) {
                 {children}
             </div>
             <Footer/>
-        </div>
+        </Container>
     );
 }
 
