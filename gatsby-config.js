@@ -1,4 +1,5 @@
 const path = require("path");
+// import rehypeHighlight from "rehype-highlight";
 
 module.exports = {
     siteMetadata: {
@@ -31,6 +32,9 @@ module.exports = {
                             maxWidth: 1200,
                         },
                     },
+                ],
+                rehypePlugins: [
+                    require("rehype-highlight"),
                 ],
             },
         },
