@@ -10,6 +10,13 @@ body {
     color: $text-color;
 }
 
+a {
+    color: $text-color;
+    &:hover {
+        color: $text-bright-color;
+    }
+}
+
 .container {
     width: 90%;
     max-width: 960px;

@@ -16,12 +16,12 @@ exports.createPages = ({ graphql, actions }) => {
                   frontmatter {
                       formattedDate: date(formatString: "MMMM DD, YYYY")
                       title
+                  }
                       embeddedImagesLocal {
                           childImageSharp {
                               gatsbyImageData(layout: FULL_WIDTH)
                           }
                       }
-                  }
                   slug
                   body
                 }
@@ -65,7 +65,7 @@ exports.createSchemaCustomization = ({ actions }) => {
             embeddedImagesLocal: [File] @link(from: "fields.embeddedImagesLocal")
         }
         type Frontmatter {
-           embeddedImagesRemote: [String]
+           embeddedImagesLocal: [String]
         }
     `);
 };
