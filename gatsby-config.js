@@ -2,8 +2,12 @@ const path = require("path");
 
 module.exports = {
     siteMetadata: {
-        title: `Hackzine.org`,
-        siteUrl: `https://www.yourdomain.tld`
+        title: `Hackzine`,
+        siteUrl: `https://www.hackzine.org`,
+        authorName: "Sam Santi",
+        twitterUrl: "https://twitter.com/_rshk",
+        githubUrl: "https://github.com/rshk",
+        linkedinUrl: "https://www.linkedin.com/in/samuelesanti",
     },
     plugins: [
         "gatsby-plugin-sass",
@@ -16,7 +20,12 @@ module.exports = {
                 "icon": "src/images/icon.png"
             }
         },
-        "gatsby-plugin-mdx",
+        {
+            resolve: "gatsby-plugin-mdx",
+            options: {
+                extensions: [".mdx", ".md"],
+            },
+        },
         "gatsby-plugin-sharp",
         "gatsby-transformer-sharp",
         {
@@ -34,6 +43,14 @@ module.exports = {
                 "path": "./src/pages/"
             },
             __key: "pages"
+        },
+        {
+            resolve: 'gatsby-source-filesystem',
+            options: {
+                "name": "blog-posts",
+                "path": "./src/blog/"
+            },
+            __key: "blog"
         },
         {
             resolve: 'gatsby-plugin-root-import',

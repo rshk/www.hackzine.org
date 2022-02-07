@@ -1,0 +1,27 @@
+@import "style/vars";
+
+.blog-post-index-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 20px 0;
+
+    .title {
+        color: $text-color;
+        font-size: 1.5em;
+        margin: 0;
+        padding: 0;
+
+        a {
+            color: $text-color;
+            text-decoration: none;
+            &:hover {
+                color: $text-bright-color;
+            }
+        }
+    }
+
+    .date {
+        color: $text-muted-color;
+    }
+}

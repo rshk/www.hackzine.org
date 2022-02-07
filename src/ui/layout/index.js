@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link, useStaticQuery, graphql } from 'gatsby';
 import { Helmet } from "react-helmet";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,21 +28,46 @@ Layout.propTypes = {
 
 
 function Header() {
-    // TODO: can we move all the details to configuration?
+    const data = useStaticQuery(graphql`
+        query {
+            site {
+                siteMetadata {
+                    title
+                    authorName
+                    twitterUrl
+                    githubUrl
+                    linkedinUrl
+                }
+            }
+        }
+    `);
+
+    const {
+        title: siteTitle,
+        authorName,
+        twitterUrl,
+        githubUrl,
+        linkedinUrl,
+    } = data.site.siteMetadata;
+
     return (
         <div className={styles.siteHeader}>
-            <div className={styles.title}>Hackzine.org</div>
+            <div className={styles.title}>
+                <Link to="/">{siteTitle}</Link>
+            </div>
             <div className={styles.subtitle}>
-                by Sam Santi{' '}
-                <a href="https://twitter.com/_rshk">
+                <span>by {authorName}{' '}</span>
+                {!!twitterUrl && <a href={twitterUrl}>
                     <FontAwesomeIcon icon={faTwitter} />
-                </a>{' '}
-                <a href="https://github.com/rshk">
+                </a>}
+                {' '}
+                {!!githubUrl && <a href={githubUrl}>
                     <FontAwesomeIcon icon={faGithub} />
-                </a>{' '}
-                <a href="https://www.linkedin.com/in/samuelesanti">
+                </a>}
+                {' '}
+                {!!linkedinUrl && <a href={linkedinUrl}>
                     <FontAwesomeIcon icon={faLinkedin} />
-                </a>
+                </a>}
             </div>
         </div>
     );

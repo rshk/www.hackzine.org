@@ -1,9 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-
-$background-color: #263238;
-$text-color: #ECEFF1;
-$secondary-color: #607D8B;
+@import "style/vars";
 
 
 body {
@@ -26,6 +23,13 @@ body {
         font-size: 2em;
         font-weight: bold;
         text-shadow: #000 3px 3px;
+        a {
+            color: inherit;
+            text-decoration: none;
+            &:hover {
+                color: $text-bright-color;
+            }
+        }
     }
 
     .subtitle {
@@ -33,9 +37,9 @@ body {
         font-style: italic;
 
         a {
-            color: #B0BEC5;
+            color: $text-muted-color;
             &:hover {
-                color: #fff;
+                color: $text-bright-color;
             }
         }
     }
@@ -51,5 +55,5 @@ body {
 .site-footer {
     border-top: solid 1px $secondary-color;
     text-align: right;
-    color: #B0BEC5;
+    color: $text-muted-color;
 }
