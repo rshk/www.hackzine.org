@@ -14,6 +14,9 @@ export default function BlogPostsIndex() {
                             formattedDate: date(formatString: "MMMM DD, YYYY")
                             title
                         }
+                        headings(depth:h1) {
+                            value
+                        }
                     }
                 }
             }
@@ -28,8 +31,8 @@ export default function BlogPostsIndex() {
                     "d-md-flex align-items-center my-3"
                 ].join(" ")}>
                     <h2 style={{flex: 1}} className={styles.title}>
-                        <Link to={`/blog/${node.slug}`}>
-                            {node.frontmatter.title}
+                        <Link to={getBlogPostPath(node)}>
+                            {getBlogPostLinkTitle(node)}
                         </Link>
                     </h2>
                     <div className={styles.date}>
@@ -39,4 +42,26 @@ export default function BlogPostsIndex() {
             )}
         </div>
     );
+}
+
+
+/**
+ * Get the title from a blog post node
+ *
+ * If a ``title`` field is defined in the "front matter", then use it.
+ * Otherwise, use the first <h1> title found in the markdown file.
+ */
+function getBlogPostLinkTitle(node) {
+    if (node.frontmatter.title) {
+        return node.frontmatter.title;
+    }
+    if (node.headings.length >= 1) {
+        return node.headings[0].value;
+    }
+    return "Untitled blog post";
+}
+
+
+function getBlogPostPath(node) {
+    return `/blog/${node.slug}`;
 }

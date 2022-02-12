@@ -9,7 +9,6 @@ export default function BlogPost({ pageContext: { node } }) {
     return (
         <Layout>
             <article>
-                <h1>{node.frontmatter.title}</h1>
                 <MDXRenderer localImages={node.frontmatter.embeddedImagesLocal}>
                     {node.body}
                 </MDXRenderer>

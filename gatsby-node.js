@@ -12,18 +12,18 @@ exports.createPages = ({ graphql, actions }) => {
         allMdx {
             edges {
                 node {
-                  id
-                  frontmatter {
-                      formattedDate: date(formatString: "MMMM DD, YYYY")
-                      title
-                  }
-                      embeddedImagesLocal {
-                          childImageSharp {
-                              gatsbyImageData(layout: FULL_WIDTH)
-                          }
-                      }
-                  slug
-                  body
+                    id
+                    frontmatter {
+                        formattedDate: date(formatString: "MMMM DD, YYYY")
+                        title
+                    }
+                    embeddedImagesLocal {
+                        childImageSharp {
+                            gatsbyImageData(layout: FULL_WIDTH)
+                        }
+                    }
+                    slug
+                    body
                 }
             }
         }
