@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 import Layout from "ui/layout";
 import BlogPostsIndex from "ui/blog-index";
