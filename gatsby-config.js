@@ -103,5 +103,6 @@ module.exports = {
                 environments: ["production"],
             },
         },
+        "gatsby-plugin-fontawesome-css",
     ]
 };
