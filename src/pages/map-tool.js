@@ -1,26 +1,31 @@
 import * as React from "react";
 import { MapContainer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Button, Input, Label, FormGroup } from "reactstrap";
+import { Button, Input, Label } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrosshairs, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 import Layout from "ui/layout";
 import "ui/map/default-icon";
-import GeodesicLine from "ui/map/geodesic-line";
+// import GeodesicLine from "ui/map/geodesic-line";
 import GeodesicCircle from "ui/map/geodesic-circle";
 import OsmTileLayer from "ui/map/osm-tile-layer";
 
 
-export default function IndexPage() {
+export default function MapToolPage() {
+    return (
+        <Layout>
+            <MapTool />
+        </Layout>
+    );
+}
+
+function MapTool() {
     const [center, setCenter] = React.useState([50, -6]);
     const [isPickerActive, setPickerActive] = React.useState(false);
 
     const [circleRadius, setCircleRadius] = React.useState(200 * 1000);
     const [showCircle, setShowCircle] = React.useState(false);
-
-    // const center = [52.3, -6.5];
-    // const circleRadius = 200 * 1000;
 
     const setCurrentLocation = ()=> {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -37,8 +42,14 @@ export default function IndexPage() {
     };
 
     const zoomLevel = 6;
+
+    if (typeof window === 'undefined') {
+        console.warn("Cannot find window object. Not rendering during SSR.");
+        return null;
+    }
+
     return (
-        <Layout>
+        <div>
             <h1>Map tool</h1>
 
             <div className="d-flex flex-row align-items-center bg-dark">
@@ -81,7 +92,7 @@ export default function IndexPage() {
                 />}
 
             </MapContainer>
-        </Layout>
+        </div>
     );
 }
 
@@ -140,8 +151,6 @@ const LOCATION_FORMATTERS = [
 ];
 
 
-
-
 function MapEventHandler({ onClick }) {
     const map = useMapEvents({
         click(event) {
@@ -152,12 +161,3 @@ function MapEventHandler({ onClick }) {
     })
     return null;
 }
-
-
-
-
-// <GeodesicLine
-//     positions={[center, {lat: 33.82, lng: -118.38}]}
-//     steps={64}
-// />
-//
