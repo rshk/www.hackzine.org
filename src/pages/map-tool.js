@@ -1,26 +1,49 @@
 import * as React from "react";
+import { Link } from "gatsby";
 import { MapContainer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Button, Input, Label } from "reactstrap";
+import { Button, ButtonGroup, Input, Label } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrosshairs, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCrosshairs, faPencilAlt, faLocationArrow, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import Layout from "ui/layout";
 import "ui/map/default-icon";
-// import GeodesicLine from "ui/map/geodesic-line";
+import GeodesicLine from "ui/map/geodesic-line";
 import GeodesicCircle from "ui/map/geodesic-circle";
 import OsmTileLayer from "ui/map/osm-tile-layer";
 
 
+const DEFAULT_RESOLUTION = 180;
+
+
 export default function MapToolPage() {
     return (
-        <Layout>
+        <div style={{ height: '100vh' }} className="d-flex flex-column">
+            <div className="d-flex flex-row align-items-center">
+                <div className="flex-grow-1 p-2">
+                    <h1>Map tool</h1>
+                </div>
+                <div className="p-2">
+                    by <Link to="/">Hackzine.org</Link>
+                </div>
+            </div>
             <MapTool />
-        </Layout>
+        </div>
     );
 }
 
 function MapTool() {
+    const [selectedTab, selectTab] = React.useState("map");
+
+    // Points of interest to show on the map
+    const [points, setPoints] = React.useState([
+        {location: [51.5, -6.5], radius: 200000, showRadius: true},
+        {location: [55.5, -9.2], radius: 200000, showRadius: true},
+        {location: [34.2, -80.3], radius: 200000, showRadius: true},
+    ]);
+
+    const locations = points.map(point => point.location);
+
     const [center, setCenter] = React.useState([50, -6]);
     const [isPickerActive, setPickerActive] = React.useState(false);
 
@@ -49,49 +72,119 @@ function MapTool() {
     }
 
     return (
-        <div>
-            <h1>Map tool</h1>
+        <div className="flex-grow-1 d-flex flex-column position-relative">
 
-            <div className="d-flex flex-row align-items-center bg-dark">
-                <div><strong>A:</strong></div>
-                <LocationDisplay location={center} />
-                <Button onClick={() => setCurrentLocation()}>
-                    <FontAwesomeIcon icon={faCrosshairs} />
-                </Button>
-                <Button
-                    onClick={() => setPickerActive(prev => !prev)}
-                    active={isPickerActive}
-                    title="Pick location from the map"
-                >
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                </Button>
-                <Label className="mx-3">Radius (m):</Label>
-                <Input type="number" value={circleRadius}
-                       onChange={evt => setCircleRadius(parseInt(evt.target.value, 10))}
-                       style={{maxWidth: 100}} />
-                <Button active={showCircle} onClick={() => setShowCircle(x => !x)}>
-                    Show
-                </Button>
+            <div className="d-flex flex-row align-items-center bg-dark justify-content-center">
+                <div className="p-1">
+                    <ButtonGroup>
+                        <Button
+                            active={selectedTab === "map"}
+                            onClick={() => selectTab("map")}>
+                            Map
+                        </Button>
+                        <Button
+                            active={selectedTab === "points"}
+                            onClick={() => selectTab("points")}>
+                            POIs
+                        </Button>
+                    </ButtonGroup>
+                </div>
             </div>
 
-            <MapContainer
-                center={center} zoom={zoomLevel}
-                style={{ width: "100%", height: "calc(100vh - 250px)" }}
-            >
+            {selectedTab === "map" &&
+             <MapContainer
+                 center={center} zoom={zoomLevel}
+                 style={{}}
+                 className="flex-grow-1"
+             >
 
-                <MapEventHandler onClick={onMapClick} />
-                <OsmTileLayer />
+                 <MapEventHandler onClick={onMapClick} />
+                 <OsmTileLayer />
 
-                <Marker position={center} />
+                 {points.map((point, idx) =>
+                     <Marker key={idx} position={point.location} />)}
 
-                {showCircle && <GeodesicCircle
-                    center={center}
-                    pathOptions={{ fillColor: "blue", color: "blue" }}
-                    radius={circleRadius}
-                    steps={64}
-                />}
+                 {points.map((point, idx) => {
+                     if (!point.showRadius) {
+                         return null;
+                     }
+                     return (
+                         <GeodesicCircle
+                             key={idx}
+                             center={point.location}
+                             radius={point.radius}
+                             steps={DEFAULT_RESOLUTION}
+                         />);
+                 })}
 
-            </MapContainer>
+                 {locations.length > 1 &&
+                  <GeodesicLine
+                      positions={locations}
+                      steps={DEFAULT_RESOLUTION}
+                  />
+                 }
+             </MapContainer>}
+
+            {selectedTab === "points" &&
+             <PointsConfigurationPane
+                 points={points}
+                 setPoints={setPoints}
+             />}
+        </div>
+    );
+}
+
+
+function PointsConfigurationPane({ points, setPoints }) {
+    return (
+        <div>
+            {points.map((point, idx) => (
+                <PointConfigurationRow
+                    key={idx}
+                    point={point}
+                    idx={idx}
+                />
+            ))}
+            <div>
+                <Button title="Add from map" color="success" className="m-1">
+                    Add from map
+                </Button>
+                <Button title="Enter coordinates" color="success" className="m-1">
+                    Enter coordinates
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+
+function PointConfigurationRow({ point, idx, onChange }) {
+    return (
+        <div className="d-flex flex-row align-items-center">
+            <div className="p-1">{idx + 1}</div>
+            <div className="p-1" style={{ minWidth: 300 }}>
+                <LocationDisplay location={point.location} />
+            </div>
+            <div className="p-1">
+                <ButtonGroup>
+                    <Button title="Enter coordinates">
+                        <FontAwesomeIcon icon={faPencilAlt} />
+                    </Button>
+                    <Button title="Pick from map">
+                        <FontAwesomeIcon icon={faCrosshairs} />
+                    </Button>
+                    <Button title="Use current location">
+                        <FontAwesomeIcon icon={faLocationArrow} />
+                    </Button>
+                </ButtonGroup>
+            </div>
+            <div className="flex-grow-1" />
+            <div className="p-1">
+                <Button title="Use current location" color="danger">
+                    <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                    Remove
+                </Button>
+            </div>
         </div>
     );
 }
@@ -109,6 +202,13 @@ function LocationDisplay({ location }) {
     );
 }
 
+
+function formatLatLonPlain([lat, lon]) {
+    const fmt = new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 6,
+    });
+    return `${fmt.format(lat)},${fmt.format(lon)}`;
+}
 
 
 function formatLatLonDMS([lat, lon]) {
@@ -141,13 +241,8 @@ function formatDMS(dms, pos, neg) {
 
 
 const LOCATION_FORMATTERS = [
-    ([lat, lon]) => {
-        const fmt = new Intl.NumberFormat("en-US", {
-            maximumFractionDigits: 6,
-        });
-        return `${fmt.format(lat)},${fmt.format(lon)}`;
-    },
     formatLatLonDMS,
+    formatLatLonPlain,
 ];
 
 
