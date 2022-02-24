@@ -71,3 +71,23 @@ exports.createSchemaCustomization = ({ actions }) => {
         }
     `);
 };
+
+
+exports.onCreateWebpackConfig = ({
+    stage,
+    loaders,
+    actions
+}) => {
+    if (stage === "build-html" || stage === "develop-html") {
+        // Disable loading the leaflet module during SSR.
+        // It tries to access the global ``window`` object, and fails.
+        actions.setWebpackConfig({
+            module: {
+                rules: [{
+                    test: [/node_modules\/leaflet/, /node_modules\\leaflet/],
+                    use: loaders.null()
+                }]
+            }
+        });
+    }
+};
