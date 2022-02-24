@@ -247,65 +247,72 @@ function PointConfigurationRow({ point, idx, onChange, onDelete, activatePickerT
     };
 
     return (
-        <div className="d-flex flex-row align-items-center">
-            <div className="p-1">{idx + 1}</div>
+        <div className="d-flex flex-column flex-md-row align-items-center my-4 md-my-0">
 
-            <div className="p-1" style={{ minWidth: 300 }}>
-                <LocationDisplay location={point.location} />
+            <div className="d-flex">
+                <div className="p-1">{idx + 1}</div>
+                <div className="p-1" style={{ minWidth: 300 }}>
+                    <LocationDisplay location={point.location} />
+                </div>
             </div>
 
-            <div className="p-1">
-                <Label check>
-                    <Input
-                        type="checkbox"
-                        checked={point.showRadius}
-                        onChange={event => onChange({
-                            ...point,
-                            showRadius: event.target.checked,
-                        })}
-                    />
-                    {" "}Show radius
-                </Label>
-            </div>
-            <div className="p-1">
-                <InputGroup>
-                    <Input
-                        type="number"
-                        value={point.radius}
-                        onChange={event => onChange({
-                            ...point,
-                            radius: event.target.value,
-                        })}
-                        style={{maxWidth: 120, textAlign: 'right'}}
-                    />
-                    <InputGroupText className="text-white bg-dark">
-                        m
-                    </InputGroupText>
-                </InputGroup>
+            <div className="d-flex align-items-center">
+                <div className="p-1">
+                    <Label check>
+                        <Input
+                            type="checkbox"
+                            checked={point.showRadius}
+                            onChange={event => onChange({
+                                ...point,
+                                showRadius: event.target.checked,
+                            })}
+                        />
+                        {" "}Show radius
+                    </Label>
+                </div>
+                <div className="p-1">
+                    <InputGroup>
+                        <Input
+                            type="number"
+                            value={point.radius}
+                            onChange={event => onChange({
+                                ...point,
+                                radius: event.target.value,
+                            })}
+                            style={{maxWidth: 120, textAlign: 'right'}}
+                        />
+                        <InputGroupText className="text-white bg-dark">
+                            m
+                        </InputGroupText>
+                    </InputGroup>
+                </div>
             </div>
 
             <div className="flex-grow-1" />
 
-            <div className="p-1">
-                <ButtonGroup>
-                    {ENABLE_COORDINATE_INPUT &&
-                     <Button title="Enter coordinates">
-                         <FontAwesomeIcon icon={faPencilAlt} />
-                     </Button>}
-                    <Button title="Pick from map" onClick={onPickFromMap}>
-                        <FontAwesomeIcon icon={faCrosshairs} />
+            <div className="d-flex align-items-center">
+                <div className="p-1">
+                    <ButtonGroup>
+                        {ENABLE_COORDINATE_INPUT &&
+                         <Button title="Enter coordinates">
+                             <FontAwesomeIcon icon={faPencilAlt} />
+                         </Button>}
+                        <Button title="Pick from map" onClick={onPickFromMap}>
+                            <FontAwesomeIcon icon={faCrosshairs} />
+                        </Button>
+                        <Button title="Use current location" onClick={onPickCurrentLocation}>
+                            <FontAwesomeIcon icon={faLocationArrow} />
+                        </Button>
+                    </ButtonGroup>
+                </div>
+                <div className="p-1">
+                    <Button title="Use current location" color="danger" onClick={onDelete}>
+                        <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                        Remove
                     </Button>
-                    <Button title="Use current location" onClick={onPickCurrentLocation}>
-                        <FontAwesomeIcon icon={faLocationArrow} />
-                    </Button>
-                </ButtonGroup>
+                </div>
             </div>
-            <div className="p-1">
-                <Button title="Use current location" color="danger" onClick={onDelete}>
-                    <FontAwesomeIcon icon={faTrashAlt} />{" "}
-                    Remove
-                </Button>
-            </div>
+
         </div>
     );
 }
