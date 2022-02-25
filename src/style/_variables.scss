@@ -1631,8 +1631,8 @@ $offcanvas-backdrop-opacity:        $modal-backdrop-opacity !default;
 
 // Code
 
-$code-font-size:                    $small-font-size !default;
-$code-color:                        $body-color;
+$code-font-size:                    inherit;
+$code-color:                        inherit;
 
 $kbd-padding-y:                     .2rem !default;
 $kbd-padding-x:                     .4rem !default;

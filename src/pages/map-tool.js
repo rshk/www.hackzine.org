@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "gatsby";
-import { MapContainer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, useMapEvents, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button, ButtonGroup, Input, Label, InputGroup, InputGroupText } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -96,81 +96,121 @@ function MapTool() {
     return (
         <div className="flex-grow-1 d-flex flex-column position-relative">
 
-            <div className="d-flex flex-row align-items-center bg-dark justify-content-center">
-                <div className="p-1">
-                    <ButtonGroup>
-                        <Button
-                            active={selectedTab === "map"}
-                            onClick={() => selectTab("map")}>
-                            Map
-                        </Button>
-                        <Button
-                            active={selectedTab === "points"}
-                            onClick={() => selectTab("points")}>
-                            POIs
-                        </Button>
-                    </ButtonGroup>
-                </div>
-            </div>
+        <div className="d-flex flex-row align-items-center bg-dark justify-content-center">
+        <div className="p-1">
+        <ButtonGroup>
+        <Button
+        active={selectedTab === "map"}
+        onClick={() => selectTab("map")}>
+        Map
+        </Button>
+        <Button
+        active={selectedTab === "points"}
+        onClick={() => selectTab("points")}>
+        POIs
+        </Button>
+        </ButtonGroup>
+        </div>
+        </div>
 
-            {selectedTab === "map" &&
-             <div className="flex-grow-1 d-flex flex-column">
+        {selectedTab === "map" &&
+         <div className="flex-grow-1 d-flex flex-column">
 
-                 {pickerTool.isActive &&
-                  <div className="bg-white text-black p-2 d-flex justify-content-between align-items-center">
-                      <div>{pickerTool.label}</div>
-                      <Button onClick={deactivatePickerTool}>
-                          Cancel
-                      </Button>
-                  </div>}
-
-                 <MapContainer
-                     center={mapCenter}
-                     zoom={mapZoom}
-                     style={{}}
-                     className="flex-grow-1"
-                 >
-
-                     <MapEventHandler
-                         onClick={onMapClick}
-                         onZoomEnd={(e, map) => setMapZoom(map.getZoom())}
-                         onMoveEnd={(e, map) => setMapCenter(map.getCenter())}
-                     />
-
-                     <OsmTileLayer />
-
-                     {points.map((point, idx) =>
-                         <Marker key={idx} position={point.location} />)}
-
-                     {points.map((point, idx) => {
-                         if (!point.showRadius) {
-                             return null;
-                         }
-                         return (
-                             <GeodesicCircle
-                                 key={idx}
-                                 center={point.location}
-                                 radius={point.radius}
-                                 steps={DEFAULT_RESOLUTION}
-                             />);
-                     })}
-
-                     {locations.length > 1 &&
-                      <GeodesicLine
-                          positions={locations}
-                          steps={DEFAULT_RESOLUTION}
-                      />
-                     }
-                 </MapContainer>
+            {pickerTool.isActive &&
+             <div className="bg-white text-black p-2 d-flex justify-content-between align-items-center">
+                 <div>{pickerTool.label}</div>
+                 <Button onClick={deactivatePickerTool}>
+                     Cancel
+                 </Button>
              </div>}
 
-            {selectedTab === "points" &&
-             <PointsConfigurationPane
-                 points={points}
-                 setPoints={setPoints}
-                 activatePickerTool={activatePickerTool}
-             />}
+            <MapContainer
+            center={mapCenter}
+            zoom={mapZoom}
+            style={{}}
+            className="flex-grow-1"
+            >
+
+            <MapEventHandler
+            onClick={onMapClick}
+            onZoomEnd={(e, map) => setMapZoom(map.getZoom())}
+            onMoveEnd={(e, map) => setMapCenter(map.getCenter())}
+            />
+
+            <OsmTileLayer />
+
+            {points.map((point, idx) =>
+                <Marker key={idx} position={point.location}>
+                    <Popup>
+                        <PointPopupContent
+                            point={point}
+                            nextPoint={points[idx + 1] || null}
+                        />
+                    </Popup>
+                </Marker>
+            )}
+
+            {points.map((point, idx) => {
+                if (!point.showRadius) {
+                    return null;
+                }
+                return (
+                    <GeodesicCircle
+                        key={idx}
+                        center={point.location}
+                        radius={point.radius}
+                        steps={DEFAULT_RESOLUTION}
+                    />);
+            })}
+
+            {locations.length > 1 &&
+             <GeodesicLine
+                 positions={locations}
+                 steps={DEFAULT_RESOLUTION}
+             />
+            }
+                 </MapContainer>
+        </div>}
+
+        {selectedTab === "points" &&
+         <PointsConfigurationPane
+             points={points}
+             setPoints={setPoints}
+             activatePickerTool={activatePickerTool}
+         />}
         </div>
+    );
+}
+
+
+function PointPopupContent({ point, nextPoint }) {
+    const nextPointDistance =
+        nextPoint ?
+        GeoMath.inverse(point.location, nextPoint.location) :
+        null;
+    return (
+        <>
+            <div>
+                <code>{formatLatLonDMS(point.location)}</code>
+            </div>
+            {!!point.radius && <div>Radius: {formatDistance(point.radius)}</div>}
+            {nextPoint &&
+             <div className="d-flex flex-row align-items-center mt-3">
+                 <span className="me-1">
+                     <FontAwesomeIcon
+                         style={{transform: `rotate(${nextPointDistance.initialBearing}deg)`}}
+                         size="2x"
+                         icon={faArrowAltCircleUp}
+                     />
+                 </span>
+                 <code className="me-1">
+                     {formatBearing(nextPointDistance.initialBearing)}
+                 </code>{" "}
+                 <code className="me-1">
+                     {formatDistance(nextPointDistance.distance)}
+                 </code>
+             </div>}
+        </>
     );
 }
 
