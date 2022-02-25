@@ -651,7 +651,7 @@ $small-font-size:             .875em !default;
 
 $sub-sup-font-size:           .75em !default;
 
-$text-muted:                  $gray-600 !default;
+$text-muted:                  $gray-500 !default;
 
 $initialism-font-size:        $small-font-size !default;
 
@@ -1632,7 +1632,7 @@ $offcanvas-backdrop-opacity:        $modal-backdrop-opacity !default;
 // Code
 
 $code-font-size:                    $small-font-size !default;
-$code-color:                        $pink !default;
+$code-color:                        $body-color;
 
 $kbd-padding-y:                     .2rem !default;
 $kbd-padding-x:                     .4rem !default;

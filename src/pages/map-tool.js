@@ -4,7 +4,10 @@ import { MapContainer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button, ButtonGroup, Input, Label, InputGroup, InputGroupText } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrosshairs, faPencilAlt, faLocationArrow, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCrosshairs, faPencilAlt, faLocationArrow, faTrashAlt, faArrowAltCircleUp } from '@fortawesome/free-solid-svg-icons';
+
+// import * as LeafletGeodesic from "leaflet.geodesic";
+import * as GeoMath from "ui/map/geo-math";
 
 import "ui/map/default-icon";
 import GeodesicLine from "ui/map/geodesic-line";
@@ -14,6 +17,10 @@ import OsmTileLayer from "ui/map/osm-tile-layer";
 
 const DEFAULT_RESOLUTION = 180;
 const ENABLE_COORDINATE_INPUT = false;
+const DEFAULT_POINTS = [
+    {location: [52.3, -6.6], radius: 200000, showRadius: true},
+    {location: [25.3,-80.7], radius: 200000, showRadius: true},
+];
 
 
 export default function MapToolPage() {
@@ -33,13 +40,13 @@ export default function MapToolPage() {
 }
 
 function MapTool() {
+
     const [selectedTab, selectTab] = React.useState("map");
+    const [mapCenter, setMapCenter] = React.useState([45, 0]);
+    const [mapZoom, setMapZoom] = React.useState(6);
 
     // Points of interest to show on the map
-    const [points, setPoints] = React.useState([
-        {location: [52.3, -6.6], radius: 200000, showRadius: true},
-        {location: [25.3,-80.7], radius: 200000, showRadius: true},
-    ]);
+    const [points, setPoints] = React.useState(DEFAULT_POINTS);
 
     const locations = points.map(point => point.location);
 
@@ -48,6 +55,8 @@ function MapTool() {
         isActive: false,
         callback: null,
     });
+
+    // ---------------------------------------------------------------
 
     // Function to activate the picker tool
     const activatePickerTool = (callback, options) => {
@@ -78,8 +87,6 @@ function MapTool() {
             });
         }
     };
-
-    const zoomLevel = 6;
 
     if (typeof window === 'undefined') {
         console.warn("Cannot find window object. Not rendering during SSR.");
@@ -118,13 +125,18 @@ function MapTool() {
                   </div>}
 
                  <MapContainer
-                     center={points.length > 0 ? points[0].location : [0, 0]}
-                     zoom={zoomLevel}
+                     center={mapCenter}
+                     zoom={mapZoom}
                      style={{}}
                      className="flex-grow-1"
                  >
 
-                     <MapEventHandler onClick={onMapClick} />
+                     <MapEventHandler
+                         onClick={onMapClick}
+                         onZoomEnd={(e, map) => setMapZoom(map.getZoom())}
+                         onMoveEnd={(e, map) => setMapCenter(map.getCenter())}
+                     />
+
                      <OsmTileLayer />
 
                      {points.map((point, idx) =>
@@ -196,6 +208,7 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
                 <PointConfigurationRow
                     key={idx}
                     point={point}
+                    nextPoint={points[idx + 1] || null}
                     idx={idx}
                     activatePickerTool={activatePickerTool}
                     onChange={onPointChange.bind(this, idx)}
@@ -224,7 +237,9 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
 }
 
 
-function PointConfigurationRow({ point, idx, onChange, onDelete, activatePickerTool }) {
+function PointConfigurationRow({
+    point, nextPoint, idx, onChange, onDelete, activatePickerTool,
+}) {
 
     const onPickFromMap = () => {
         activatePickerTool(location => {
@@ -246,72 +261,99 @@ function PointConfigurationRow({ point, idx, onChange, onDelete, activatePickerT
 
     };
 
+    const nextPointDistance =
+        nextPoint ?
+        GeoMath.inverse(point.location, nextPoint.location) :
+        null;
+
     return (
-        <div className="d-flex flex-column flex-md-row align-items-center my-4 md-my-0">
+        <div>
+            <div className="d-flex flex-column flex-md-row align-items-center my-4 md-my-0">
 
-            <div className="d-flex">
-                <div className="p-1">{idx + 1}</div>
-                <div className="p-1" style={{ minWidth: 300 }}>
-                    <LocationDisplay location={point.location} />
+                <div className="d-flex">
+                    <div className="p-1 bg-light text-dark text-center" style={{width: '3em'}}>
+                        {idx + 1}
+                    </div>
+                    <div className="p-1" style={{ minWidth: 300 }}>
+                        <LocationDisplay location={point.location} />
+                    </div>
                 </div>
-            </div>
 
-            <div className="d-flex align-items-center">
-                <div className="p-1">
-                    <Label check>
-                        <Input
-                            type="checkbox"
-                            checked={point.showRadius}
-                            onChange={event => onChange({
-                                ...point,
-                                showRadius: event.target.checked,
-                            })}
-                        />
-                        {" "}Show radius
-                    </Label>
+                <div className="d-flex align-items-center">
+                    <div className="p-1">
+                        <Label check>
+                            <Input
+                                type="checkbox"
+                                checked={point.showRadius}
+                                onChange={event => onChange({
+                                    ...point,
+                                    showRadius: event.target.checked,
+                                })}
+                            />
+                            {" "}Show radius
+                        </Label>
+                    </div>
+                    <div className="p-1">
+                        <InputGroup>
+                            <Input
+                                type="number"
+                                value={point.radius}
+                                onChange={event => onChange({
+                                    ...point,
+                                    radius: event.target.value,
+                                })}
+                                style={{maxWidth: 120, textAlign: 'right'}}
+                            />
+                            <InputGroupText className="text-white bg-dark">
+                                m
+                            </InputGroupText>
+                        </InputGroup>
+                    </div>
                 </div>
-                <div className="p-1">
-                    <InputGroup>
-                        <Input
-                            type="number"
-                            value={point.radius}
-                            onChange={event => onChange({
-                                ...point,
-                                radius: event.target.value,
-                            })}
-                            style={{maxWidth: 120, textAlign: 'right'}}
-                        />
-                        <InputGroupText className="text-white bg-dark">
-                            m
-                        </InputGroupText>
-                    </InputGroup>
-                </div>
-            </div>
 
-            <div className="flex-grow-1" />
+                <div className="flex-grow-1" />
 
-            <div className="d-flex align-items-center">
-                <div className="p-1">
-                    <ButtonGroup>
-                        {ENABLE_COORDINATE_INPUT &&
-                         <Button title="Enter coordinates">
-                             <FontAwesomeIcon icon={faPencilAlt} />
-                         </Button>}
-                        <Button title="Pick from map" onClick={onPickFromMap}>
-                            <FontAwesomeIcon icon={faCrosshairs} />
+                <div className="d-flex align-items-center">
+                    <div className="p-1">
+                        <ButtonGroup>
+                            {ENABLE_COORDINATE_INPUT &&
+                             <Button title="Enter coordinates">
+                                 <FontAwesomeIcon icon={faPencilAlt} />
+                             </Button>}
+                            <Button title="Pick from map" onClick={onPickFromMap}>
+                                <FontAwesomeIcon icon={faCrosshairs} />
+                            </Button>
+                            <Button title="Use current location" onClick={onPickCurrentLocation}>
+                                <FontAwesomeIcon icon={faLocationArrow} />
+                            </Button>
+                        </ButtonGroup>
+                    </div>
+                    <div className="p-1">
+                        <Button title="Use current location" color="danger" onClick={onDelete}>
+                            <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                            Remove
                         </Button>
-                        <Button title="Use current location" onClick={onPickCurrentLocation}>
-                            <FontAwesomeIcon icon={faLocationArrow} />
-                        </Button>
-                    </ButtonGroup>
+                    </div>
                 </div>
-                <div className="p-1">
-                    <Button title="Use current location" color="danger" onClick={onDelete}>
-                        <FontAwesomeIcon icon={faTrashAlt} />{" "}
-                        Remove
-                    </Button>
-                </div>
+
             </div>
+
+            {nextPoint &&
+             <div className="m-3 p-3 border border-info d-flex flex-row align-items-center">
+                 <FontAwesomeIcon
+                     style={{transform: `rotate(${nextPointDistance.initialBearing}deg)`}}
+                     size="2x"
+                     icon={faArrowAltCircleUp}
+                 />
+                 <div className="ms-3">
+                     <span className="text-muted">Bearing:</span>{" "}
+                     <code>{formatBearing(nextPointDistance.initialBearing)}</code>
+                 </div>
+                 <div className="ms-3">
+                     <span className="text-muted">Distance:</span>{" "}
+                     <code>{formatDistance(nextPointDistance.distance)}</code>
+                 </div>
+             </div>}
 
         </div>
     );
@@ -376,13 +418,42 @@ const LOCATION_FORMATTERS = [
 ];
 
 
-function MapEventHandler({ onClick }) {
+function MapEventHandler({ onClick, onZoomEnd, onMoveEnd }) {
     const map = useMapEvents({
         click(event) {
             if (onClick) {
                 onClick(event, map);
             }
         },
+        zoomend(event) {
+            if (onZoomEnd) {
+                onZoomEnd(event, map);
+            }
+        },
+        moveend(event) {
+            if (onMoveEnd) {
+                onMoveEnd(event, map);
+            }
+        }
     })
     return null;
+}
+
+
+function formatDistance(distance) {
+    const formatter = new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 0,
+    });
+    if (distance > 1000) {
+        return `${formatter.format(distance / 1000)} km`;
+    }
+    return `${formatter.format(distance)} m`;
+}
+
+
+function formatBearing(bearing) {
+    const formatter = new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 0,
+    });
+    return `${formatter.format(bearing)}°`;
 }
