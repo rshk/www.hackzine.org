@@ -18,7 +18,7 @@ const ENABLE_COORDINATE_INPUT = false;
 
 export default function MapToolPage() {
     return (
-        <div style={{ height: '100vh' }} className="d-flex flex-column">
+        <div style={{ height: 'calc(100vh - 40px)' }} className="d-flex flex-column">
             <div className="d-flex flex-row align-items-center">
                 <div className="flex-grow-1 p-2">
                     <h1>Map tool</h1>
