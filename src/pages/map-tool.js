@@ -604,8 +604,9 @@ function PointConfigurationRow({
 
     const renderEditToolPane = () => {
         return (
-            <div className="m-3 p-3 border border-light d-flex flex-row align-items-center">
+            <div className="m-3 p-3 border border-light">
                 Edit coordinates
+                <div className="text-warning">Coming soon!</div>
             </div>
         );
     };
@@ -615,6 +616,7 @@ function PointConfigurationRow({
             <div className="m-3 p-3 border border-success">
                 <h4>Add new point</h4>
                 <div>Enter coordinates of the new point</div>
+                <div className="text-warning">Coming soon!</div>
                 <div>
                     <Button color="success">Add point</Button>{" "}
                     <Button onClick={() => setSelectedTool(null)}>
@@ -630,6 +632,7 @@ function PointConfigurationRow({
             <div className="m-3 p-3 border border-success">
                 <h4>Navigate</h4>
                 <div>Add a next point from bearing / distance</div>
+                <div className="text-warning">Coming soon!</div>
                 <div>
                     <Button color="success">Add point</Button>{" "}
                     <Button onClick={() => setSelectedTool(null)}>
