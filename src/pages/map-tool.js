@@ -8,8 +8,6 @@ import {
     ButtonGroup,
     Input,
     Label,
-    InputGroup,
-    InputGroupText,
     FormFeedback,
 } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -35,6 +33,7 @@ import "ui/map/default-icon";
 import GeodesicLine from "ui/map/geodesic-line";
 import GeodesicCircle from "ui/map/geodesic-circle";
 import OsmTileLayer from "ui/map/osm-tile-layer";
+import LocationDisplay from "ui/map/location-display";
 
 
 const DEFAULT_RESOLUTION = 180;
@@ -536,10 +535,6 @@ function PointConfigurationRow({
                         <FontAwesomeIcon icon={faArrowDown} />
                     </Button>
                 </ButtonGroup>{" "}
-                <Button title="Use current location" color="danger" onClick={onDelete}>
-                    <FontAwesomeIcon icon={faTrashAlt} />{" "}
-                    Delete
-                </Button>
         </>
         );
     };
@@ -573,7 +568,7 @@ function PointConfigurationRow({
             <div className="d-flex flex-column flex-md-row align-items-center my-4 md-my-0">
 
                 <div className="d-flex">
-                    <div className="p-1 bg-light text-dark text-center" style={{width: '3em'}}>
+                    <div className="p-1 bg-light text-dark text-center fs-5" style={{width: '3em'}}>
                         {idx + 1}
                     </div>
                     <div className="p-1" style={{ minWidth: 300 }}>
@@ -610,25 +605,17 @@ function PointConfigurationRow({
                     {renderTools()}
                 </div>
 
+                <div className="p-1">
+                    <Button title="Use current location" color="danger" onClick={onDelete}>
+                        <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                        Delete
+                    </Button>
+                </div>
+
             </div>
 
             {renderDestination()}
 
-        </div>
-    );
-}
-
-
-function LocationDisplay({ location }) {
-    const [fmtId, setFmtId] = React.useState(0);
-    const formatter = LOCATION_FORMATTERS[fmtId];
-    const setNextFmtId = () => setFmtId((fmtId + 1) % LOCATION_FORMATTERS.length);
-
-    return (
-        <div onClick={() => setNextFmtId()} className="mx-3">
-            <code className="bg-dark text-white">
-                {formatter(location)}
-            </code>
         </div>
     );
 }
