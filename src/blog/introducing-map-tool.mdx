@@ -1,0 +1,41 @@
+---
+date: "2022-02-26 14:35"
+---
+
+# Introducing the map tool
+
+Ever needed to perform some simple geospatial queries, and dreaded
+having to fire up a full-blown Gis software for that? It gets worse
+while are on the go, and only have a small screen device available.
+
+I finally decided to put together a simple online [Map
+tool](/map-tool) to help with some of that.
+
+It's still a bit crude at the moment, but already provides some useful
+functionality.
+
+## Current features
+
+- **Plot markers on the map.** Point-and-click to add markers on the
+  map. Shows coordinates of the selected point in decimal or DMS
+  (degrees, minutes, seconds).
+- **Plot current location on the map.** Use the device location to add
+  a marker on the map.
+- **Plot distance from a point.** Create a circle of a given radius
+  around a point. This can be useful when trying to triangulate a
+  position for example, given distance from various points.
+  Circles are drawn on a WGS84 spheroid.
+- **Plot shortest path between points.** Draw shortest-path routes
+  between two points, and calculate distance (and initial bearing)
+  between the two.
+- **Save state to local storage.**
+
+
+## Planned features
+
+- Add point from coordinates
+- Add point from starting point / bearing / distance
+- Make it more mobile-friendly
+- Import / export from JSON
+- Save multiple files to local storage
+- Shareable links
