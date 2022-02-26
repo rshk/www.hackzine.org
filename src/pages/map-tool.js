@@ -1,6 +1,7 @@
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import { Link } from "gatsby";
-import { MapContainer, Marker, useMapEvents, Popup } from "react-leaflet";
+import { MapContainer, Marker, useMapEvents, Popup, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button, ButtonGroup, Input, Label, InputGroup, InputGroupText } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,19 +26,37 @@ const DEFAULT_POINTS = [
 
 export default function MapToolPage() {
     return (
-        <div style={{ height: 'calc(100vh - 40px)' }} className="d-flex flex-column">
-            <div className="d-flex flex-row align-items-center">
-                <div className="flex-grow-1 p-2">
-                    <h1>Map tool</h1>
+        <>
+            <Helmet>
+                <title>Hackzine.org - Map tool</title>
+            </Helmet>
+            <div style={{ height: 'calc(100vh - 40px)' }} className="d-flex flex-column">
+                <div className="d-flex flex-row align-items-center">
+                    <div className="flex-grow-1 p-2">
+                        <h1>Map tool</h1>
+                    </div>
+                    <div className="p-2">
+                        by <Link to="/">Hackzine.org</Link>
+                    </div>
                 </div>
-                <div className="p-2">
-                    by <Link to="/">Hackzine.org</Link>
-                </div>
+                <MapToolWrapper />
             </div>
-            <MapTool />
-        </div>
+        </>
     );
 }
+
+
+function MapToolWrapper() {
+    // Skip rendering the map entirely during SSR
+
+    if (typeof window === 'undefined') {
+        console.warn("Cannot find window object. Not rendering during SSR.");
+        return null;
+    }
+
+    return <MapTool />;
+}
+
 
 function MapTool() {
 
@@ -69,11 +88,23 @@ function MapTool() {
         selectTab("map");
     };
 
+    const activatePickNewPointTool = () => {
+        activatePickerTool(
+            location => {
+                setPoints(points => [ ...points, { location } ]);
+            },
+            { name: 'add' },
+        );
+    };
+
+
     const deactivatePickerTool = () => {
         setPickerTool({
             isActive: false,
         });
     };
+
+    // ---------------------------------------------------------------
 
     const onMapClick = event => {
         const {lat, lng} = event.latlng;
@@ -88,128 +119,263 @@ function MapTool() {
         }
     };
 
-    if (typeof window === 'undefined') {
-        console.warn("Cannot find window object. Not rendering during SSR.");
-        return null;
-    }
+    // ---------------------------------------------------------------
+
+    const exportState = () => {
+        return {
+            version: 1,
+            timestamp: (new Date()).toISOString(),
+            mapCenter,
+            mapZoom,
+            points,
+        };
+    };
+
+    const importState = (state) => {
+        if (state.version !== 1) {
+            console.error(`Unsupported state version: ${state.version}`);
+            return;
+        }
+        setPoints(state.points);
+        setMapZoom(state.mapZoom);
+        setMapCenter(state.mapCenter);
+    };
+
+    // ---------------------------------------------------------------
+
+    const renderTabSwitcher = () => {
+        const ITEMS = [
+            {id: "map", label: "Map"},
+            {id: "points", label: "Points"},
+            {id: "export", label: "Export"},
+        ];
+        return (
+            <ButtonGroup>
+                {ITEMS.map(({id, label}) =>
+                    <Button
+                        key={id}
+                        active={selectedTab === id}
+                        onClick={() => selectTab(id)}
+                    >
+                        {label}
+                    </Button>
+                )}
+            </ButtonGroup>
+        );
+    };
+
+    const renderPickerTool = () => {
+        const isActive = pickerTool.isActive && pickerTool.name === "add";
+        const onClick = () => {
+            if (isActive) {
+                deactivatePickerTool();
+            }
+            else {
+                activatePickNewPointTool();
+            }
+        };
+        return (
+            <Button active={isActive} onClick={onClick} title="Add from map">
+                <FontAwesomeIcon icon={faCrosshairs} />
+            </Button>
+        );
+    };
+
+    const renderAddCurrentLocationTool = () => {
+        const onClick = () => {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                const newPoint = { location: [latitude, longitude] };
+                setPoints(points => [ ...points, newPoint ]);
+            });
+        };
+        return (
+            <Button onClick={onClick} title="Add current location">
+                <FontAwesomeIcon icon={faLocationArrow} />
+            </Button>
+        );
+    };
+
+    const renderPickerMessage = () => {
+        return (
+            <div className="bg-white text-black p-2 d-flex justify-content-between align-items-center position-absolute top-0 start-0 end-0" style={{zIndex: 2000}}>
+                <div>{pickerTool.label}</div>
+                <Button onClick={deactivatePickerTool}>
+                    Cancel
+                </Button>
+            </div>
+        );
+    };
+
+    // ---------------------------------------------------------------
+
+    const renderExportTab = () => {
+
+        const LOCALSTORAGE_KEY = "map-tool-state";
+
+        const onSave = () => {
+            const state = exportState();
+            console.log("Exported state", state);
+            if (!checkStorage()) {
+                return;
+            }
+            window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(state));
+        };
+
+        const onLoad = () => {
+            if (!checkStorage()) {
+                return;
+            }
+            const state = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY));
+            console.log("Importing state", state);
+            importState(state);
+            selectTab("map");
+        };
+
+        const checkStorage = () => {
+            if (!(window && window.localStorage)) {
+                console.error("LocalStorage is not available");
+                return false;
+            }
+            return true;
+        };
+
+        return (
+            <div>
+                <h2>Import / Export</h2>
+                <Button onClick={onSave}>Save</Button>
+                <Button onClick={onLoad}>Load</Button>
+            </div>
+        );
+    };
 
     return (
         <div className="flex-grow-1 d-flex flex-column position-relative">
 
-        <div className="d-flex flex-row align-items-center bg-dark justify-content-center">
-        <div className="p-1">
-        <ButtonGroup>
-        <Button
-        active={selectedTab === "map"}
-        onClick={() => selectTab("map")}>
-        Map
-        </Button>
-        <Button
-        active={selectedTab === "points"}
-        onClick={() => selectTab("points")}>
-        POIs
-        </Button>
-        </ButtonGroup>
-        </div>
-        </div>
+            <div className="d-flex flex-row align-items-center bg-dark justify-content-center">
+                <div className="p-1">
+                    {renderTabSwitcher()}
+                </div>
+                <div className="p-1 flex-grow-1">
+                    {(selectedTab === "map") && <ButtonGroup>
+                        {renderPickerTool()}
+                        {renderAddCurrentLocationTool()}
+                    </ButtonGroup>}
+                </div>
+            </div>
 
-        {selectedTab === "map" &&
-         <div className="flex-grow-1 d-flex flex-column">
+            {selectedTab === "map" &&
+             <div className="flex-grow-1 d-flex flex-column position-relative">
 
-            {pickerTool.isActive &&
-             <div className="bg-white text-black p-2 d-flex justify-content-between align-items-center">
-                 <div>{pickerTool.label}</div>
-                 <Button onClick={deactivatePickerTool}>
-                     Cancel
-                 </Button>
+                 {pickerTool.isActive && renderPickerMessage()}
+
+                 <MapContainer
+                     center={mapCenter}
+                     zoom={mapZoom}
+                     className="flex-grow-1"
+                     style={{cursor: pickerTool.isActive ? "crosshair" : "pointer"}}
+                 >
+
+                     <MapEventHandler
+                         onClick={onMapClick}
+                         onZoomEnd={(e, map) => setMapZoom(map.getZoom())}
+                         onMoveEnd={(e, map) => setMapCenter(map.getCenter())}
+                     />
+
+                     <ZoomControl position="bottomleft" />
+
+                     <OsmTileLayer />
+
+                     {points.map((point, idx) =>
+                         <Marker key={idx} position={point.location}>
+                             <Popup>
+                                 <PointPopupContent
+                                     idx={idx}
+                                     point={point}
+                                     nextPoint={points[idx + 1] || null}
+                                     onDelete={() => setPoints(points => [
+                                         ...points.slice(0, idx),
+                                         ...points.slice(idx + 1),
+                                     ])}
+                                 />
+                             </Popup>
+                         </Marker>
+                     )}
+
+                     {points.map((point, idx) => {
+                         if (!point.showRadius) {
+                             return null;
+                         }
+                         return (
+                             <GeodesicCircle
+                                 key={idx}
+                                 center={point.location}
+                                 radius={point.radius}
+                                 steps={DEFAULT_RESOLUTION}
+                             />);
+                     })}
+
+                     {locations.length > 1 &&
+                      <GeodesicLine
+                          positions={locations}
+                          steps={DEFAULT_RESOLUTION}
+                      />
+                     }
+                 </MapContainer>
              </div>}
 
-            <MapContainer
-            center={mapCenter}
-            zoom={mapZoom}
-            style={{}}
-            className="flex-grow-1"
-            >
+            {selectedTab === "points" &&
+             <PointsConfigurationPane
+                 points={points}
+                 setPoints={setPoints}
+                 activatePickerTool={activatePickerTool}
+             />}
 
-            <MapEventHandler
-            onClick={onMapClick}
-            onZoomEnd={(e, map) => setMapZoom(map.getZoom())}
-            onMoveEnd={(e, map) => setMapCenter(map.getCenter())}
-            />
-
-            <OsmTileLayer />
-
-            {points.map((point, idx) =>
-                <Marker key={idx} position={point.location}>
-                    <Popup>
-                        <PointPopupContent
-                            point={point}
-                            nextPoint={points[idx + 1] || null}
-                        />
-                    </Popup>
-                </Marker>
-            )}
-
-            {points.map((point, idx) => {
-                if (!point.showRadius) {
-                    return null;
-                }
-                return (
-                    <GeodesicCircle
-                        key={idx}
-                        center={point.location}
-                        radius={point.radius}
-                        steps={DEFAULT_RESOLUTION}
-                    />);
-            })}
-
-            {locations.length > 1 &&
-             <GeodesicLine
-                 positions={locations}
-                 steps={DEFAULT_RESOLUTION}
-             />
-            }
-                 </MapContainer>
-        </div>}
-
-        {selectedTab === "points" &&
-         <PointsConfigurationPane
-             points={points}
-             setPoints={setPoints}
-             activatePickerTool={activatePickerTool}
-         />}
+            {selectedTab === "export" && renderExportTab()}
         </div>
     );
 }
 
 
-function PointPopupContent({ point, nextPoint }) {
-    const nextPointDistance =
-        nextPoint ?
-        GeoMath.inverse(point.location, nextPoint.location) :
-        null;
+function PointPopupContent({ idx, point, nextPoint, onDelete }) {
+
+    const renderDestination = () => {
+        if (!nextPoint) {
+            return null;
+        }
+        const nextPointDistance = GeoMath.inverse(point.location, nextPoint.location);
+        return (
+            <div className="d-flex flex-row align-items-center mt-3">
+                <span className="me-1">
+                    <FontAwesomeIcon
+                        style={{transform: `rotate(${nextPointDistance.initialBearing}deg)`}}
+                        size="2x"
+                        icon={faArrowAltCircleUp}
+                    />
+                </span>
+                <code className="me-1">
+                    {formatBearing(nextPointDistance.initialBearing)}
+                </code>{" "}
+                <code className="me-1">
+                    {formatDistance(nextPointDistance.distance)}
+                </code>
+            </div>
+        );
+    };
+
     return (
         <>
-            <div>
+            <div>Point {idx + 1}</div>
+            <div className="fs-6">
                 <code>{formatLatLonDMS(point.location)}</code>
             </div>
             {!!point.radius && <div>Radius: {formatDistance(point.radius)}</div>}
-            {nextPoint &&
-             <div className="d-flex flex-row align-items-center mt-3">
-                 <span className="me-1">
-                     <FontAwesomeIcon
-                         style={{transform: `rotate(${nextPointDistance.initialBearing}deg)`}}
-                         size="2x"
-                         icon={faArrowAltCircleUp}
-                     />
-                 </span>
-                 <code className="me-1">
-                     {formatBearing(nextPointDistance.initialBearing)}
-                 </code>{" "}
-                 <code className="me-1">
-                     {formatDistance(nextPointDistance.distance)}
-                 </code>
-             </div>}
+            {renderDestination()}
+            <div className="my-3">
+                <Button color="danger" size="sm" onClick={onDelete}>
+                    <FontAwesomeIcon icon={faTrashAlt} />{" "}Delete
+                </Button>
+            </div>
         </>
     );
 }
@@ -239,7 +405,7 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
     const onAddPickFromMap = () => {
         activatePickerTool(location => {
             onPointAdd({ location });
-        });
+        }, {name: 'add'});
     };
 
     return (
@@ -371,7 +537,7 @@ function PointConfigurationRow({
                     <div className="p-1">
                         <Button title="Use current location" color="danger" onClick={onDelete}>
                             <FontAwesomeIcon icon={faTrashAlt} />{" "}
-                            Remove
+                            Delete
                         </Button>
                     </div>
                 </div>
@@ -432,9 +598,10 @@ function formatLatLonDMS([lat, lon]) {
 
 function getDMS(number) {
     const sign = number < 0 ? -1 : 1;
-    const degrees = Math.abs(Math.floor(number));
-    const minutes = Math.floor((number * 60) % 60);
-    const seconds = (number * 3600) % 60;
+    const number_abs = Math.abs(number);
+    const degrees = Math.abs(Math.floor(number_abs));
+    const minutes = Math.floor((number_abs * 60) % 60);
+    const seconds = (number_abs * 3600) % 60;
     return { sign, degrees, minutes, seconds };
 }
 
@@ -442,9 +609,13 @@ function getDMS(number) {
 function formatDMS(dms, pos, neg) {
     const fmtD = new Intl.NumberFormat("en-US", {
         maximumFractionDigits: 0,
+        // Hacky way to show three digits for longitude
+        minimumIntegerDigits: (pos === 'E' && neg === 'W') ? 3 : 2,
     });
     const fmtS = new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 1,
+        // maximumFractionDigits: 1,
+        maximumFractionDigits: 0,
+        minimumIntegerDigits: 2,
     });
     const {degrees, minutes, seconds} = dms;
     const sign = dms.sign < 0 ? neg : pos;
