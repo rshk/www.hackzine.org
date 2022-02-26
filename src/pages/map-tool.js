@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { Button, ButtonGroup, Input, Label, InputGroup, InputGroupText } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrosshairs, faPencilAlt, faLocationArrow, faTrashAlt, faArrowAltCircleUp } from '@fortawesome/free-solid-svg-icons';
+import Div100vh from 'react-div-100vh'
 
 // import * as LeafletGeodesic from "leaflet.geodesic";
 import * as GeoMath from "ui/map/geo-math";
@@ -30,7 +31,7 @@ export default function MapToolPage() {
             <Helmet>
                 <title>Hackzine.org - Map tool</title>
             </Helmet>
-            <div style={{ height: 'calc(100vh - 40px)' }} className="d-flex flex-column">
+            <Div100vh className="d-flex flex-column">
                 <div className="d-flex flex-row align-items-center">
                     <div className="flex-grow-1 p-2">
                         <h1>Map tool</h1>
@@ -40,7 +41,7 @@ export default function MapToolPage() {
                     </div>
                 </div>
                 <MapToolWrapper />
-            </div>
+            </Div100vh>
         </>
     );
 }
