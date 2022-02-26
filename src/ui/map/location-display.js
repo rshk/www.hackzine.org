@@ -34,12 +34,13 @@ export default function LocationDisplay({ location }) {
                 </code>
             </div>
             <ButtonGroup>
-                {LOCATION_FORMATTERS.map(({ label }, idx) =>
+                {LOCATION_FORMATTERS.map(({ label, title }, idx) =>
                     <Button
                         key={idx}
                         onClick={() => setFmtId(idx)}
                         size="sm"
                         active={idx === fmtId}
+                        title={title}
                     >
                         {label}
                     </Button>
@@ -59,6 +60,6 @@ LocationDisplay.propTypes = {
 
 
 const LOCATION_FORMATTERS = [
-    { label: "DMS", formatter: formatLatLonDMS },
-    { label: "Deg", formatter: formatLatLonPlain },
+    { label: "DMS", title: "Degrees, Minutes, Seconds", formatter: formatLatLonDMS },
+    { label: "Dec", title: "Decimal", formatter: formatLatLonPlain },
 ];

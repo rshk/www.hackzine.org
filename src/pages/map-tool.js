@@ -16,6 +16,7 @@ import {
     faPencilAlt,
     faGlobe,
     faLocationArrow,
+    faPlusCircle,
     faTrashAlt,
     faArrowAltCircleUp,
     faArrowUp,
@@ -24,7 +25,8 @@ import {
     faMapMarkerAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faMap } from '@fortawesome/free-regular-svg-icons';
-import Div100vh from 'react-div-100vh'
+import Div100vh from 'react-div-100vh';
+import * as uuid from "uuid";
 
 // import * as LeafletGeodesic from "leaflet.geodesic";
 import * as GeoMath from "ui/map/geo-math";
@@ -38,9 +40,23 @@ import LocationDisplay from "ui/map/location-display";
 
 const DEFAULT_RESOLUTION = 180;
 const ENABLE_COORDINATE_INPUT = false;
+
+
+function createPoint(data) {
+    return {
+        id: uuid.v4(),
+        location: [0, 0],
+        label: "",
+        radius: 0,
+        showRadius: false,
+        ...data,
+    };
+}
+
+
 const DEFAULT_POINTS = [
-    {location: [52.3, -6.6], radius: 200000, showRadius: true},
-    {location: [25.3,-80.7], radius: 200000, showRadius: true},
+    createPoint({location: [52.3, -6.6], radius: 200000, showRadius: true}),
+    createPoint({location: [25.3,-80.7], radius: 200000, showRadius: true}),
 ];
 
 
@@ -111,12 +127,12 @@ function MapTool() {
     const activatePickNewPointTool = () => {
         activatePickerTool(
             location => {
-                setPoints(points => [ ...points, { location } ]);
+                const newPoint = createPoint({ location });
+                setPoints(points => ArrayTool.append(points, newPoint));
             },
             { name: 'add' },
         );
     };
-
 
     const deactivatePickerTool = () => {
         setPickerTool({
@@ -223,8 +239,11 @@ function MapTool() {
         const onClick = () => {
             navigator.geolocation.getCurrentPosition((position) => {
                 const { latitude, longitude } = position.coords;
-                const newPoint = { location: [latitude, longitude] };
-                setPoints(points => [ ...points, newPoint ]);
+                const newPoint = createPoint({
+                    location: [latitude, longitude],
+                    label: "Current location",
+                });
+                setPoints(points => ArrayTool.append(points, newPoint));
             });
         };
         return (
@@ -335,10 +354,8 @@ function MapTool() {
                                      idx={idx}
                                      point={point}
                                      nextPoint={points[idx + 1] || null}
-                                     onDelete={() => setPoints(points => [
-                                         ...points.slice(0, idx),
-                                         ...points.slice(idx + 1),
-                                     ])}
+                                     onDelete={() =>
+                                         setPoints(points => ArrayTool.remove(points, idx))}
                                  />
                              </Popup>
                          </Marker>
@@ -435,9 +452,20 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
 
     const onAddPickFromMap = () => {
         activatePickerTool(location => {
-            const point = { location };
+            const point = createPoint({ location });
             setPoints(points => ArrayTool.append(points, point));
         }, {name: 'add'});
+    };
+
+    const onAddCurrentLocation = () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            const newPoint = createPoint({
+                location: [latitude, longitude],
+                label: "Current location",
+            });
+            setPoints(points => ArrayTool.append(points, newPoint));
+        });
     };
 
     const onPointMoveUp = (idx) => {
@@ -452,7 +480,7 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
         <div>
             {points.map((point, idx) => (
                 <PointConfigurationRow
-                    key={idx}
+                    key={point.id || `point-${idx}`}
                     point={point}
                     nextPoint={points[idx + 1] || null}
                     idx={idx}
@@ -465,7 +493,7 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
                     isLast={idx === points.length - 1}
                 />
             ))}
-            <div>
+            <div className="p-1">
 
                 <Button
                     title="Add from map"
@@ -473,7 +501,16 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
                     className="m-1"
                     onClick={onAddPickFromMap}
                 >
-                    Add from map
+                    <FontAwesomeIcon icon={faCrosshairs} /> Add from map
+                </Button>
+
+                <Button
+                    title="Add current location"
+                    color="success"
+                    className="m-1"
+                    onClick={onAddCurrentLocation}
+                >
+                    <FontAwesomeIcon icon={faGlobe} /> Add current location
                 </Button>
 
                 {ENABLE_COORDINATE_INPUT &&
@@ -492,6 +529,8 @@ function PointConfigurationRow({
     isFirst, isLast,
 }) {
 
+    const [selectedTool, setSelectedTool] = React.useState(null);
+
     const onPickFromMap = () => {
         activatePickerTool(location => {
             onChange({
@@ -509,22 +548,46 @@ function PointConfigurationRow({
                 location: [latitude, longitude],
             });
         });
+    };
 
+    const getToolSwitchProps = toolName => {
+        const isActive = toolName === selectedTool;
+        return {
+            active: isActive,
+            onClick: () => {
+                setSelectedTool(isActive ? null : toolName);
+            },
+        };
     };
 
     const renderTools = () => {
         return (
             <>
                 <ButtonGroup>
-                    {ENABLE_COORDINATE_INPUT &&
-                     <Button title="Enter coordinates">
-                         <FontAwesomeIcon icon={faPencilAlt} />
-                     </Button>}
+                    <Button
+                        title="Edit coordinates"
+                        {...getToolSwitchProps('edit')}>
+                        <FontAwesomeIcon icon={faPencilAlt} />
+                    </Button>
                     <Button title="Pick from map" onClick={onPickFromMap}>
                         <FontAwesomeIcon icon={faCrosshairs} />
                     </Button>
                     <Button title="Use current location" onClick={onPickCurrentLocation}>
                         <FontAwesomeIcon icon={faGlobe} />
+                    </Button>
+                </ButtonGroup>{" "}
+                <ButtonGroup>
+                    <Button
+                        title="Add next point from coordinates"
+                        {...getToolSwitchProps('add-absolute')}
+                    >
+                        <FontAwesomeIcon icon={faPlusCircle} />
+                    </Button>
+                    <Button
+                        title="Navigate to"
+                        {...getToolSwitchProps('add-relative')}
+                    >
+                        <FontAwesomeIcon icon={faLocationArrow} />
                     </Button>
                 </ButtonGroup>{" "}
                 <ButtonGroup>
@@ -536,6 +599,44 @@ function PointConfigurationRow({
                     </Button>
                 </ButtonGroup>{" "}
         </>
+        );
+    };
+
+    const renderEditToolPane = () => {
+        return (
+            <div className="m-3 p-3 border border-light d-flex flex-row align-items-center">
+                Edit coordinates
+            </div>
+        );
+    };
+
+    const renderAddAbsoluteToolPane = () => {
+        return (
+            <div className="m-3 p-3 border border-success">
+                <h4>Add new point</h4>
+                <div>Enter coordinates of the new point</div>
+                <div>
+                    <Button color="success">Add point</Button>{" "}
+                    <Button onClick={() => setSelectedTool(null)}>
+                        Cancel
+                    </Button>
+                </div>
+            </div>
+        );
+    };
+
+    const renderAddRelativeToolPane = () => {
+        return (
+            <div className="m-3 p-3 border border-success">
+                <h4>Navigate</h4>
+                <div>Add a next point from bearing / distance</div>
+                <div>
+                    <Button color="success">Add point</Button>{" "}
+                    <Button onClick={() => setSelectedTool(null)}>
+                        Cancel
+                    </Button>
+                </div>
+            </div>
         );
     };
 
@@ -571,9 +672,12 @@ function PointConfigurationRow({
                     <div className="p-1 bg-light text-dark text-center fs-5" style={{width: '3em'}}>
                         {idx + 1}
                     </div>
-                    <div className="p-1" style={{ minWidth: 300 }}>
+
+                    <div className="p-1 d-md-flex align-items-center" style={{ minWidth: 300 }}>
+                        {!!point.label && <span className="fs-5 me-2">{point.label}</span>}
                         <LocationDisplay location={point.location} />
                     </div>
+
                 </div>
 
                 <div className="d-flex align-items-center">
@@ -614,7 +718,10 @@ function PointConfigurationRow({
 
             </div>
 
+            {selectedTool === "edit" && renderEditToolPane()}
             {renderDestination()}
+            {selectedTool === "add-absolute" && renderAddAbsoluteToolPane()}
+            {selectedTool === "add-relative" && renderAddRelativeToolPane()}
 
         </div>
     );
