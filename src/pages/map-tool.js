@@ -148,7 +148,7 @@ function MapTool() {
         const ITEMS = [
             {id: "map", label: "Map"},
             {id: "points", label: "Points"},
-            {id: "export", label: "Export"},
+            {id: "export", label: "Save"},
         ];
         return (
             <ButtonGroup>
@@ -275,6 +275,7 @@ function MapTool() {
                      zoom={mapZoom}
                      className="flex-grow-1"
                      style={{cursor: pickerTool.isActive ? "crosshair" : "pointer"}}
+                     zoomControl={false}
                  >
 
                      <MapEventHandler
