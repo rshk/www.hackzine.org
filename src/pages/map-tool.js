@@ -5,7 +5,7 @@ import { MapContainer, Marker, useMapEvents, Popup, ZoomControl } from "react-le
 import "leaflet/dist/leaflet.css";
 import { Button, ButtonGroup, Input, Label, InputGroup, InputGroupText } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrosshairs, faPencilAlt, faLocationArrow, faTrashAlt, faArrowAltCircleUp } from '@fortawesome/free-solid-svg-icons';
+import { faCrosshairs, faPencilAlt, faLocationArrow, faTrashAlt, faArrowAltCircleUp, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import Div100vh from 'react-div-100vh'
 
 // import * as LeafletGeodesic from "leaflet.geodesic";
@@ -410,6 +410,36 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
         }, {name: 'add'});
     };
 
+    const onPointMoveUp = (idx) => {
+        setPoints(points => {
+            console.log("Move point up", points, idx);
+            if (idx <= 0) {
+                return points;
+            }
+            return [
+                ...points.slice(0, idx - 1),
+                points[idx],
+                points[idx - 1],
+                ...points.slice(idx + 1),
+            ];
+        });
+    };
+
+    const onPointMoveDown = (idx) => {
+        setPoints(points => {
+            console.log("Move point down", points, idx);
+            if (idx >= (points.length - 1)) {
+                return points;
+            }
+            return [
+                ...points.slice(0, idx),
+                points[idx + 1],
+                points[idx],
+                ...points.slice(idx + 2),
+            ];
+        });
+    };
+
     return (
         <div>
             {points.map((point, idx) => (
@@ -421,6 +451,10 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
                     activatePickerTool={activatePickerTool}
                     onChange={onPointChange.bind(this, idx)}
                     onDelete={onPointDelete.bind(this, idx)}
+                    onMoveUp={onPointMoveUp.bind(this, idx)}
+                    onMoveDown={onPointMoveDown.bind(this, idx)}
+                    isFirst={idx === 0}
+                    isLast={idx === points.length - 1}
                 />
             ))}
             <div>
@@ -446,7 +480,8 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
 
 
 function PointConfigurationRow({
-    point, nextPoint, idx, onChange, onDelete, activatePickerTool,
+    point, nextPoint, idx, onChange, onDelete, onMoveUp, onMoveDown, activatePickerTool,
+    isFirst, isLast,
 }) {
 
     const onPickFromMap = () => {
@@ -469,10 +504,29 @@ function PointConfigurationRow({
 
     };
 
-    const nextPointDistance =
-        nextPoint ?
-        GeoMath.inverse(point.location, nextPoint.location) :
-        null;
+    const renderDestination = () => {
+        if (!nextPoint) {
+            return null;
+        }
+        const nextPointDistance = GeoMath.inverse(point.location, nextPoint.location);
+        return (
+            <div className="m-3 p-3 border border-info d-flex flex-row align-items-center">
+                <FontAwesomeIcon
+                    style={{transform: `rotate(${nextPointDistance.initialBearing}deg)`}}
+                    size="2x"
+                    icon={faArrowAltCircleUp}
+                />
+                <div className="ms-3">
+                    <span className="text-muted">Bearing:</span>{" "}
+                    <code>{formatBearing(nextPointDistance.initialBearing)}</code>
+                </div>
+                <div className="ms-3">
+                    <span className="text-muted">Distance:</span>{" "}
+                    <code>{formatDistance(nextPointDistance.distance)}</code>
+                </div>
+            </div>
+        );
+    };
 
     return (
         <div>
@@ -521,47 +575,36 @@ function PointConfigurationRow({
 
                 <div className="flex-grow-1" />
 
-                <div className="d-flex align-items-center">
-                    <div className="p-1">
-                        <ButtonGroup>
-                            {ENABLE_COORDINATE_INPUT &&
-                             <Button title="Enter coordinates">
-                                 <FontAwesomeIcon icon={faPencilAlt} />
-                             </Button>}
-                            <Button title="Pick from map" onClick={onPickFromMap}>
-                                <FontAwesomeIcon icon={faCrosshairs} />
-                            </Button>
-                            <Button title="Use current location" onClick={onPickCurrentLocation}>
-                                <FontAwesomeIcon icon={faLocationArrow} />
-                            </Button>
-                        </ButtonGroup>
-                    </div>
-                    <div className="p-1">
-                        <Button title="Use current location" color="danger" onClick={onDelete}>
-                            <FontAwesomeIcon icon={faTrashAlt} />{" "}
-                            Delete
+                <div className="p-1">
+                    <ButtonGroup>
+                        {ENABLE_COORDINATE_INPUT &&
+                         <Button title="Enter coordinates">
+                             <FontAwesomeIcon icon={faPencilAlt} />
+                         </Button>}
+                        <Button title="Pick from map" onClick={onPickFromMap}>
+                            <FontAwesomeIcon icon={faCrosshairs} />
                         </Button>
-                    </div>
+                        <Button title="Use current location" onClick={onPickCurrentLocation}>
+                            <FontAwesomeIcon icon={faLocationArrow} />
+                        </Button>
+                    </ButtonGroup>{" "}
+                    <ButtonGroup>
+                        <Button onClick={onMoveUp} disabled={isFirst}>
+                            <FontAwesomeIcon icon={faArrowUp} />
+                        </Button>
+                        <Button onClick={onMoveDown} disabled={isLast}>
+                            <FontAwesomeIcon icon={faArrowDown} />
+                        </Button>
+                    </ButtonGroup>{" "}
+                    <Button title="Use current location" color="danger" onClick={onDelete}>
+                        <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                        Delete
+                    </Button>
                 </div>
 
             </div>
 
-            {nextPoint &&
-             <div className="m-3 p-3 border border-info d-flex flex-row align-items-center">
-                 <FontAwesomeIcon
-                     style={{transform: `rotate(${nextPointDistance.initialBearing}deg)`}}
-                     size="2x"
-                     icon={faArrowAltCircleUp}
-                 />
-                 <div className="ms-3">
-                     <span className="text-muted">Bearing:</span>{" "}
-                     <code>{formatBearing(nextPointDistance.initialBearing)}</code>
-                 </div>
-                 <div className="ms-3">
-                     <span className="text-muted">Distance:</span>{" "}
-                     <code>{formatDistance(nextPointDistance.distance)}</code>
-                 </div>
-             </div>}
+            {renderDestination()}
 
         </div>
     );
