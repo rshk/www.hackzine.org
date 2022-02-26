@@ -3,9 +3,29 @@ import { Helmet } from "react-helmet";
 import { Link } from "gatsby";
 import { MapContainer, Marker, useMapEvents, Popup, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Button, ButtonGroup, Input, Label, InputGroup, InputGroupText } from "reactstrap";
+import {
+    Button,
+    ButtonGroup,
+    Input,
+    Label,
+    InputGroup,
+    InputGroupText,
+    FormFeedback,
+} from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrosshairs, faPencilAlt, faLocationArrow, faTrashAlt, faArrowAltCircleUp, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCrosshairs,
+    faPencilAlt,
+    faGlobe,
+    faLocationArrow,
+    faTrashAlt,
+    faArrowAltCircleUp,
+    faArrowUp,
+    faArrowDown,
+    faCloudDownloadAlt,
+    faMapMarkerAlt,
+} from '@fortawesome/free-solid-svg-icons';
+import { faMap } from '@fortawesome/free-regular-svg-icons';
 import Div100vh from 'react-div-100vh'
 
 // import * as LeafletGeodesic from "leaflet.geodesic";
@@ -146,9 +166,27 @@ function MapTool() {
 
     const renderTabSwitcher = () => {
         const ITEMS = [
-            {id: "map", label: "Map"},
-            {id: "points", label: "Points"},
-            {id: "export", label: "Save"},
+            {
+                id: "map",
+                label: <>
+                    <FontAwesomeIcon className="d-md-none" icon={faMap} />{" "}
+                    <span className="d-none d-md-inline">Map</span>
+                </>,
+            },
+            {
+                id: "points",
+                label: <>
+                    <FontAwesomeIcon className="d-md-none" icon={faMapMarkerAlt} />{" "}
+                    <span className="d-none d-md-inline">Points</span>
+                </>,
+            },
+            {
+                id: "export",
+                label: <>
+                    <FontAwesomeIcon className="d-md-none" icon={faCloudDownloadAlt} />{" "}
+                    <span className="d-none d-md-inline">Load / Save</span>
+                </>,
+            },
         ];
         return (
             <ButtonGroup>
@@ -192,7 +230,7 @@ function MapTool() {
         };
         return (
             <Button onClick={onClick} title="Add current location">
-                <FontAwesomeIcon icon={faLocationArrow} />
+                <FontAwesomeIcon icon={faGlobe} />
             </Button>
         );
     };
@@ -242,10 +280,13 @@ function MapTool() {
         };
 
         return (
-            <div>
-                <h2>Import / Export</h2>
+            <div className="p-3">
+                <h2>Save to local storage</h2>
+                <div>Load and save in the current browser</div>
                 <Button onClick={onSave}>Save</Button>
                 <Button onClick={onLoad}>Load</Button>
+                <h2>Export</h2>
+                <h2>Import JSON</h2>
             </div>
         );
     };
@@ -386,58 +427,26 @@ function PointPopupContent({ idx, point, nextPoint, onDelete }) {
 function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
 
     const onPointChange = (idx, changes) => {
-        setPoints([
-            ...points.slice(0, idx),
-            changes,
-            ...points.slice(idx + 1),
-        ]);
+        setPoints(points => ArrayTool.update(points, idx, changes));
     };
 
     const onPointDelete = (idx) => {
-        setPoints([
-            ...points.slice(0, idx),
-            ...points.slice(idx + 1),
-        ]);
-    };
-
-    const onPointAdd = (point) => {
-        setPoints([ ...points, point ]);
+        setPoints(points => ArrayTool.remove(points, idx));
     };
 
     const onAddPickFromMap = () => {
         activatePickerTool(location => {
-            onPointAdd({ location });
+            const point = { location };
+            setPoints(points => ArrayTool.append(points, point));
         }, {name: 'add'});
     };
 
     const onPointMoveUp = (idx) => {
-        setPoints(points => {
-            console.log("Move point up", points, idx);
-            if (idx <= 0) {
-                return points;
-            }
-            return [
-                ...points.slice(0, idx - 1),
-                points[idx],
-                points[idx - 1],
-                ...points.slice(idx + 1),
-            ];
-        });
+        setPoints(points => ArrayTool.moveUp(points, idx));
     };
 
     const onPointMoveDown = (idx) => {
-        setPoints(points => {
-            console.log("Move point down", points, idx);
-            if (idx >= (points.length - 1)) {
-                return points;
-            }
-            return [
-                ...points.slice(0, idx),
-                points[idx + 1],
-                points[idx],
-                ...points.slice(idx + 2),
-            ];
-        });
+        setPoints(points => ArrayTool.moveDown(points, idx));
     };
 
     return (
@@ -504,6 +513,37 @@ function PointConfigurationRow({
 
     };
 
+    const renderTools = () => {
+        return (
+            <>
+                <ButtonGroup>
+                    {ENABLE_COORDINATE_INPUT &&
+                     <Button title="Enter coordinates">
+                         <FontAwesomeIcon icon={faPencilAlt} />
+                     </Button>}
+                    <Button title="Pick from map" onClick={onPickFromMap}>
+                        <FontAwesomeIcon icon={faCrosshairs} />
+                    </Button>
+                    <Button title="Use current location" onClick={onPickCurrentLocation}>
+                        <FontAwesomeIcon icon={faGlobe} />
+                    </Button>
+                </ButtonGroup>{" "}
+                <ButtonGroup>
+                    <Button onClick={onMoveUp} disabled={isFirst}>
+                        <FontAwesomeIcon icon={faArrowUp} />
+                    </Button>
+                    <Button onClick={onMoveDown} disabled={isLast}>
+                        <FontAwesomeIcon icon={faArrowDown} />
+                    </Button>
+                </ButtonGroup>{" "}
+                <Button title="Use current location" color="danger" onClick={onDelete}>
+                    <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                    Delete
+                </Button>
+        </>
+        );
+    };
+
     const renderDestination = () => {
         if (!nextPoint) {
             return null;
@@ -555,51 +595,19 @@ function PointConfigurationRow({
                             {" "}Show radius
                         </Label>
                     </div>
-                    <div className="p-1">
-                        <InputGroup>
-                            <Input
-                                type="number"
-                                value={point.radius}
-                                onChange={event => onChange({
-                                    ...point,
-                                    radius: event.target.value,
-                                })}
-                                style={{maxWidth: 120, textAlign: 'right'}}
-                            />
-                            <InputGroupText className="text-white bg-dark">
-                                m
-                            </InputGroupText>
-                        </InputGroup>
-                    </div>
+                    {!!point.showRadius && <div className="p-1">
+                        <DistanceInput
+                            value={point.radius || 0}
+                            onValueChange={radius => onChange({ ...point, radius })}
+                            style={{maxWidth: 120, textAlign: 'right'}}
+                        />
+                    </div>}
                 </div>
 
                 <div className="flex-grow-1" />
 
                 <div className="p-1">
-                    <ButtonGroup>
-                        {ENABLE_COORDINATE_INPUT &&
-                         <Button title="Enter coordinates">
-                             <FontAwesomeIcon icon={faPencilAlt} />
-                         </Button>}
-                        <Button title="Pick from map" onClick={onPickFromMap}>
-                            <FontAwesomeIcon icon={faCrosshairs} />
-                        </Button>
-                        <Button title="Use current location" onClick={onPickCurrentLocation}>
-                            <FontAwesomeIcon icon={faLocationArrow} />
-                        </Button>
-                    </ButtonGroup>{" "}
-                    <ButtonGroup>
-                        <Button onClick={onMoveUp} disabled={isFirst}>
-                            <FontAwesomeIcon icon={faArrowUp} />
-                        </Button>
-                        <Button onClick={onMoveDown} disabled={isLast}>
-                            <FontAwesomeIcon icon={faArrowDown} />
-                        </Button>
-                    </ButtonGroup>{" "}
-                    <Button title="Use current location" color="danger" onClick={onDelete}>
-                        <FontAwesomeIcon icon={faTrashAlt} />{" "}
-                        Delete
-                    </Button>
+                    {renderTools()}
                 </div>
 
             </div>
@@ -622,6 +630,101 @@ function LocationDisplay({ location }) {
                 {formatter(location)}
             </code>
         </div>
+    );
+}
+
+
+function DistanceInput({ value, onValueChange, ...props }) {
+
+    const parseValue = rawValue => {
+        const m = /^(\d+)\s*(.*)$/.exec(rawValue);
+
+        if (!m) {
+            throw new Error(`Invalid distance: ${rawValue}`);
+        }
+
+        const intValue = parseInt(m[1], 10);
+        const suffix = m[2];
+
+        if (["", "m"].includes(suffix)) {
+            return intValue;
+        }
+        if (["k", "km"].includes(suffix)) {
+            return intValue * 1000;
+        }
+        if (suffix === "mi") {
+            // Land miles
+            return intValue * 1609.34;
+        }
+        if (["M", "NM", "nm", "nmi"].includes(suffix)) {
+            // Nautical miles
+            return intValue * 1852;
+        }
+        if (suffix === "ft") {
+            // Feet
+            return intValue * 0.3048;
+        }
+        throw new Error(`Invalid distance units: ${suffix}`);
+    };
+
+    const normalizeValue = value => {
+        if (value >= 1000) {
+            return `${value / 1000} km`;
+        }
+        return `${value} m`;
+    };
+
+    const [rawValue, setRawValue] = React.useState(normalizeValue(value));
+    const [errorMessage, setErrorMessage] = React.useState(false);
+    const [isFocused, setFocused] = React.useState(false);
+
+    const onChange = event => {
+        const newValue = event.target.value;
+        console.log("Changed", newValue);
+        setRawValue(newValue);
+        let parsedValue = null;
+        try {
+            parsedValue = parseValue(newValue);
+        }
+        catch (e) {
+            setErrorMessage(e.message || "Invalid value");
+            return;
+        }
+        setErrorMessage(null);
+        onValueChange(parsedValue);
+    };
+
+    const onFocus = () => {
+        setFocused(true);
+        setRawValue(normalizeValue(value));
+    };
+
+    const onBlur = () => {
+        setFocused(false);
+        let parsedValue;
+        try {
+            parsedValue = parseValue(rawValue);
+        }
+        catch (e) {
+            setErrorMessage(e.message || "Invalid value");
+            return;
+        }
+        setErrorMessage(null);
+        setRawValue(normalizeValue(parsedValue));
+    };
+
+    return (
+        <>
+            <Input
+                invalid={!!errorMessage}
+                value={isFocused ? rawValue : normalizeValue(value)}
+                onChange={onChange}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                {...props}
+            />
+            {errorMessage && <FormFeedback>{errorMessage}</FormFeedback>}
+        </>
     );
 }
 
@@ -713,3 +816,51 @@ function formatBearing(bearing) {
     });
     return `${formatter.format(bearing)}°`;
 }
+
+
+/**
+ * Immutable array manipulation tool
+ */
+const ArrayTool = {
+    append(items, value) {
+        return [ ...items, value ];
+    },
+    prepend(items, value) {
+        return [ value, ...items ];
+    },
+    update(items, idx, value) {
+        return [
+            ...items.slice(0, idx),
+            value,
+            ...items.slice(idx + 1),
+        ];
+    },
+    remove(items, idx) {
+        return [
+            ...items.slice(0, idx),
+            ...items.slice(idx + 1),
+        ];
+    },
+    moveUp(items, idx) {
+        if (idx <= 0) {
+            return items;
+        }
+        return [
+            ...items.slice(0, idx - 1),
+            items[idx],
+            items[idx - 1],
+            ...items.slice(idx + 1),
+        ];
+    },
+    moveDown(items, idx) {
+        if (idx >= (items.length - 1)) {
+            return items;
+        }
+        return [
+            ...items.slice(0, idx),
+            items[idx + 1],
+            items[idx],
+            ...items.slice(idx + 2),
+        ];
+    },
+};
