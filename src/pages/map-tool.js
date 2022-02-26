@@ -333,9 +333,8 @@ function MapTool() {
                      center={mapCenter}
                      zoom={mapZoom}
                      className="flex-grow-1"
-                     style={{cursor: pickerTool.isActive ? "crosshair" : "pointer"}}
                      zoomControl={false}
-                 >
+                     style={{cursor: 'crosshair'}}>
 
                      <MapEventHandler
                          onClick={onMapClick}
