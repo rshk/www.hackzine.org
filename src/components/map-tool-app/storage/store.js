@@ -31,7 +31,9 @@ const store = createStoreWithMiddleware(
     }),
 
     // Enable React DevTools integration
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    (typeof window !== "undefined")
+    ? window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    : undefined,
 );
 
 export default store;
