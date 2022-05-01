@@ -2,7 +2,17 @@ import * as React from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "gatsby";
 // import PropTypes from "prop-types";
-import { MapContainer, Marker, useMapEvents, Popup, ZoomControl } from "react-leaflet";
+import {
+    MapContainer,
+    Marker,
+    useMap,
+    useMapEvents,
+    Popup,
+    ZoomControl,
+    ScaleControl,
+    LayersControl,
+    LayerGroup,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {
     Button,
@@ -32,6 +42,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as GeoMath from "./lib/geo-math";
 
 import "./map/icons/default";
+import makeNumericPOIIcon from "./map/icons/numeric-poi";
 import GeodesicLine from "./map/geodesic-line";
 import GeodesicCircle from "./map/geodesic-circle";
 import OsmTileLayer from "./map/layers/osm";
@@ -252,6 +263,108 @@ function MapTool() {
         );
     };
 
+    const renderPOIs = () => {
+        return points.map((point, idx) =>
+            <Marker key={idx} position={point.location}>
+                <Popup>
+                    <PointPopupContent
+                        idx={idx}
+                        point={point}
+                        nextPoint={points[idx + 1] || null}
+                        onDelete={() => dispatch(actions.points.remove(idx))}
+                    />
+                </Popup>
+            </Marker>
+        );
+    };
+
+    const renderPlottedRoutes = () => {
+        if (locations.length <= 1) {
+            return null;
+        }
+        return (
+            <GeodesicLine
+                positions={locations}
+                steps={DEFAULT_RESOLUTION}
+            />
+        )
+    };
+
+    const renderPlottedRadiuses = () => {
+        return points.map((point, idx) => {
+            if (!point.showRadius) {
+                return null;
+            }
+            return (
+                <GeodesicCircle
+                    key={idx}
+                    center={point.location}
+                    radius={point.radius}
+                    steps={DEFAULT_RESOLUTION}
+                />);
+        });
+    };
+
+    const renderDummyMarkers = () => {
+        return (
+            <CustomLayerGroup minZoom={6}>
+                <Marker position={[45, 0]} icon={makeNumericPOIIcon()} />
+                <Marker position={[45, 1]} icon={makeNumericPOIIcon()} />
+                <Marker position={[45, 2]} icon={makeNumericPOIIcon()} />
+            </CustomLayerGroup>
+        );
+    };
+
+    const renderMap = () => {
+        return (
+            <MapContainer
+                center={mapCenter}
+                zoom={mapZoom}
+                className="flex-grow-1"
+                zoomControl={false}
+                attributionControl={false}
+                style={{ cursor: 'crosshair' }}
+            >
+
+                <MapEventHandler
+                    onClick={onMapClick}
+                    onZoomEnd={(e, map) => setMapZoom(map.getZoom())}
+                    onMoveEnd={(e, map) => setMapCenter(map.getCenter())}
+                />
+
+                <ZoomControl position="bottomleft" />
+                <ScaleControl position="topright" />
+
+                <LayersControl position="bottomright">
+
+                    <LayersControl.Overlay name="POIs" checked >
+                        <LayerGroup>
+                            {renderPOIs()}
+                        </LayerGroup>
+                    </LayersControl.Overlay>
+
+                    <LayersControl.Overlay name="POIs: radius" checked >
+                        <LayerGroup>
+                            {renderPlottedRadiuses()}
+                        </LayerGroup>
+                    </LayersControl.Overlay>
+
+                    <LayersControl.Overlay name="POIs: route" checked >
+                        <LayerGroup>
+                            {renderPlottedRoutes()}
+                        </LayerGroup>
+                    </LayersControl.Overlay>
+
+                    <LayersControl.BaseLayer name="Open Street Map" checked>
+                        <OsmTileLayer />
+                    </LayersControl.BaseLayer>
+
+                </LayersControl>
+
+            </MapContainer>
+        );
+    };
+
     return (
         <div className="flex-grow-1 d-flex flex-column position-relative">
 
@@ -268,68 +381,20 @@ function MapTool() {
             </div>
 
             {selectedTab === "map" &&
-             <div className="flex-grow-1 d-flex flex-column position-relative">
+                <div className="flex-grow-1 d-flex flex-column position-relative">
 
-                 {pickerTool.isActive && renderPickerMessage()}
+                    {pickerTool.isActive && renderPickerMessage()}
+                    {renderMap()}
 
-                 <MapContainer
-                     center={mapCenter}
-                     zoom={mapZoom}
-                     className="flex-grow-1"
-                     zoomControl={false}
-                     style={{cursor: 'crosshair'}}>
 
-                     <MapEventHandler
-                         onClick={onMapClick}
-                         onZoomEnd={(e, map) => setMapZoom(map.getZoom())}
-                         onMoveEnd={(e, map) => setMapCenter(map.getCenter())}
-                     />
-
-                     <ZoomControl position="bottomleft" />
-
-                     <OsmTileLayer />
-
-                     {points.map((point, idx) =>
-                         <Marker key={idx} position={point.location}>
-                             <Popup>
-                                 <PointPopupContent
-                                     idx={idx}
-                                     point={point}
-                                     nextPoint={points[idx + 1] || null}
-                                     onDelete={() => dispatch(actions.points.remove(idx))}
-                                 />
-                             </Popup>
-                         </Marker>
-                     )}
-
-                     {points.map((point, idx) => {
-                         if (!point.showRadius) {
-                             return null;
-                         }
-                         return (
-                             <GeodesicCircle
-                                 key={idx}
-                                 center={point.location}
-                                 radius={point.radius}
-                                 steps={DEFAULT_RESOLUTION}
-                             />);
-                     })}
-
-                     {locations.length > 1 &&
-                      <GeodesicLine
-                          positions={locations}
-                          steps={DEFAULT_RESOLUTION}
-                      />
-                     }
-                 </MapContainer>
-             </div>}
+                </div>}
 
             {selectedTab === "points" &&
-             <PointsConfigurationPane
-                 points={points}
-                 dispatch={dispatch}
-                 activatePickerTool={activatePickerTool}
-             />}
+                <PointsConfigurationPane
+                    points={points}
+                    dispatch={dispatch}
+                    activatePickerTool={activatePickerTool}
+                />}
 
         </div>
     );
@@ -690,4 +755,16 @@ function MapEventHandler({ onClick, onZoomEnd, onMoveEnd }) {
         }
     })
     return null;
+}
+
+
+function CustomLayerGroup({ minZoom = 0, children, ...props }) {
+    const map = useMap();
+    const currentZoom = map.getZoom();
+    const isVisible = currentZoom >= minZoom;
+    return (
+        <LayerGroup {...props}>
+            {isVisible ? children : null}
+        </LayerGroup>
+    )
 }
