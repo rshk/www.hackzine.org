@@ -6,7 +6,7 @@ import {
 } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { formatLatLonDMS, formatLatLonPlain } from "./formatting";
+import { formatLatLonDMS, formatLatLonPlain } from "../lib/formatting";
 
 
 export default function LocationDisplay({ location }) {

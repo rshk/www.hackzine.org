@@ -29,13 +29,13 @@ import Div100vh from 'react-div-100vh';
 import * as uuid from "uuid";
 
 // import * as LeafletGeodesic from "leaflet.geodesic";
-import * as GeoMath from "ui/map/geo-math";
+import * as GeoMath from "./lib/geo-math";
 
-import "ui/map/default-icon";
-import GeodesicLine from "ui/map/geodesic-line";
-import GeodesicCircle from "ui/map/geodesic-circle";
-import OsmTileLayer from "ui/map/osm-tile-layer";
-import LocationDisplay from "ui/map/location-display";
+import "./map/icons/default";
+import GeodesicLine from "./map/geodesic-line";
+import GeodesicCircle from "./map/geodesic-circle";
+import OsmTileLayer from "./map/layers/osm";
+import LocationDisplay from "./ui/location-display";
 import {
     formatLatLonDMS,
     formatDistance,
