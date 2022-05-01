@@ -21,7 +21,6 @@ import {
     faArrowAltCircleUp,
     faArrowUp,
     faArrowDown,
-    faCloudDownloadAlt,
     faMapMarkerAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faMap } from '@fortawesome/free-regular-svg-icons';
@@ -166,30 +165,6 @@ function MapTool() {
         }
     };
 
-    // ---------------------------------------------------------------
-
-    const exportState = () => {
-        return {
-            version: 1,
-            timestamp: (new Date()).toISOString(),
-            mapCenter,
-            mapZoom,
-            points,
-        };
-    };
-
-    const importState = (state) => {
-        if (state.version !== 1) {
-            console.error(`Unsupported state version: ${state.version}`);
-            return;
-        }
-        dispatch(actions.points.assign(state.points));
-        setMapZoom(state.mapZoom);
-        setMapCenter(state.mapCenter);
-    };
-
-    // ---------------------------------------------------------------
-
     const renderTabSwitcher = () => {
         const ITEMS = [
             {
@@ -204,13 +179,6 @@ function MapTool() {
                 label: <>
                     <FontAwesomeIcon className="d-md-none" icon={faMapMarkerAlt} />{" "}
                     <span className="d-none d-md-inline">Points</span>
-                </>,
-            },
-            {
-                id: "export",
-                label: <>
-                    <FontAwesomeIcon className="d-md-none" icon={faCloudDownloadAlt} />{" "}
-                    <span className="d-none d-md-inline">Load / Save</span>
                 </>,
             },
         ];
@@ -271,51 +239,6 @@ function MapTool() {
                 <Button onClick={deactivatePickerTool}>
                     Cancel
                 </Button>
-            </div>
-        );
-    };
-
-    // ---------------------------------------------------------------
-
-    const renderExportTab = () => {
-
-        const LOCALSTORAGE_KEY = "map-tool-state";
-
-        const onSave = () => {
-            const state = exportState();
-            console.log("Exported state", state);
-            if (!checkStorage()) {
-                return;
-            }
-            window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(state));
-        };
-
-        const onLoad = () => {
-            if (!checkStorage()) {
-                return;
-            }
-            const state = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY));
-            console.log("Importing state", state);
-            importState(state);
-            selectTab("map");
-        };
-
-        const checkStorage = () => {
-            if (!(window && window.localStorage)) {
-                console.error("LocalStorage is not available");
-                return false;
-            }
-            return true;
-        };
-
-        return (
-            <div className="p-3">
-                <h2>Save to local storage</h2>
-                <div>Load and save in the current browser</div>
-                <Button onClick={onSave}>Save</Button>
-                <Button onClick={onLoad}>Load</Button>
-                <h2>Export</h2>
-                <h2>Import JSON</h2>
             </div>
         );
     };
@@ -399,7 +322,6 @@ function MapTool() {
                  activatePickerTool={activatePickerTool}
              />}
 
-            {selectedTab === "export" && renderExportTab()}
         </div>
     );
 }
