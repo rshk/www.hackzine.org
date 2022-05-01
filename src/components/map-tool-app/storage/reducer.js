@@ -49,6 +49,30 @@ export default function reducer(state = {}, action) {
                 points: ArrayTool.moveDown(state.points, action.idx),
             };
 
+        case "uiState.map.setCenter":
+            return {
+                ...state,
+                uiState: {
+                    ...state.uiState,
+                    map: {
+                        ...state.uiState?.map,
+                        center: action.center,
+                    },
+                },
+            };
+
+        case "uiState.map.setZoom":
+            return {
+                ...state,
+                uiState: {
+                    ...state.uiState,
+                    map: {
+                        ...state.uiState?.map,
+                        zoom: action.zoom,
+                    },
+                },
+            };
+
         default:
             return state;
     }

@@ -4,9 +4,9 @@ import reducer from "./reducer";
 
 
 const LOCALSTORAGE_CONFIG = {
-    states: ['points'],
-    namespace: 'hackzine-map-tool',
-    namespaceSeparator: ':',
+    states: ["points", "settings", "uiState"],
+    namespace: "hackzine-map-tool",
+    namespaceSeparator: ":",
 };
 
 

@@ -105,8 +105,17 @@ function MapToolWrapper() {
 function MapTool() {
 
     const [selectedTab, selectTab] = React.useState("map");
-    const [mapCenter, setMapCenter] = React.useState([45, 0]);
-    const [mapZoom, setMapZoom] = React.useState(6);
+    // const [mapCenter, setMapCenter] = React.useState([45, 0]);
+    // const [mapZoom, setMapZoom] = React.useState(6);
+    const uiState = useSelector(({ uiState = {} }) => uiState);
+    const {
+        map: {
+            zoom: mapZoom = 6,
+            center: mapCenter = [45, 0],
+        } = {}
+    } = uiState;
+    const setMapCenter = center => dispatch(actions.uiState.map.setCenter(center));
+    const setMapZoom = zoom => dispatch(actions.uiState.map.setZoom(zoom));
 
     // Points of interest to show on the map
     // const [points, setPoints] = React.useState(DEFAULT_POINTS);

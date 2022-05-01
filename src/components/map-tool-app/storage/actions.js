@@ -12,3 +12,11 @@ export const points = {
     assign: (points) =>
         ({ type: "points.assign", points }),
 };
+
+
+export const uiState = {
+    map: {
+        setCenter: center => ({ type: "uiState.map.setCenter", center }),
+        setZoom: zoom => ({ type: "uiState.map.setZoom", zoom }),
+    },
+};
