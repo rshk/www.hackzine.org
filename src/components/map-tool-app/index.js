@@ -27,6 +27,7 @@ import {
 import { faMap } from '@fortawesome/free-regular-svg-icons';
 import Div100vh from 'react-div-100vh';
 import * as uuid from "uuid";
+import { useSelector, useDispatch } from "react-redux";
 
 // import * as LeafletGeodesic from "leaflet.geodesic";
 import * as GeoMath from "./lib/geo-math";
@@ -42,7 +43,9 @@ import {
     formatBearing,
 } from "./lib/formatting";
 import DistanceInput from "./ui/distance-input";
-import ArrayTool from "./lib/array-tool";
+// import ArrayTool from "./lib/array-tool";
+import Provider from "./storage/provider";
+import * as actions from "./storage/actions";
 
 
 const DEFAULT_RESOLUTION = 180;
@@ -61,7 +64,7 @@ function createPoint(data) {
 }
 
 
-const DEFAULT_POINTS = [];
+// const DEFAULT_POINTS = [];
 
 
 export default function MapToolPage() {
@@ -70,17 +73,19 @@ export default function MapToolPage() {
             <Helmet>
                 <title>Hackzine.org - Map tool</title>
             </Helmet>
-            <Div100vh className="d-flex flex-column">
-                <div className="d-flex flex-row align-items-center">
-                    <div className="flex-grow-1 p-2">
-                        <h1>Map tool</h1>
+            <Provider>
+                <Div100vh className="d-flex flex-column">
+                    <div className="d-flex flex-row align-items-center">
+                        <div className="flex-grow-1 p-2">
+                            <h1>Map tool</h1>
+                        </div>
+                        <div className="p-2">
+                            by <Link to="/">Hackzine.org</Link>
+                        </div>
                     </div>
-                    <div className="p-2">
-                        by <Link to="/">Hackzine.org</Link>
-                    </div>
-                </div>
-                <MapToolWrapper />
-            </Div100vh>
+                    <MapToolWrapper />
+                </Div100vh>
+            </Provider>
         </>
     );
 }
@@ -105,7 +110,9 @@ function MapTool() {
     const [mapZoom, setMapZoom] = React.useState(6);
 
     // Points of interest to show on the map
-    const [points, setPoints] = React.useState(DEFAULT_POINTS);
+    // const [points, setPoints] = React.useState(DEFAULT_POINTS);
+    const dispatch = useDispatch();
+    const points = useSelector(({ points = [] }) => points);
 
     const locations = points.map(point => point.location);
 
@@ -132,7 +139,7 @@ function MapTool() {
         activatePickerTool(
             location => {
                 const newPoint = createPoint({ location });
-                setPoints(points => ArrayTool.append(points, newPoint));
+                dispatch(actions.points.append(newPoint));
             },
             { name: 'add' },
         );
@@ -176,7 +183,7 @@ function MapTool() {
             console.error(`Unsupported state version: ${state.version}`);
             return;
         }
-        setPoints(state.points);
+        dispatch(actions.points.assign(state.points));
         setMapZoom(state.mapZoom);
         setMapCenter(state.mapCenter);
     };
@@ -247,7 +254,7 @@ function MapTool() {
                     location: [latitude, longitude],
                     label: "Current location",
                 });
-                setPoints(points => ArrayTool.append(points, newPoint));
+                dispatch(actions.points.append(newPoint));
             });
         };
         return (
@@ -357,8 +364,7 @@ function MapTool() {
                                      idx={idx}
                                      point={point}
                                      nextPoint={points[idx + 1] || null}
-                                     onDelete={() =>
-                                         setPoints(points => ArrayTool.remove(points, idx))}
+                                     onDelete={() => dispatch(actions.points.remove(idx))}
                                  />
                              </Popup>
                          </Marker>
@@ -389,7 +395,7 @@ function MapTool() {
             {selectedTab === "points" &&
              <PointsConfigurationPane
                  points={points}
-                 setPoints={setPoints}
+                 dispatch={dispatch}
                  activatePickerTool={activatePickerTool}
              />}
 
@@ -443,20 +449,20 @@ function PointPopupContent({ idx, point, nextPoint, onDelete }) {
 }
 
 
-function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
+function PointsConfigurationPane({ points, dispatch, activatePickerTool }) {
 
     const onPointChange = (idx, changes) => {
-        setPoints(points => ArrayTool.update(points, idx, changes));
+        dispatch(actions.points.update(idx, changes));
     };
 
     const onPointDelete = (idx) => {
-        setPoints(points => ArrayTool.remove(points, idx));
+        dispatch(actions.points.remove(idx));
     };
 
     const onAddPickFromMap = () => {
         activatePickerTool(location => {
-            const point = createPoint({ location });
-            setPoints(points => ArrayTool.append(points, point));
+            const newPoint = createPoint({ location });
+            dispatch(actions.points.append(newPoint));
         }, {name: 'add'});
     };
 
@@ -467,16 +473,16 @@ function PointsConfigurationPane({ points, setPoints, activatePickerTool }) {
                 location: [latitude, longitude],
                 label: "Current location",
             });
-            setPoints(points => ArrayTool.append(points, newPoint));
+            dispatch(actions.points.append(newPoint));
         });
     };
 
     const onPointMoveUp = (idx) => {
-        setPoints(points => ArrayTool.moveUp(points, idx));
+        dispatch(actions.points.moveUp(idx));
     };
 
     const onPointMoveDown = (idx) => {
-        setPoints(points => ArrayTool.moveDown(points, idx));
+        dispatch(actions.points.moveDown(idx));
     };
 
     return (
