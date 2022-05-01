@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "gatsby";
+// import PropTypes from "prop-types";
 import { MapContainer, Marker, useMapEvents, Popup, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {
@@ -8,7 +9,6 @@ import {
     ButtonGroup,
     Input,
     Label,
-    FormFeedback,
 } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -36,6 +36,13 @@ import GeodesicLine from "ui/map/geodesic-line";
 import GeodesicCircle from "ui/map/geodesic-circle";
 import OsmTileLayer from "ui/map/osm-tile-layer";
 import LocationDisplay from "ui/map/location-display";
+import {
+    formatLatLonDMS,
+    formatDistance,
+    formatBearing,
+} from "./lib/formatting";
+import DistanceInput from "./ui/distance-input";
+import ArrayTool from "./lib/array-tool";
 
 
 const DEFAULT_RESOLUTION = 180;
@@ -54,10 +61,7 @@ function createPoint(data) {
 }
 
 
-const DEFAULT_POINTS = [
-    // createPoint({location: [52.3, -6.6], radius: 200000, showRadius: true}),
-    // createPoint({location: [25.3,-80.7], radius: 200000, showRadius: true}),
-];
+const DEFAULT_POINTS = [];
 
 
 export default function MapToolPage() {
@@ -730,149 +734,6 @@ function PointConfigurationRow({
 }
 
 
-function DistanceInput({ value, onValueChange, ...props }) {
-
-    const parseValue = rawValue => {
-        const m = /^(\d+)\s*(.*)$/.exec(rawValue);
-
-        if (!m) {
-            throw new Error(`Invalid distance: ${rawValue}`);
-        }
-
-        const intValue = parseInt(m[1], 10);
-        const suffix = m[2];
-
-        if (["", "m"].includes(suffix)) {
-            return intValue;
-        }
-        if (["k", "km"].includes(suffix)) {
-            return intValue * 1000;
-        }
-        if (suffix === "mi") {
-            // Land miles
-            return intValue * 1609.34;
-        }
-        if (["M", "NM", "nm", "nmi"].includes(suffix)) {
-            // Nautical miles
-            return intValue * 1852;
-        }
-        if (suffix === "ft") {
-            // Feet
-            return intValue * 0.3048;
-        }
-        throw new Error(`Invalid distance units: ${suffix}`);
-    };
-
-    const normalizeValue = value => {
-        if (value >= 1000) {
-            return `${value / 1000} km`;
-        }
-        return `${value} m`;
-    };
-
-    const [rawValue, setRawValue] = React.useState(normalizeValue(value));
-    const [errorMessage, setErrorMessage] = React.useState(false);
-    const [isFocused, setFocused] = React.useState(false);
-
-    const onChange = event => {
-        const newValue = event.target.value;
-        console.log("Changed", newValue);
-        setRawValue(newValue);
-        let parsedValue = null;
-        try {
-            parsedValue = parseValue(newValue);
-        }
-        catch (e) {
-            setErrorMessage(e.message || "Invalid value");
-            return;
-        }
-        setErrorMessage(null);
-        onValueChange(parsedValue);
-    };
-
-    const onFocus = () => {
-        setFocused(true);
-        setRawValue(normalizeValue(value));
-    };
-
-    const onBlur = () => {
-        setFocused(false);
-        let parsedValue;
-        try {
-            parsedValue = parseValue(rawValue);
-        }
-        catch (e) {
-            setErrorMessage(e.message || "Invalid value");
-            return;
-        }
-        setErrorMessage(null);
-        setRawValue(normalizeValue(parsedValue));
-    };
-
-    return (
-        <>
-            <Input
-                invalid={!!errorMessage}
-                value={isFocused ? rawValue : normalizeValue(value)}
-                onChange={onChange}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                {...props}
-            />
-            {errorMessage && <FormFeedback>{errorMessage}</FormFeedback>}
-        </>
-    );
-}
-
-
-function formatLatLonPlain([lat, lon]) {
-    const fmt = new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 6,
-    });
-    return `${fmt.format(lat)},${fmt.format(lon)}`;
-}
-
-
-function formatLatLonDMS([lat, lon]) {
-    const latDMS = getDMS(lat);
-    const lonDMS = getDMS(lon);
-    return `${formatDMS(latDMS, 'N', 'S')}, ${formatDMS(lonDMS, 'E', 'W')}`;
-}
-
-
-function getDMS(number) {
-    const sign = number < 0 ? -1 : 1;
-    const number_abs = Math.abs(number);
-    const degrees = Math.abs(Math.floor(number_abs));
-    const minutes = Math.floor((number_abs * 60) % 60);
-    const seconds = (number_abs * 3600) % 60;
-    return { sign, degrees, minutes, seconds };
-}
-
-
-function formatDMS(dms, pos, neg) {
-    const fmtD = new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 0,
-        // Hacky way to show three digits for longitude
-        minimumIntegerDigits: (pos === 'E' && neg === 'W') ? 3 : 2,
-    });
-    const fmtS = new Intl.NumberFormat("en-US", {
-        // maximumFractionDigits: 1,
-        maximumFractionDigits: 0,
-        minimumIntegerDigits: 2,
-    });
-    const {degrees, minutes, seconds} = dms;
-    const sign = dms.sign < 0 ? neg : pos;
-    return `${fmtD.format(degrees)}° ${fmtD.format(minutes)}' ${fmtS.format(seconds)}" ${sign}`;
-}
-
-
-const LOCATION_FORMATTERS = [
-    formatLatLonDMS,
-    formatLatLonPlain,
-];
-
-
 function MapEventHandler({ onClick, onZoomEnd, onMoveEnd }) {
     const map = useMapEvents({
         click(event) {
@@ -893,70 +754,3 @@ function MapEventHandler({ onClick, onZoomEnd, onMoveEnd }) {
     })
     return null;
 }
-
-
-function formatDistance(distance) {
-    const formatter = new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 0,
-    });
-    if (distance > 1000) {
-        return `${formatter.format(distance / 1000)} km`;
-    }
-    return `${formatter.format(distance)} m`;
-}
-
-
-function formatBearing(bearing) {
-    const formatter = new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 0,
-    });
-    return `${formatter.format(bearing)}°`;
-}
-
-
-/**
- * Immutable array manipulation tool
- */
-const ArrayTool = {
-    append(items, value) {
-        return [ ...items, value ];
-    },
-    prepend(items, value) {
-        return [ value, ...items ];
-    },
-    update(items, idx, value) {
-        return [
-            ...items.slice(0, idx),
-            value,
-            ...items.slice(idx + 1),
-        ];
-    },
-    remove(items, idx) {
-        return [
-            ...items.slice(0, idx),
-            ...items.slice(idx + 1),
-        ];
-    },
-    moveUp(items, idx) {
-        if (idx <= 0) {
-            return items;
-        }
-        return [
-            ...items.slice(0, idx - 1),
-            items[idx],
-            items[idx - 1],
-            ...items.slice(idx + 1),
-        ];
-    },
-    moveDown(items, idx) {
-        if (idx >= (items.length - 1)) {
-            return items;
-        }
-        return [
-            ...items.slice(0, idx),
-            items[idx + 1],
-            items[idx],
-            ...items.slice(idx + 2),
-        ];
-    },
-};
