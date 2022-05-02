@@ -22,31 +22,31 @@ export default function reducer(state = {}, action) {
         case "points.append":
             return {
                 ...state,
-                points: ArrayTool.append(state.points, action.newPoint),
+                points: ArrayTool.append(state.points || [], action.newPoint),
             };
 
         case "points.remove":
             return {
                 ...state,
-                points: ArrayTool.remove(state.points, action.idx),
+                points: ArrayTool.remove(state.points || [], action.idx),
             };
 
         case "points.update":
             return {
                 ...state,
-                points: ArrayTool.update(state.points, action.idx, action.changes),
+                points: ArrayTool.update(state.points || [], action.idx, action.changes),
             };
 
         case "points.moveUp":
             return {
                 ...state,
-                points: ArrayTool.moveUp(state.points, action.idx),
+                points: ArrayTool.moveUp(state.points || [], action.idx),
             };
 
         case "points.moveDown":
             return {
                 ...state,
-                points: ArrayTool.moveDown(state.points, action.idx),
+                points: ArrayTool.moveDown(state.points || [], action.idx),
             };
 
         case "uiState.map.setCenter":
