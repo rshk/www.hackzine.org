@@ -32,6 +32,7 @@ import {
     faArrowUp,
     faArrowDown,
     faMapMarkerAlt,
+    faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { faMap } from '@fortawesome/free-regular-svg-icons';
 import Div100vh from 'react-div-100vh';
@@ -211,6 +212,13 @@ function MapTool() {
                 label: <>
                     <FontAwesomeIcon className="d-md-none" icon={faMapMarkerAlt} />{" "}
                     <span className="d-none d-md-inline">Points</span>
+                </>,
+            },
+            {
+                id: "settings",
+                label: <>
+                    <FontAwesomeIcon className="d-md-none" icon={faCog} />{" "}
+                    <span className="d-none d-md-inline">Settings</span>
                 </>,
             },
         ];
@@ -448,21 +456,21 @@ function MapTool() {
                 </div>
             </div>
 
-            {selectedTab === "map" &&
+            <div className="flex-grow-1 d-flex flex-column position-relative">
                 <div className="flex-grow-1 d-flex flex-column position-relative">
-
                     {pickerTool.isActive && renderPickerMessage()}
                     {renderMap()}
+                </div>
 
+                {selectedTab === "points" &&
+                    <PointsConfigurationPane
+                        points={points}
+                        dispatch={dispatch}
+                        activatePickerTool={activatePickerTool}
+                    />}
 
-                </div>}
-
-            {selectedTab === "points" &&
-                <PointsConfigurationPane
-                    points={points}
-                    dispatch={dispatch}
-                    activatePickerTool={activatePickerTool}
-                />}
+                {selectedTab === "settings" && <SettingsPane />}
+            </div>
 
         </div>
     );
@@ -513,6 +521,33 @@ function PointPopupContent({ idx, point, nextPoint, onDelete }) {
 }
 
 
+function ModalPane({ children }) {
+    const style = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 999999999,
+        // background: "rgba(0,0,0,.2)",
+        overflow: 'auto',
+        // background: "val(--bs-body-bg, 50%)",
+    };
+    const classes = [
+        "position-absolute",
+        "bg-dark",
+        "m-md-3",
+        "p-md-2",
+        "shadow",
+    ];
+    return (
+        <div className={classes.join(" ")} style={style}>
+            {children}
+        </div>
+    );
+}
+
+
 function PointsConfigurationPane({ points, dispatch, activatePickerTool }) {
 
     const onPointChange = (idx, changes) => {
@@ -550,7 +585,7 @@ function PointsConfigurationPane({ points, dispatch, activatePickerTool }) {
     };
 
     return (
-        <div>
+        <ModalPane>
             {points.map((point, idx) => (
                 <PointConfigurationRow
                     key={point.id || `point-${idx}`}
@@ -592,7 +627,7 @@ function PointsConfigurationPane({ points, dispatch, activatePickerTool }) {
                  </Button>}
 
             </div>
-        </div>
+        </ModalPane>
     );
 }
 
@@ -835,4 +870,22 @@ function CustomLayerGroup({ minZoom = 0, children, ...props }) {
             {isVisible ? children : null}
         </LayerGroup>
     )
+}
+
+
+function SettingsPane() {
+
+    function doFullReset() {
+        localStorage.clear();
+        window.location.reload();
+    }
+
+    return (
+        <ModalPane>
+            <div className="m-2">
+                <h1>Settings</h1>
+                <Button color="danger" onClick={() => doFullReset()}>Reset all</Button>
+            </div>
+        </ModalPane>
+    );
 }
