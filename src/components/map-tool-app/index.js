@@ -42,7 +42,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as GeoMath from "./lib/geo-math";
 
 import "./map/icons/default";
-import makeNumericPOIIcon from "./map/icons/numeric-poi";
+import makeCustomIcon from "./map/icons/custom";
 import GeodesicLine from "./map/geodesic-line";
 import GeodesicCircle from "./map/geodesic-circle";
 import OsmTileLayer from "./map/layers/osm";
@@ -60,6 +60,18 @@ import * as actions from "./storage/actions";
 
 const DEFAULT_RESOLUTION = 180;
 const ENABLE_COORDINATE_INPUT = false;
+const ROUTE_LINE_STYLE = {
+    color: "#3f51b5",
+};
+const RADIUS_CIRCLE_STYLE = {
+    color: "#3f51b5",
+    opacity: 0.5,
+    stroke: true,
+    weight: 3,
+    fill: true,
+    fillColor: "#3f51b5",
+    fillOpacity: .1,
+};
 
 
 function createPoint(data) {
@@ -265,7 +277,15 @@ function MapTool() {
 
     const renderPOIs = () => {
         return points.map((point, idx) =>
-            <Marker key={idx} position={point.location}>
+            <Marker
+                key={idx}
+                position={point.location}
+                icon={makeCustomIcon({
+                    text: (idx + 1),
+                    color: "indigo",
+                    size: 26,
+                })}
+            >
                 <Popup>
                     <PointPopupContent
                         idx={idx}
@@ -286,6 +306,7 @@ function MapTool() {
             <GeodesicLine
                 positions={locations}
                 steps={DEFAULT_RESOLUTION}
+                style={ROUTE_LINE_STYLE}
             />
         )
     };
@@ -301,16 +322,63 @@ function MapTool() {
                     center={point.location}
                     radius={point.radius}
                     steps={DEFAULT_RESOLUTION}
+                    style={RADIUS_CIRCLE_STYLE}
                 />);
         });
     };
 
     const renderDummyMarkers = () => {
+        const DUMMY_MARKERS = [
+            { position: [46, -10], color: "indigo", text: "1" },
+            { position: [46, -9], color: "indigo", text: "2" },
+            { position: [46, -8], color: "indigo", text: "3" },
+            { position: [46, -7], color: "indigo", text: "4" },
+            { position: [46, -6], color: "indigo", text: "5" },
+            { position: [46, -5], color: "indigo", text: "6" },
+            { position: [46, -4], color: "indigo", text: "7" },
+            { position: [46, -3], color: "indigo", text: "8" },
+            { position: [46, -2], color: "indigo", text: "9" },
+            { position: [46, -1], color: "indigo", text: "10" },
+            { position: [46, 0], color: "indigo", text: "11" },
+            { position: [46, 1], color: "indigo", text: "12" },
+            { position: [46, 2], color: "indigo", text: "13" },
+            { position: [46, 3], color: "indigo", text: "14" },
+            { position: [46, 4], color: "indigo", text: "15" },
+            { position: [46, 5], color: "indigo", text: "16" },
+            { position: [46, 6], color: "indigo", text: "17" },
+            { position: [46, 7], color: "indigo", text: "18" },
+            { position: [46, 8], color: "indigo", text: "..." },
+            { position: [46, 9], color: "indigo", text: "999" },
+
+            { position: [45, -3], color: "purple", icon: "home" },
+            { position: [45, -2], color: "deep-purple", icon: "anchor" },
+            { position: [45, -1], color: "indigo", icon: "parking" },
+            { position: [45, 0], color: "blue", icon: "car" },
+            { position: [45, 1], color: "light-blue", icon: "gas-pump" },
+            { position: [45, 2], color: "cyan", icon: "info" },
+            { position: [45, 3], color: "teal", icon: "clinic" },
+            { position: [45, 4], color: "green", icon: "farm" },
+            { position: [45, 5], color: "light-green", icon: "globe" },
+            { position: [45, 6], color: "lime", icon: "soccer" },
+            { position: [45, 7], color: "yellow", icon: "star" },
+            { position: [45, 8], color: "amber", icon: "american-football" },
+            { position: [45, 9], color: "orange", icon: "info" },
+            { position: [45, 10], color: "deep-orange", icon: "warning" },
+            { position: [45, 11], color: "red", icon: "pizza" },
+            { position: [45, 12], color: "pink", icon: "globe" },
+            { position: [45, 13], color: "brown", icon: "question" },
+            { position: [45, 14], color: "gray", icon: "crosshairs" },
+            { position: [45, 15], color: "blue-gray", icon: "marker" },
+        ];
         return (
             <CustomLayerGroup minZoom={6}>
-                <Marker position={[45, 0]} icon={makeNumericPOIIcon()} />
-                <Marker position={[45, 1]} icon={makeNumericPOIIcon()} />
-                <Marker position={[45, 2]} icon={makeNumericPOIIcon()} />
+                {DUMMY_MARKERS.map(({ position, color, icon, text }, idx) =>
+                    <Marker
+                        key={idx}
+                        position={position}
+                        icon={makeCustomIcon({ color, icon, text })}
+                    />
+                )}
             </CustomLayerGroup>
         );
     };
