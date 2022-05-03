@@ -41,7 +41,11 @@ import ModalPane from "./modal-pane";
 const ENABLE_COORDINATE_INPUT = false;
 
 
-export default function PointsConfigurationPane({ activatePickerTool }) {
+export default function PointsConfigurationPane({
+    activatePickerTool,
+    doAddCurrentLocation,
+}) {
+
     const dispatch = useDispatch();
     const points = useSelector(({ points = [] }) => points);
 
@@ -61,14 +65,7 @@ export default function PointsConfigurationPane({ activatePickerTool }) {
     };
 
     const onAddCurrentLocation = () => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            const newPoint = createPoint({
-                location: [latitude, longitude],
-                label: "Current location",
-            });
-            dispatch(actions.points.append(newPoint));
-        });
+        doAddCurrentLocation();
     };
 
     const onPointMoveUp = (idx) => {
@@ -385,7 +382,7 @@ function PointConfigurationRow({
 
             <div>
 
-                <div className="d-flex align-items-center flex-grow-1">
+                <div>
                     <div className="p-1">
                         <Label check>
                             <Input
@@ -396,7 +393,7 @@ function PointConfigurationRow({
                                     showRadius: event.target.checked,
                                 })}
                             />
-                            {" "}Show radius
+                            {" "}Show distance
                         </Label>
                     </div>
                     {!!point.showRadius && <div className="p-1">

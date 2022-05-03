@@ -59,6 +59,7 @@ import Provider from "./storage/provider";
 import * as actions from "./storage/actions";
 import ModalPane from "./ui/modal-pane";
 import PointsConfigurationPane from "./ui/points-pane";
+import SettingsPane from "./ui/settings-pane";
 
 
 const DEFAULT_RESOLUTION = 180;
@@ -255,17 +256,24 @@ function MapTool() {
         );
     };
 
-    const renderAddCurrentLocationTool = () => {
-        const onClick = () => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
-                const newPoint = createPoint({
-                    location: [latitude, longitude],
-                    label: "Current location",
-                });
-                dispatch(actions.points.append(newPoint));
+    const doAddCurrentLocation = () => {
+        const currentDate = new Intl.DateTimeFormat('en-GB', {
+            dateStyle: 'full',
+            timeStyle: 'short',
+        }).format(new Date());
+
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            const newPoint = createPoint({
+                location: [latitude, longitude],
+                label: `Location on ${currentDate}`,
             });
-        };
+            dispatch(actions.points.append(newPoint));
+        });
+    };
+
+    const renderAddCurrentLocationTool = () => {
+        const onClick = () => doAddCurrentLocation();
         return (
             <Button onClick={onClick} title="Add current location">
                 <FontAwesomeIcon icon={faGlobe} />
@@ -334,62 +342,6 @@ function MapTool() {
                     style={RADIUS_CIRCLE_STYLE}
                 />);
         });
-    };
-
-    const renderDummyMarkers = () => {
-        const DUMMY_MARKERS = [
-            { position: [46, -10], color: "indigo", text: "1" },
-            { position: [46, -9], color: "indigo", text: "2" },
-            { position: [46, -8], color: "indigo", text: "3" },
-            { position: [46, -7], color: "indigo", text: "4" },
-            { position: [46, -6], color: "indigo", text: "5" },
-            { position: [46, -5], color: "indigo", text: "6" },
-            { position: [46, -4], color: "indigo", text: "7" },
-            { position: [46, -3], color: "indigo", text: "8" },
-            { position: [46, -2], color: "indigo", text: "9" },
-            { position: [46, -1], color: "indigo", text: "10" },
-            { position: [46, 0], color: "indigo", text: "11" },
-            { position: [46, 1], color: "indigo", text: "12" },
-            { position: [46, 2], color: "indigo", text: "13" },
-            { position: [46, 3], color: "indigo", text: "14" },
-            { position: [46, 4], color: "indigo", text: "15" },
-            { position: [46, 5], color: "indigo", text: "16" },
-            { position: [46, 6], color: "indigo", text: "17" },
-            { position: [46, 7], color: "indigo", text: "18" },
-            { position: [46, 8], color: "indigo", text: "..." },
-            { position: [46, 9], color: "indigo", text: "999" },
-
-            { position: [45, -3], color: "purple", icon: "home" },
-            { position: [45, -2], color: "deep-purple", icon: "anchor" },
-            { position: [45, -1], color: "indigo", icon: "parking" },
-            { position: [45, 0], color: "blue", icon: "car" },
-            { position: [45, 1], color: "light-blue", icon: "gas-pump" },
-            { position: [45, 2], color: "cyan", icon: "info" },
-            { position: [45, 3], color: "teal", icon: "clinic" },
-            { position: [45, 4], color: "green", icon: "farm" },
-            { position: [45, 5], color: "light-green", icon: "globe" },
-            { position: [45, 6], color: "lime", icon: "soccer" },
-            { position: [45, 7], color: "yellow", icon: "star" },
-            { position: [45, 8], color: "amber", icon: "american-football" },
-            { position: [45, 9], color: "orange", icon: "info" },
-            { position: [45, 10], color: "deep-orange", icon: "warning" },
-            { position: [45, 11], color: "red", icon: "pizza" },
-            { position: [45, 12], color: "pink", icon: "globe" },
-            { position: [45, 13], color: "brown", icon: "question" },
-            { position: [45, 14], color: "gray", icon: "crosshairs" },
-            { position: [45, 15], color: "blue-gray", icon: "marker" },
-        ];
-        return (
-            <CustomLayerGroup minZoom={6}>
-                {DUMMY_MARKERS.map(({ position, color, icon, text }, idx) =>
-                    <Marker
-                        key={idx}
-                        position={position}
-                        icon={makeCustomIcon({ color, icon, text })}
-                    />
-                )}
-            </CustomLayerGroup>
-        );
     };
 
     const renderMap = () => {
@@ -468,6 +420,7 @@ function MapTool() {
                         points={points}
                         dispatch={dispatch}
                         activatePickerTool={activatePickerTool}
+                        doAddCurrentLocation={doAddCurrentLocation}
                     />}
 
                 {selectedTab === "settings" && <SettingsPane />}
@@ -541,34 +494,4 @@ function MapEventHandler({ onClick, onZoomEnd, onMoveEnd }) {
         }
     })
     return null;
-}
-
-
-function CustomLayerGroup({ minZoom = 0, children, ...props }) {
-    const map = useMap();
-    const currentZoom = map.getZoom();
-    const isVisible = currentZoom >= minZoom;
-    return (
-        <LayerGroup {...props}>
-            {isVisible ? children : null}
-        </LayerGroup>
-    )
-}
-
-
-function SettingsPane() {
-
-    function doFullReset() {
-        localStorage.clear();
-        window.location.reload();
-    }
-
-    return (
-        <ModalPane>
-            <div className="m-2">
-                <h1>Settings</h1>
-                <Button color="danger" onClick={() => doFullReset()}>Reset all</Button>
-            </div>
-        </ModalPane>
-    );
 }

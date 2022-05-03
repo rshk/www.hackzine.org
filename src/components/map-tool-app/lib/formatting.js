@@ -1,4 +1,4 @@
-import { getDMS } from "./math";
+import { getDMS, getDM } from "./math";
 
 
 export function formatLatLonPlain([lat, lon]) {
@@ -16,6 +16,13 @@ export function formatLatLonDMS([lat, lon]) {
 }
 
 
+export function formatLatLonDM([lat, lon]) {
+    const latDM = getDM(lat);
+    const lonDM = getDM(lon);
+    return `${formatDM(latDM, 'N', 'S')},${formatDM(lonDM, 'E', 'W')}`;
+}
+
+
 export function formatDMS(dms, pos, neg) {
     const fmtD = new Intl.NumberFormat("en-US", {
         maximumFractionDigits: 0,
@@ -30,6 +37,23 @@ export function formatDMS(dms, pos, neg) {
     const {degrees, minutes, seconds} = dms;
     const sign = dms.sign < 0 ? neg : pos;
     return `${fmtD.format(degrees)}°${fmtD.format(minutes)}'${fmtS.format(seconds)}"${sign}`;
+}
+
+
+export function formatDM(dm, pos, neg) {
+    const fmtD = new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 0,
+        // Hacky way to show three digits for longitude
+        minimumIntegerDigits: (pos === 'E' && neg === 'W') ? 3 : 2,
+    });
+    const fmtM = new Intl.NumberFormat("en-US", {
+        // maximumFractionDigits: 1,
+        maximumFractionDigits: 2,
+        minimumIntegerDigits: 2,
+    });
+    const { degrees, minutes } = dm;
+    const sign = dm.sign < 0 ? neg : pos;
+    return `${fmtD.format(degrees)}°${fmtM.format(minutes)}'${sign}`;
 }
 
 

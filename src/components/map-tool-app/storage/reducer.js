@@ -73,6 +73,15 @@ export default function reducer(state = {}, action) {
                 },
             };
 
+        case "settings.update":
+            return {
+                ...state,
+                settings: {
+                    ...(state.settings || {}),
+                    ...action.settings,
+                },
+            };
+
         default:
             return state;
     }

@@ -20,3 +20,8 @@ export const uiState = {
         setZoom: zoom => ({ type: "uiState.map.setZoom", zoom }),
     },
 };
+
+
+export const settings = {
+    update: settings => ({ type: "settings.update", settings }),
+};
