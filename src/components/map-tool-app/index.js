@@ -60,6 +60,7 @@ import * as actions from "./storage/actions";
 import ModalPane from "./ui/modal-pane";
 import PointsConfigurationPane from "./ui/points-pane";
 import SettingsPane from "./ui/settings-pane";
+import createPoint from "./lib/create-point";
 
 
 const DEFAULT_RESOLUTION = 180;
@@ -75,21 +76,6 @@ const RADIUS_CIRCLE_STYLE = {
     fillColor: "#3f51b5",
     fillOpacity: .1,
 };
-
-
-function createPoint(data) {
-    return {
-        id: uuid.v4(),
-        location: [0, 0],
-        label: "",
-        radius: 0,
-        showRadius: false,
-        ...data,
-    };
-}
-
-
-// const DEFAULT_POINTS = [];
 
 
 export default function MapToolPage() {
@@ -124,11 +110,11 @@ function MapToolWrapper() {
         return null;
     }
 
-    return <MapTool />;
+    return <MapToolApp />;
 }
 
 
-function MapTool() {
+function MapToolApp() {
 
     const [selectedTab, selectTab] = React.useState("map");
     // const [mapCenter, setMapCenter] = React.useState([45, 0]);
@@ -164,6 +150,10 @@ function MapTool() {
             isActive: true,
             callback,
             label: "Pick a location on the map",
+
+            // Allow picking multiple times
+            multi: false,
+
             ...options,
         });
         selectTab("map");
@@ -171,11 +161,22 @@ function MapTool() {
 
     const activatePickNewPointTool = () => {
         activatePickerTool(
+            (location, tool) => {
+                const newPoint = createPoint({ location });
+                dispatch(actions.points.append(newPoint));
+                tool.deactivate();
+            },
+            { name: 'add' },
+        );
+    };
+
+    const activatePickManyPointsTool = () => {
+        activatePickerTool(
             location => {
                 const newPoint = createPoint({ location });
                 dispatch(actions.points.append(newPoint));
             },
-            { name: 'add' },
+            { name: 'addMany', multi: true },
         );
     };
 
@@ -188,15 +189,18 @@ function MapTool() {
     // ---------------------------------------------------------------
 
     const onMapClick = event => {
-        const {lat, lng} = event.latlng;
+        const { lat, lng } = event.latlng;
         if (pickerTool.isActive) {
+
             if (pickerTool.callback) {
-                pickerTool.callback([lat, lng]);
+                pickerTool.callback([lat, lng], {
+                    deactivate: deactivatePickerTool,
+                });
             }
-            setPickerTool({
-                isActive: false,
-                callback: null,
-            });
+
+            if (!pickerTool.multi) {
+                deactivatePickerTool();
+            }
         }
     };
 
@@ -251,6 +255,23 @@ function MapTool() {
         };
         return (
             <Button active={isActive} onClick={onClick} title="Add from map">
+                <FontAwesomeIcon icon={faCrosshairs} />
+            </Button>
+        );
+    };
+
+    const renderMultiPickerTool = () => {
+        const isActive = pickerTool.isActive && pickerTool.name === "addMany";
+        const onClick = () => {
+            if (isActive) {
+                deactivatePickerTool();
+            }
+            else {
+                activatePickManyPointsTool();
+            }
+        };
+        return (
+            <Button active={isActive} onClick={onClick} title="Add many from map">
                 <FontAwesomeIcon icon={faCrosshairs} />
             </Button>
         );
@@ -404,6 +425,7 @@ function MapTool() {
                 <div className="p-1 flex-grow-1">
                     {(selectedTab === "map") && <ButtonGroup>
                         {renderPickerTool()}
+                        {renderMultiPickerTool()}
                         {renderAddCurrentLocationTool()}
                     </ButtonGroup>}
                 </div>
