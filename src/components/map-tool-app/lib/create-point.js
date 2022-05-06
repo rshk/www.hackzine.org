@@ -1,4 +1,5 @@
 import * as uuid from "uuid";
+import { normalizeLatLon } from "./math";
 
 
 export default function createPoint(data) {
@@ -12,12 +13,3 @@ export default function createPoint(data) {
         location: location ? normalizeLatLon(location) : [0, 0],
     };
 }
-
-
-const normalizeLatLon = ([lat, lon]) => {
-    return [normalizeLat(lat), normalizeLon(lon)];
-};
-
-
-const normalizeLat = lat => Math.max(-90, Math.min(lat, 90));
-const normalizeLon = lon => (lon % 360 + 540) % 360 - 180;

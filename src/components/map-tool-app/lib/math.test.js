@@ -1,5 +1,5 @@
 import each from "jest-each";
-import { getDMS } from "./math";
+import { getDMS, normalizeLon } from "./math";
 
 describe("getDMS()", () => {
     each([
@@ -10,5 +10,19 @@ describe("getDMS()", () => {
 
     ]).test("Returns a correct value for %d: %p", (number, expected) => {
         expect(getDMS(number)).toEqual(expected);
+    });
+});
+
+
+describe("normalizeLon()", () => {
+    each([
+        [20, 20],
+        [-20, -20],
+        [180, 180],
+        [-180, 180],
+        [200, -160],
+        [-200, 160],
+    ]).test("normalizeLon(%d) = %d", (value, expected) => {
+        expect(normalizeLon(value)).toEqual(expected);
     });
 });

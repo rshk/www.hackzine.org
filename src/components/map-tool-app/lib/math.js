@@ -40,3 +40,12 @@ export function getDMSAll(number) {
         secondsTrunc: Math.floor(seconds),
     };
 }
+
+
+export const normalizeLatLon = ([lat, lon]) => {
+    return [normalizeLat(lat), normalizeLon(lon)];
+};
+
+
+export const normalizeLat = lat => Math.max(-90, Math.min(lat, 90));
+export const normalizeLon = lon => (lon % 360 - 540) % 360 + 180;
