@@ -68,7 +68,7 @@ import PointsConfigurationPane from "./ui/points-pane";
 import SettingsPane from "./ui/settings-pane";
 import createPoint from "./lib/create-point";
 import { getDMS, normalizeLat, normalizeLon } from "./lib/math";
-
+import { LatitudeInput, LongitudeInput } from "./ui/coordinates-input";
 
 const DEFAULT_RESOLUTION = 180;
 const ROUTE_LINE_STYLE = {
@@ -540,68 +540,24 @@ function MapEventHandler({ onClick, onZoomEnd, onMoveEnd }) {
 
 
 function CoordinatesInputModal({ onClose }) {
-    const [rawLatitude, setRawLatitude] = React.useState({
-        degrees: '',
-        minutes: '',
-        seconds: '',
-        sign: 'N',
-    });
-    const [rawLongitude, setRawLongitude] = React.useState({
-        degrees: '',
-        minutes: '',
-        seconds: '',
-        sign: 'W',
-    });
+    const dispatch = useDispatch();
+    const [latitude, setLatitude] = React.useState();
+    const [longitude, setLongitude] = React.useState();
 
-    const getLatitude = (state) => {
-        console.log('Get latitude', state);
-        const { sign, degrees, minutes, seconds } = state;
-        return normalizeLat((sign === 'S' ? -1 : 1) * (
-            parseFloat(degrees || 0) +
-            parseFloat(minutes || 0) / 60 +
-            parseFloat(seconds || 0) / 3660
-        ));
-    };
-
-    const getLongitude = (state) => {
-        console.log('Get longitude', state);
-        const { sign, degrees, minutes, seconds } = state;
-        return normalizeLon((sign === 'W' ? -1 : 1) * (
-            parseFloat(degrees || 0) +
-            parseFloat(minutes || 0) / 60 +
-            parseFloat(seconds || 0) / 3660
-        ));
-    };
-
-    const normalizeLatitudeValue = () => setRawLatitude(state => {
-        console.log("Normalize latitude", state);
-        const latitude = _.round(getLatitude(state), 8);
-        console.log("Latitude", latitude);
-        const { degrees, minutes, seconds, sign } = getDMS(latitude);
-        console.log("Converted back:", { degrees, minutes, seconds, sign });
-        return ({
-            degrees,
-            minutes,
-            seconds: _.round(seconds, 2),
-            sign: sign < 0 ? 'S' : 'N',
-        });
-    });
-
-    const normalizeLongitudeValue = () => setRawLongitude(state => {
-        const longitude = getLongitude(state);
-        const { degrees, minutes, seconds, sign } = getDMS(longitude);
-        return ({
-            degrees,
-            minutes,
-            seconds,
-            sign: sign < 0 ? 'W' : 'E',
-        });
-    });
+    const isSubmitEnabled = !!(latitude && longitude);
 
     const onSubmit = () => {
-        const latitude = getLatitude(rawLatitude);
-        const longitude = getLongitude(rawLongitude);
-        console.log("Submitting", [latitude, longitude]);
+        if (!(latitude && longitude)) {
+            // Nothing to do here
+            return;
+        }
+        const coords = [
+            latitude.toDegrees(),
+            longitude.toDegrees(),
+        ];
+        const newPoint = createPoint({ location: coords });
+        dispatch(actions.points.append(newPoint));
+        onClose();
     };
 
     return (
@@ -611,97 +567,13 @@ function CoordinatesInputModal({ onClose }) {
             </ModalHeader>
             <ModalBody>
                 <Label>Latitude:</Label>
-                <div className="d-flex flex-row">
-                    <InputGroup>
-                        <Input
-                            type="number"
-                            placeholder="degrees"
-                            value={rawLatitude.degrees}
-                            onChange={({ target: { value: degrees } }) =>
-                                setRawLatitude(state => ({ ...state, degrees }))}
-                            onBlur={() => normalizeLatitudeValue()}
-                        />
-                        <InputGroupText>&deg;</InputGroupText>
-                        <Input
-                            type="number"
-                            placeholder="minutes"
-                            value={rawLatitude.minutes}
-                            onChange={({ target: { value: minutes } }) =>
-                                setRawLatitude(state => ({ ...state, minutes }))}
-                            onBlur={() => normalizeLatitudeValue()}
-                        />
-                        <InputGroupText>&apos;</InputGroupText>
-                        <Input
-                            type="number"
-                            placeholder="seconds"
-                            value={rawLatitude.seconds}
-                            onChange={({ target: { value: seconds } }) =>
-                                setRawLatitude(state => ({ ...state, seconds }))}
-                            onBlur={() => normalizeLatitudeValue()}
-                        />
-                        <InputGroupText>&quot;</InputGroupText>
-                    </InputGroup>
-                    <Input
-                        type="select"
-                        className="ms-1"
-                        style={{width: 80}}
-                        onChange={({ target: { value: sign } }) =>
-                            setRawLatitude(state => ({ ...state, sign }))}
-                        value={rawLatitude.sign}
-                        onBlur={() => normalizeLatitudeValue()}
-                    >
-                        <option>N</option>
-                        <option>S</option>
-                    </Input>
-                </div>
+                <LatitudeInput value={latitude} onChange={value => setLatitude(value)} />
                 <Label>Longitude:</Label>
-                <div className="d-flex flex-row">
-                    <InputGroup>
-                        <Input
-                            type="number"
-                            placeholder="degrees"
-                            value={rawLongitude.degrees}
-                            onChange={({ target: { value: degrees } }) =>
-                                setRawLongitude(state => ({ ...state, degrees }))}
-                            onBlur={() => normalizeLongitudeValue()}
-                        />
-                        <InputGroupText>&deg;</InputGroupText>
-                        <Input
-                            type="number"
-                            placeholder="minutes"
-                            value={rawLongitude.minutes}
-                            onChange={({ target: { value: minutes } }) =>
-                                setRawLongitude(state => ({ ...state, minutes }))}
-                            onBlur={() => normalizeLongitudeValue()}
-                        />
-                        <InputGroupText>&apos;</InputGroupText>
-                        <Input
-                            type="number"
-                            placeholder="seconds"
-                            value={rawLongitude.seconds}
-                            onChange={({ target: { value: seconds } }) =>
-                                setRawLongitude(state => ({ ...state, seconds }))}
-                            onBlur={() => normalizeLongitudeValue()}
-                        />
-                        <InputGroupText>&quot;</InputGroupText>
-                    </InputGroup>
-                    <Input
-                        type="select"
-                        className="ms-1"
-                        style={{width: 80}}
-                        onChange={({ target: { value: sign } }) =>
-                            setRawLongitude(state => ({ ...state, sign }))}
-                        value={rawLongitude.sign}
-                        onBlur={() => normalizeLongitudeValue()}
-                    >
-                        <option>E</option>
-                        <option>W</option>
-                    </Input>
-                </div>
+                <LongitudeInput value={longitude} onChange={value => setLongitude(value)} />
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={onSubmit}>
-                    Do Something
+                <Button color="success" onClick={onSubmit} disabled={!isSubmitEnabled}>
+                    Create point
                 </Button>
                 {' '}
                 <Button onClick={onClose}>

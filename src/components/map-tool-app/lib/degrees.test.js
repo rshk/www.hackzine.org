@@ -5,7 +5,7 @@ describe("Degrees", () => {
 
     describe("Construct from degrees", () => {
         const d = Degrees.fromDegrees(123.456);
-        expect(d.getDegrees()).toBeCloseTo(123.456, 3);
+        expect(d.toDegrees()).toBeCloseTo(123.456, 3);
     });
 
     describe("Construct from degrees, minutes, seconds", () => {
@@ -56,7 +56,7 @@ describe("Degrees", () => {
     describe("Convert from DMS to degrees and back", () => {
         test("12° 33’ 45”", () => {
             const d = Degrees.fromDMS(12, 33, 45);
-            expect(d.getDegrees()).toEqual(12.5625);
+            expect(d.toDegrees()).toEqual(12.5625);
             const d1 = Degrees.fromDegrees(12.5625);
             expect(d1.toDMS()).toEqual({
                 sign: 1,

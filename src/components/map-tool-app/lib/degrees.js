@@ -1,5 +1,3 @@
-import { normalizeLat, normalizeLon } from "./math";
-
 export default class Degrees {
     constructor(milliseconds) {
         this.milliseconds = milliseconds;
@@ -22,7 +20,7 @@ export default class Degrees {
         return new this(milliseconds);
     }
 
-    getDegrees() {
+    toDegrees() {
         return this.milliseconds / (60 * 60 * 1000);
     }
 

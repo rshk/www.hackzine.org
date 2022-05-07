@@ -1,30 +1,40 @@
 import { getDMS, getDM } from "./math";
 
 const LOCALE = "en-US";
-const SYMBOL_DEGREES = "°";
-const SYMBOL_MINUTES = "’";
-const SYMBOL_SECONDS = "”";
+export const SYMBOL_DEGREES = "°";
+export const SYMBOL_MINUTES = "’";
+export const SYMBOL_SECONDS = "”";
+export const SYMBOL_NORTH = "N";
+export const SYMBOL_SOUTH = "S";
+export const SYMBOL_WEST = "W";
+export const SYMBOL_EAST = "E";
 
 
 export function formatLatLonPlain([lat, lon]) {
     const fmt = new Intl.NumberFormat(LOCALE, {
         maximumFractionDigits: 6,
     });
-    return `${fmt.format(lat)},${fmt.format(lon)}`;
+    return [ fmt.format(lat), fmt.format(lon) ].join(",");
 }
 
 
 export function formatLatLonDMS([lat, lon]) {
     const latDMS = getDMS(lat);
     const lonDMS = getDMS(lon);
-    return `${formatDMS(latDMS, 'N', 'S')},${formatDMS(lonDMS, 'E', 'W')}`;
+    return [
+        formatDMS(latDMS, SYMBOL_NORTH, SYMBOL_SOUTH),
+        formatDMS(lonDMS, SYMBOL_EAST, SYMBOL_WEST),
+    ].join(",");
 }
 
 
 export function formatLatLonDM([lat, lon]) {
     const latDM = getDM(lat);
     const lonDM = getDM(lon);
-    return `${formatDM(latDM, 'N', 'S')},${formatDM(lonDM, 'E', 'W')}`;
+    return [
+        formatDM(latDM, SYMBOL_NORTH, SYMBOL_SOUTH),
+        formatDM(lonDM, SYMBOL_EAST, SYMBOL_WEST),
+    ].join(",");
 }
 
 
