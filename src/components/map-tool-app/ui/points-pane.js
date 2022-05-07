@@ -42,8 +42,7 @@ const ENABLE_COORDINATE_INPUT = false;
 
 
 export default function PointsConfigurationPane({
-    activatePickerTool,
-    doAddCurrentLocation,
+    pickerTool,
 }) {
 
     const dispatch = useDispatch();
@@ -58,14 +57,10 @@ export default function PointsConfigurationPane({
     };
 
     const onAddPickFromMap = () => {
-        activatePickerTool(location => {
+        pickerTool.activate(location => {
             const newPoint = createPoint({ location });
             dispatch(actions.points.append(newPoint));
         }, {name: 'add'});
-    };
-
-    const onAddCurrentLocation = () => {
-        doAddCurrentLocation();
     };
 
     const onPointMoveUp = (idx) => {
@@ -84,7 +79,7 @@ export default function PointsConfigurationPane({
                     point={point}
                     nextPoint={points[idx + 1] || null}
                     idx={idx}
-                    activatePickerTool={activatePickerTool}
+                    pickerTool={pickerTool}
                     onChange={onPointChange.bind(this, idx)}
                     onDelete={onPointDelete.bind(this, idx)}
                     onMoveUp={onPointMoveUp.bind(this, idx)}
@@ -102,15 +97,6 @@ export default function PointsConfigurationPane({
                     onClick={onAddPickFromMap}
                 >
                     <FontAwesomeIcon icon={faCrosshairs} /> Add from map
-                </Button>
-
-                <Button
-                    title="Add current location"
-                    color="success"
-                    className="m-1"
-                    onClick={onAddCurrentLocation}
-                >
-                    <FontAwesomeIcon icon={faGlobe} /> Add current location
                 </Button>
 
                 {ENABLE_COORDINATE_INPUT &&
@@ -132,7 +118,7 @@ function PointConfigurationRow({
     onDelete,
     onMoveUp,
     onMoveDown,
-    activatePickerTool,
+    pickerTool,
     isFirst,
     isLast,
 }) {
@@ -141,11 +127,8 @@ function PointConfigurationRow({
     const [selectedTool, setSelectedTool] = React.useState(null);
 
     const onPickFromMap = () => {
-        activatePickerTool(location => {
-            onChange({
-                ...point,
-                location,
-            });
+        pickerTool.activate(location => {
+            onChange({ ...point, location });
         });
     };
 
