@@ -84,7 +84,7 @@ module.exports = {
         {
             resolve: "gatsby-plugin-amplitude-analytics",
             options: {
-                apiKey: "bd7218e4c8a8fb675c97992c5610dd05",
+                apiKey: "d7c3e222739b6959350b15e098cc0eaf",
                 respectDNT: true,
                 // exclude: ["/preview/**", "/do-not-track/me/too/"],
                 // eventTypes: {
