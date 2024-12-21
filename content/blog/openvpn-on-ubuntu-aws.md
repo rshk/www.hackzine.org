@@ -3,18 +3,16 @@ title: OpenVPN server on Ubuntu
 date: "2023-03-15 19:45:50"
 ---
 
-# OpenVPN server on Ubuntu
-
-Ubuntu version: 22.04 LTS
-OpenVPN version: 2.5.5
+- **Ubuntu version:** 22.04 LTS
+- **OpenVPN version:** 2.5.5
 
 We're going to be using AWS for deploying our server, but any other
 provider will do. We'll be using Ubuntu 22.04 LTS; things might vary if
 using different versions.
 
-## Create EC2 instance and connect to it
+## Create an EC2 instance and connect to it
 
-* Go to EC2 console
+* Go to the EC2 console
 * "Launch an instance"
   * Name: VPN server
   * Application and OS Images: Ubuntu 22.04 LTS 64-bit (ami-06d94a781b544c133)
