@@ -1,0 +1,14 @@
+---
+title: Hello, Gatsby!
+date: "2022-02-07 22:00"
+---
+
+# Hello, Gatsby!
+
+Finally got around to port this blog to [Gatsby](https://www.gatsbyjs.com/).
+
+I might migrate a few old posts as well, with time, if there's stuff
+that's still relevant.
+
+I'm hoping to start updating this blog more frequently as well,
+talking about projects, ideas, etc.

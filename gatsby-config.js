@@ -9,15 +9,16 @@
  */
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `Hackzine.org`,
     author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`,
+      name: `Sam Santi`,
+      summary: `.`,
     },
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
+    description: `A blog about software, engineering, and technology in general.`,
+    siteUrl: `https://hackzine.org/`,
     social: {
-      twitter: `kylemathews`,
+        // twitter: `_rshk`,
+        github: "rshk",
     },
   },
   plugins: [
