@@ -7,4 +7,5 @@ const eleventyNavigation = {
 
 # About
 
-I am a person that writes stuff.
+**Sam Santi**, Software engineer. Bad at regularly updating blogs.
+[@rshk](https://github.com/rshk) on GitHub.

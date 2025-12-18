@@ -1,10 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
 /* Defaults */
 :root {
-    --font-family: -apple-system, system-ui, sans-serif;
-    --font-family-monospace:
-        Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console,
-        Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono,
-        Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+    --font-family: "Fira Code", monospace;
+    --font-family-monospace: "Fira Code", monospace;
+    --chw: 0.6rem;  /* Character Width */
 }
 
 /* Theme colors */
@@ -12,6 +12,7 @@
     --color-gray-20: #e0e0e0;
     --color-gray-50: #c0c0c0;
     --color-gray-90: #333;
+    --ruler-color: #455A64;
 
     --background-color: #fff;
 
@@ -19,6 +20,9 @@
     --text-color-link: #082840;
     --text-color-link-active: #5f2b48;
     --text-color-link-visited: #17050f;
+    --text-color-muted: #546E7A;
+
+    --text-color-accent: #F4511E;
 
     --syntax-tab-size: 2;
 }
@@ -28,13 +32,17 @@
         --color-gray-20: #e0e0e0;
         --color-gray-50: #c0c0c0;
         --color-gray-90: #dad8d8;
+        --ruler-color: #455A64;
 
         /* --text-color is assigned to --color-gray-_ above */
-        --text-color-link: #1493fb;
-        --text-color-link-active: #6969f7;
-        --text-color-link-visited: #a6a6f8;
+        --text-color-link: #00ACC1;
+        --text-color-link-active: #26C6DA;
+        --text-color-link-visited: #00ACC1;
+        --text-color-muted: #546E7A;
 
-        --background-color: #15202b;
+        --text-color-accent: #F4511E;
+
+        --background-color: #263238;
     }
 }
 
@@ -51,15 +59,19 @@ html,
 body {
     padding: 0;
     margin: 0 auto;
+    font-size: 16px;
     font-family: var(--font-family);
     color: var(--text-color);
     background-color: var(--background-color);
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 400;
 }
 html {
     overflow-y: scroll;
 }
 body {
-    max-width: 40em;
+    max-width: calc(80 * var(--chw));
 }
 
 /* https://www.a11yproject.com/posts/how-to-hide-content/ */
@@ -116,17 +128,22 @@ a[href]:active {
     color: var(--text-color-link-active);
 }
 
-main,
-footer {
-    padding: 1rem;
+main {
+    padding: 1rem 0;
 }
 main :first-child {
     margin-top: 0;
 }
 
 header {
-    border-bottom: 1px dashed var(--color-gray-20);
+    border-bottom: 1px solid var(--ruler-color);
 }
+footer {
+    text-align: right;
+    border-top: 1px solid var(--ruler-color);
+    color: var(--text-color-muted);
+}
+
 
 #skip-link {
     text-decoration: none;
@@ -151,8 +168,8 @@ header {
     justify-content: space-between;
     gap: 0.5em 1em;
     list-style: "";
-    border-top: 1px dashed var(--color-gray-20);
-    padding: 1em 0;
+    border-top: 1px dashed var(--ruler-color);
+    padding: 1em 0 0;
 }
 .links-nextprev > * {
     flex-grow: 1;
@@ -192,6 +209,12 @@ pre:not([class*="language-"]) {
 code {
     word-break: break-all;
 }
+h1,h2,h3,h4,h5,h6 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
 
 /* Header */
 header {
@@ -200,14 +223,22 @@ header {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 1em;
+    padding: 1rem 0;
 }
 .home-link {
     flex-grow: 1;
-    font-size: 1em; /* 16px /16 */
+    font-size: 1.4em;
     font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+    color: var(--text-color-accent);
+
+    a[href], a[href]:link, a[href]:visited {
+        color: inherit;
+    }
 }
-.home-link:link:not(:hover) {
+.home-link > a:link:not(:hover) {
     text-decoration: none;
 }
 
@@ -229,42 +260,47 @@ header {
     text-decoration: underline;
 }
 
+@counter-style hexadecimal {
+    system: numeric;
+    symbols: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "A" "B" "C" "D" "E" "F";
+    /* suffix: ". "; */
+    /* prefix: "0x"; */
+    pad: 2 "0";
+}
+
 /* Posts list */
 .postlist {
     counter-reset: start-from var(--postlist-index);
     list-style: none;
     padding: 0;
-    padding-left: 1.5rem;
+    padding-left: calc(var(--chw) * 2);
 }
 .postlist-item {
-    display: flex;
-    flex-wrap: wrap;
     align-items: baseline;
     counter-increment: start-from -1;
-    margin-bottom: 1em;
 }
 .postlist-item:before {
     display: inline-block;
     pointer-events: none;
-    content: "" counter(start-from, decimal-leading-zero) ". ";
+    content: "" counter(start-from, decimal-leading-zero) " ";
+    content: "0x" counter(start-from, hexadecimal) " ";
     line-height: 100%;
     text-align: right;
-    margin-left: -1.5rem;
+    margin-left: calc(var(--chw) * -2);
 }
 .postlist-date,
 .postlist-item:before {
-    font-size: 0.8125em; /* 13px /16 */
+    font-size: 1em; /* 13px /16 */
     color: var(--color-gray-90);
 }
 .postlist-date {
-    word-spacing: -0.5px;
+    color: var(--text-color-muted);
+}
+.postlist-date {
 }
 .postlist-link {
-    font-size: 1.1875em; /* 19px /16 */
+    font-size: 1em; /* 19px /16 */
     font-weight: 700;
-    flex-basis: calc(100% - 1.5rem);
-    padding-left: 0.25em;
-    padding-right: 0.5em;
     text-underline-position: from-font;
     text-underline-offset: 0;
     text-decoration-thickness: 1px;
@@ -273,12 +309,37 @@ header {
     font-weight: bold;
 }
 
+.post-title {
+    /* TODO: use non-monospace font, as we're breaking size anyways? */
+    font-size: 2em;
+    font-weight: 700;
+    margin: 1rem 0;
+}
+
+.post-content {
+    margin: 1em 0;
+
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--text-color-accent);
+
+        &:before {
+            color: var(--text-color-muted);
+        }
+    }
+
+    h1:before { content: "> "; }
+    h2:before { content: ">> "; }
+    h3:before { content: ">>> "; }
+    h4:before { content: ">>>> "; }
+    h5:before { content: ">>>>> "; }
+    h6:before { content: ">>>>>> "; }
+}
+
 /* Tags */
 .post-tag {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    text-transform: capitalize;
     font-style: italic;
 }
 .postlist-item > .post-tag {
@@ -287,13 +348,14 @@ header {
 
 /* Tags list */
 .post-metadata {
+    color: var(--text-color-muted);
     display: inline-flex;
     flex-wrap: wrap;
-    gap: 0.5em;
+    gap: calc(var(--chw) * 1);
     list-style: none;
     padding: 0;
     margin: 0;
 }
 .post-metadata time {
-    margin-right: 1em;
+    margin-right: 0;
 }
