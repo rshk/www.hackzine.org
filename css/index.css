@@ -12,15 +12,15 @@
     --color-gray-20: #e0e0e0;
     --color-gray-50: #c0c0c0;
     --color-gray-90: #333;
-    --ruler-color: #455a64;
+    --ruler-color: #B0BEC5;
 
-    --background-color: #fff;
+    --background-color: #F5F5F5;
 
     --text-color: var(--color-gray-90);
-    --text-color-link: #082840;
+    --text-color-link: #00838F;
     --text-color-link-active: #5f2b48;
-    --text-color-link-visited: #17050f;
-    --text-color-muted: #546e7a;
+    --text-color-link-visited: #00838F;
+    --text-color-muted: #90A4AE;
 
     --text-color-accent: #f4511e;
 
