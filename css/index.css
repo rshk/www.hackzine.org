@@ -111,6 +111,7 @@ p:last-child {
 }
 p {
     line-height: 1.5;
+    margin: 1em 0;
 }
 
 li {
@@ -153,6 +154,7 @@ footer {
     text-align: right;
     border-top: 1px solid var(--ruler-color);
     color: var(--text-color-muted);
+    padding-top: 1em;
 }
 
 #skip-link {
@@ -281,34 +283,19 @@ header {
     text-decoration: underline;
 }
 
-@counter-style hexadecimal {
-    system: numeric;
-    symbols: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "A" "B" "C" "D" "E" "F";
-    /* suffix: ". "; */
-    /* prefix: "0x"; */
-    pad: 2 "0";
-}
-
 /* Posts list */
 .postlist {
-    /* counter-reset: start-from var(--postlist-index); */
     list-style: none;
     padding: 0;
-    /* padding-left: calc(var(--chw) * 2); */
+    margin: 0;
+    padding: 0;
+}
+ul.postlist li {
+    list-style: none;
 }
 .postlist-item {
     align-items: baseline;
-    /* counter-increment: start-from -1; */
 }
-/* .postlist-item:before { */
-/*     display: inline-block; */
-/*     pointer-events: none; */
-/*     content: "" counter(start-from, decimal-leading-zero) " "; */
-/*     content: "0x" counter(start-from, hexadecimal) " "; */
-/*     line-height: 100%; */
-/*     text-align: right; */
-/*     margin-left: calc(var(--chw) * -2); */
-/* } */
 .postlist-date,
 .postlist-item:before {
     font-size: 1em; /* 13px /16 */

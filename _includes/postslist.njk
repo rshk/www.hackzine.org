@@ -1,4 +1,4 @@
-<ol reversed class="postlist" style="--postlist-index: {{ (postslistCounter or postslist.length) + 1 }}">
+<ul reversed class="postlist" style="--postlist-index: {{ (postslistCounter or postslist.length) + 1 }}">
     {%- for post in postslist | reverse %}
         {% set index = collections.posts | getCollectionItemIndex(post) %}
 	    <li class="postlist-item{% if post.url == url %} postlist-item-active{% endif %}">
@@ -7,4 +7,4 @@
 		    <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
 	    </li>
     {%- endfor %}
-</ol>
+</ul>

@@ -66,10 +66,10 @@
 		</main>
 
 		<footer>
-            <p>(c)2009-2025</p>
-			<p style="display:none">
+            <div>(c)2009-{{helpers.currentYear()}}</div>
+			<div style="display:none">
                 <em>Built with <a href="https://www.11ty.dev/">{{ eleventy.generator }}</a></em>
-            </p>
+            </div>
 		</footer>
 
 		<!-- This page `{{ page.url }}` was built on {% currentBuildDate %} -->
