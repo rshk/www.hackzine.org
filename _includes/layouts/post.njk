@@ -1,11 +1,16 @@
 ---
 layout: layouts/base.njk
 ---
+{% set index = collections.posts | getCollectionItemIndex %}
+
 {# Only include the syntax highlighter CSS on blog posts, included with the CSS per-page bundle #}
 <style>{% include "node_modules/prismjs/themes/prism-okaidia.css" %}</style>
 <style>{% include "css/prism-diff.css" %}</style>
 
 <ul class="post-metadata">
+    <li>
+        <strong>{{index|hexNum}}</strong>
+    </li>
 	<li><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate }}</time></li>
 	{%- for tag in tags | filterTagList %}
 	{%- set tagUrl %}/tags/{{ tag | slugify }}/{% endset %}
@@ -13,7 +18,9 @@ layout: layouts/base.njk
 	{%- endfor %}
 </ul>
 
-<h1 class="post-title">{{ title }}</h1>
+<h1 class="post-title">
+    {{ title }}
+</h1>
 
 <div class="post-content">
     {{ content | safe }}

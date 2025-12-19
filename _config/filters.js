@@ -45,4 +45,8 @@ export default function (eleventyConfig) {
     eleventyConfig.addFilter("sortAlphabetically", (strings) =>
         (strings || []).sort((b, a) => b.localeCompare(a)),
     );
+
+    eleventyConfig.addFilter("hexNum", (number, length = 2) =>
+        "0x"+("0".repeat(length) + number.toString(16)).slice(-length),
+    );
 }

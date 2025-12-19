@@ -291,24 +291,24 @@ header {
 
 /* Posts list */
 .postlist {
-    counter-reset: start-from var(--postlist-index);
+    /* counter-reset: start-from var(--postlist-index); */
     list-style: none;
     padding: 0;
-    padding-left: calc(var(--chw) * 2);
+    /* padding-left: calc(var(--chw) * 2); */
 }
 .postlist-item {
     align-items: baseline;
-    counter-increment: start-from -1;
+    /* counter-increment: start-from -1; */
 }
-.postlist-item:before {
-    display: inline-block;
-    pointer-events: none;
-    content: "" counter(start-from, decimal-leading-zero) " ";
-    content: "0x" counter(start-from, hexadecimal) " ";
-    line-height: 100%;
-    text-align: right;
-    margin-left: calc(var(--chw) * -2);
-}
+/* .postlist-item:before { */
+/*     display: inline-block; */
+/*     pointer-events: none; */
+/*     content: "" counter(start-from, decimal-leading-zero) " "; */
+/*     content: "0x" counter(start-from, hexadecimal) " "; */
+/*     line-height: 100%; */
+/*     text-align: right; */
+/*     margin-left: calc(var(--chw) * -2); */
+/* } */
 .postlist-date,
 .postlist-item:before {
     font-size: 1em; /* 13px /16 */
@@ -399,4 +399,8 @@ ul.post-metadata {
 }
 .post-metadata time {
     margin-right: 0;
+}
+
+.text-muted {
+    color: var(--text-color-muted);
 }
