@@ -12,12 +12,18 @@ layout: layouts/base.njk
     <li>
         <strong>{{index|hexNum}}</strong>
     </li>
+    {% if draft %}
+        <li>
+            <span class="marker-draft">DRAFT</span>
+        </li>
+    {% endif %}
 	<li><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate }}</time></li>
 	{%- for tag in tags | filterTagList %}
 	{%- set tagUrl %}/tags/{{ tag | slugify }}/{% endset %}
 	<li><a href="{{ tagUrl }}" class="post-tag">#{{ tag }}</a>{%- if not loop.last %} {% endif %}</li>
 	{%- endfor %}
 </ul>
+
 
 <h1 class="post-title">
     {{ title }}

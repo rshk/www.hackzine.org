@@ -392,3 +392,10 @@ ul.post-metadata {
 .text-muted {
     color: var(--text-color-muted);
 }
+
+.marker-draft {
+    background: #FFC107;
+    color: #F44336;
+    padding: .2rem var(--chw);
+    font-weight: 700;
+}
