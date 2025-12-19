@@ -1,5 +1,5 @@
 export default {
-    title: "Hackzine.org",
+    title: "Hackzine",
     url: "https://www.hackzine.org/",
     language: "en",
     description: "",
