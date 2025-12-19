@@ -4,7 +4,8 @@ layout: layouts/base.njk
 {% set index = collections.posts | getCollectionItemIndex %}
 
 {# Only include the syntax highlighter CSS on blog posts, included with the CSS per-page bundle #}
-<style>{% include "node_modules/prismjs/themes/prism-okaidia.css" %}</style>
+<!-- <style>{% include "node_modules/prismjs/themes/prism-okaidia.css" %}</style> -->
+<style>{% include "css/prism.css" %}</style>
 <style>{% include "css/prism-diff.css" %}</style>
 
 <ul class="post-metadata">

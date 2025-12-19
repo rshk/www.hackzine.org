@@ -1,0 +1,178 @@
+/*
+ Solarized Color Schemes originally by Ethan Schoonover
+ http://ethanschoonover.com/solarized
+
+ Ported for PrismJS by Hector Matos
+ Website: https://krakendev.io
+ Twitter Handle: https://twitter.com/allonsykraken)
+*/
+
+/*
+SOLARIZED HEX
+--------- -------
+base03    #002b36
+base02    #073642
+base01    #586e75
+base00    #657b83
+base0     #839496
+base1     #93a1a1
+base2     #eee8d5
+base3     #fdf6e3
+yellow    #b58900
+orange    #cb4b16
+red       #dc322f
+magenta   #d33682
+violet    #6c71c4
+blue      #268bd2
+cyan      #2aa198
+green     #859900
+*/
+
+:root {
+    --c-solarized-base03:    #002b36;
+    --c-solarized-base02:    #073642;
+    --c-solarized-base01:    #586e75;
+    --c-solarized-base00:    #657b83;
+    --c-solarized-base0:     #839496;
+    --c-solarized-base1:     #93a1a1;
+    --c-solarized-base2:     #eee8d5;
+    --c-solarized-base3:     #fdf6e3;
+    --c-solarized-yellow:    #b58900;
+    --c-solarized-orange:    #cb4b16;
+    --c-solarized-red:       #dc322f;
+    --c-solarized-magenta:   #d33682;
+    --c-solarized-violet:    #6c71c4;
+    --c-solarized-blue:      #268bd2;
+    --c-solarized-cyan:      #2aa198;
+    --c-solarized-green:     #859900;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: var(--c-solarized-base0);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+	background: var(--c-solarized-base2);
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	background: var(--c-solarized-base2);
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+
+    padding: .5em calc(var(--chw) * 1);
+    /* margin: -.5em 0; */
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background-color: var(--c-solarized-base03);
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: var(--c-solarized-base01);
+}
+
+.token.punctuation {
+	color: var(--c-solarized-base1);
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: var(--c-solarized-blue);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.url,
+.token.inserted {
+	color: var(--c-solarized-cyan);
+}
+
+.token.builtin {
+    font-weight: bold;
+	color: var(--c-solarized-magenta);
+}
+
+.token.entity {
+	color: 	color: var(--c-solarized-base0);
+	background: color: var(--c-solarized-base02);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: var(--c-solarized-green);
+}
+
+.token.function,
+.token.class-name {
+	color: var(--c-solarized-blue);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+	color: var(--c-solarized-orange);
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+
+.token.annotation {
+	color: var(--c-solarized-yellow);
+}

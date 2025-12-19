@@ -208,7 +208,7 @@ code {
 }
 pre:not([class*="language-"]) {
     margin: 0.5em 0;
-    line-height: 1.375; /* 22px /16 */
+    line-height: 1.5;
     -moz-tab-size: var(--syntax-tab-size);
     -o-tab-size: var(--syntax-tab-size);
     tab-size: var(--syntax-tab-size);
@@ -334,6 +334,7 @@ ul.postlist li {
     h5,
     h6 {
         color: var(--text-color-accent);
+        margin-top: 1.5rem;
 
         &:before {
             color: var(--text-color-muted);
