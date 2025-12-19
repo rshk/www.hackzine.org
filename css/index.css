@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap");
 
 /* Defaults */
 :root {
     --font-family: "Fira Code", monospace;
     --font-family-monospace: "Fira Code", monospace;
-    --chw: 0.6rem;  /* Character Width */
+    --chw: 0.6rem; /* Character Width */
 }
 
 /* Theme colors */
@@ -12,7 +12,7 @@
     --color-gray-20: #e0e0e0;
     --color-gray-50: #c0c0c0;
     --color-gray-90: #333;
-    --ruler-color: #455A64;
+    --ruler-color: #455a64;
 
     --background-color: #fff;
 
@@ -20,9 +20,9 @@
     --text-color-link: #082840;
     --text-color-link-active: #5f2b48;
     --text-color-link-visited: #17050f;
-    --text-color-muted: #546E7A;
+    --text-color-muted: #546e7a;
 
-    --text-color-accent: #F4511E;
+    --text-color-accent: #f4511e;
 
     --syntax-tab-size: 2;
 }
@@ -32,15 +32,15 @@
         --color-gray-20: #e0e0e0;
         --color-gray-50: #c0c0c0;
         --color-gray-90: #dad8d8;
-        --ruler-color: #455A64;
+        --ruler-color: #455a64;
 
         /* --text-color is assigned to --color-gray-_ above */
-        --text-color-link: #00ACC1;
-        --text-color-link-active: #26C6DA;
-        --text-color-link-visited: #00ACC1;
-        --text-color-muted: #546E7A;
+        --text-color-link: #00acc1;
+        --text-color-link-active: #26c6da;
+        --text-color-link-visited: #00acc1;
+        --text-color-muted: #546e7a;
 
-        --text-color-accent: #F4511E;
+        --text-color-accent: #f4511e;
 
         --background-color: #263238;
     }
@@ -128,6 +128,17 @@ a[href]:active {
     color: var(--text-color-link-active);
 }
 
+ul {
+    padding: 0;
+    padding-left: calc(var(--chw) * 2);
+}
+ul li {
+    list-style: "* ";
+    &::marker {
+        color: var(--text-color-muted);
+    }
+}
+
 main {
     padding: 1rem 0;
 }
@@ -143,7 +154,6 @@ footer {
     border-top: 1px solid var(--ruler-color);
     color: var(--text-color-muted);
 }
-
 
 #skip-link {
     text-decoration: none;
@@ -163,13 +173,17 @@ footer {
     z-index: 999;
 }
 
-.links-nextprev {
+ul.links-nextprev {
     display: flex;
     justify-content: space-between;
     gap: 0.5em 1em;
     list-style: "";
     border-top: 1px dashed var(--ruler-color);
     padding: 1em 0 0;
+
+    li {
+        list-style: "";
+    }
 }
 .links-nextprev > * {
     flex-grow: 1;
@@ -209,7 +223,12 @@ pre:not([class*="language-"]) {
 code {
     word-break: break-all;
 }
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-size: 1rem;
     font-weight: 700;
     margin: 0;
@@ -234,7 +253,9 @@ header {
     line-height: 1em;
     color: var(--text-color-accent);
 
-    a[href], a[href]:link, a[href]:visited {
+    a[href],
+    a[href]:link,
+    a[href]:visited {
         color: inherit;
     }
 }
@@ -319,7 +340,12 @@ header {
 .post-content {
     margin: 1em 0;
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         color: var(--text-color-accent);
 
         &:before {
@@ -327,12 +353,24 @@ header {
         }
     }
 
-    h1:before { content: "> "; }
-    h2:before { content: ">> "; }
-    h3:before { content: ">>> "; }
-    h4:before { content: ">>>> "; }
-    h5:before { content: ">>>>> "; }
-    h6:before { content: ">>>>>> "; }
+    h1:before {
+        content: "> ";
+    }
+    h2:before {
+        content: ">> ";
+    }
+    h3:before {
+        content: ">>> ";
+    }
+    h4:before {
+        content: ">>>> ";
+    }
+    h5:before {
+        content: ">>>>> ";
+    }
+    h6:before {
+        content: ">>>>>> ";
+    }
 }
 
 /* Tags */
@@ -347,7 +385,7 @@ header {
 }
 
 /* Tags list */
-.post-metadata {
+ul.post-metadata {
     color: var(--text-color-muted);
     display: inline-flex;
     flex-wrap: wrap;
@@ -355,6 +393,9 @@ header {
     list-style: none;
     padding: 0;
     margin: 0;
+    li {
+        list-style: none;
+    }
 }
 .post-metadata time {
     margin-right: 0;
