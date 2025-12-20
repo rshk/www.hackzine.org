@@ -92,7 +92,7 @@ display_result(results, sys.stdout)
 
 ## How does it work?
 
-the `multidecode()` function will go through a list of decoders,
+The `multidecode()` function will go through a list of decoders,
 attempting the decode the input text with each one in turn.
 
 If the decoder output is equal to the input, or the decoder errors

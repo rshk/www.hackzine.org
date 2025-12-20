@@ -2,7 +2,7 @@
 title: Parallelize work in Python with Asyncio
 description:
 date: 2025-12-20T21:30
-tags: programmingx
+tags: programming
 ---
 
 Say we have a large amount of I/O-bound tasks (eg. network requests)
