@@ -1,199 +1,116 @@
 ---
 title: Recursive string multidecoder
 description:
-date: 2025-12-19
-tags: infosec,programming
+date: 2025-12-20
+tags: infosec,programming,tools
 draft: true
 ---
 
-Say we found a string somewhere that has clearly been encoded multiple
-times, using different encorings.
+It's common when reverse engineering some piece of software or network
+protocol, to come across some text that has been encoded multiple
+times, possibly mixing multiple encodings.
 
-We could go ahead and manually attempt to decode it step-by-step,
-using our favorite programming language, or one of the available tools
-for decoding strings, but that's tedious work.
+There are several tools that can help with the decoding process, but
+it can be pretty labor intensive to manually decode a string multiple
+times, trying to guess the correct encoding in the process.
 
-Surely we can automate the whole process? Read along.
-
-
-## General idea
-
-We could create a script that automatically attempts to decode our
-input string using several well-known encoding formats.
-
-* Decoding failed? We guessed the wrong encoding.
-* Input didn't change? Also, wrong encoding.
-
-We then keep applying the same process recursively, until we can't
-decode the string any further.
+Wouldn't it be nice to have a tool to automate this process for us,
+automatically exploring various combinations of encodings until a
+result is found?
 
 
-## Python implementation
+## TL;DR just gimme the tool
 
-Let's start by creating a dictionary, mapping an encoding name to a
-function that can be used to decode a string in that encoding:
+Sure! Get the source from [github](https://github.com/rshk/multidecoder) or [pypi](https://pypi.org/project/text-multidecoder/).
 
-``` python
-# This is a long way to say, a dict mapping names to a function
-# that accepts bytes, returns bytes.
-DECODERS: dict[str, Callable[[bytes], bytes]] = {}
-```
-
-
-### Adding functions to the dict
-
-We could do it the boring way, by defining a bunch of functions, then
-creating a dict like:
-
-``` python
-{
-  "encoding1": decode_encoding1,
-  "encoding2": decode_encoding2,
-  ...
-}
-```
-
-but that feels clumsy.
-
-Let's create a simple decorator instead:
-
-``` python
-def add_decoder(name: str):
-    def decorator(fn):
-        DECODERS[name] = fn
-        return fn
-    return decorator
-```
-
-We can now proceed to create decoding functions for all the encoding
-formats we want to support:
-
-``` python
-import base64
-import html
-import urllib.parse
-
-@add_decoder("base64")
-def decode_base64(text: bytes) -> bytes:
-    return base64.decodebytes(text)
-
-
-@add_decoder("base64_urlsafe")
-def decode_base64_urlsafe(text: bytes) -> bytes:
-    return base64.urlsafe_b64decode(text)
-
-
-@add_decoder("hex")
-def decode_hex(text: bytes) -> bytes:
-    return bytes.fromhex(text.decode())
-
-
-@add_decoder("html")
-def decode_html(text: bytes) -> bytes:
-    return html.unescape(text)
-
-
-@add_decoder("url")
-def decode_url(text: bytes) -> bytes:
-    return urllib.parse.unquote(text.decode()).encode()
-```
-
-
-### Now, for the important bit
-
-We want to recursively exlore results, possibly following multiple
-different paths, to see where they lead to.
-
-We also want to decouple the analysis part from the display part, so
-we can possibly feed its output into some other tool.
-
-``` python
-Result = NewType("Result", tuple[str, bytes, list["Result"]])
-
-
-def multidecode(text: bytes, max_depth=10) -> Iterable[Result]:
-    if max_depth <= 0:
-        return  # Max depth reached
-
-    assert isinstance(text, bytes)
-    for name, decoder in DECODERS.items():
-        try:
-            decoded = decoder(text)
-        except Exception:
-            continue  # Nothing was decoded
-        assert isinstance(decoded, bytes)
-        if text == decoded:
-            continue  # Nothing changed
-
-        yield Result((name, decoded, multidecode(decoded, max_depth=max_depth - 1)))
-```
-
-
-### Displaying the results
-
-We need to recursively traverse the results and print out information:
-
-``` python
-def display_result(results: Iterable[Result], depth=0):
-    indent = " " * (4 * depth)
-    for (
-        name,
-        decoded,
-        subitems,
-    ) in results:
-        print(f"{indent}{name} -> {decoded}")
-        display_result(subitems, depth + 1)
-```
-
-
-### Stitching it all together
-
-
-``` python
-def main():
-    for text in sys.argv[1:]:
-        print(text)
-        text = text.encode()
-        results = multidecode(text, max_depth=10)
-        display_result(results, depth=1)
-        print()
-
-
-if __name__ == "__main__":
-    main()
-```
-
-
-
-## Example
-
-```
-4a5464434a544979614756736247386c4d6a496c4d30456c4d6a416c4d6a4a5862334a735a4355794d69553352413d3d
-```
-
-This looks like a hex-encoded string, right?
+Install with [pipx](https://pipx.pypa.io/stable/installation/):
 
 ``` shell
-% uv run ./encdec/multidecoder.py "4a546443...52413d3d"
-4a546443...52413d3d
-    base64 -> b'\xe1\xaex\xeb\x8e7...\xdd\xdd\xdd'
-        base64 -> b'\xc7\xbcg\x9b\xb9\xf9'
-        base64_urlsafe -> b'\xc7\xbcg\x9b\xb9\xf9'
-    base64_urlsafe -> b'\xe1\xaex\xeb\x8e7...\xdd\xdd\xdd'
-        base64 -> b'\xc7\xbcg\x9b\xb9\xf9'
-        base64_urlsafe -> b'\xc7\xbcg\x9b\xb9\xf9'
-    hex -> b'JTdCJTIyaGVsbG8lMjIlM0ElMjAlMjJXb3JsZCUyMiU3RA=='
-        base64 -> b'%7B%22hello%22%3A%20%22World%22%7D'
-            url -> b'{"hello": "World"}'
-        base64_urlsafe -> b'%7B%22hello%22%3A%20%22World%22%7D'
-            url -> b'{"hello": "World"}'
+# Latest release
+pipx install text-multidecoder
+
+# From a git branch
+pipx install git+https://github.com/rshk/multidecoder.git@main
 ```
 
-As we can see, the original string decoded successfully as both base64
-and hexadecimal, but while the base64 route lead to unconclusive
-results, we can immediately see that decoding it as hex, then base64,
-then urlencoded, produced some json-looking object. Hurray!
+### Command line usage
 
-## Links
+``` shell
+multidecoder -t "string to decode"
+multidecoder < decodeme.txt
+```
 
-[Download the complete source code of multidecoder.py](https://gist.github.com/rshk/b124b90fea932b09759aeec731d8be36)
+
+Example:
+
+<pre class="language-custom">
+<span class="token punctuation">%</span> <span class="token keyword">multidecoder</span> -t <span class="token string">"4a5464434a544979614756736247386c4d6a496c4d30456c4d6a416c4d6a4a5862334a735a4355794d69553352413d3d"</span>
+<span style="color:#42a5f5">base64<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">hex[ e1 ae 78 eb 8e 37 e1 ae 78 e3 de fd eb 5e 3b e7 ae f7 eb 6e 3b df ce 9c e1 de 9a e3 de 9c e1 dd f4 e3 9e 9c e1 de 9a e3 5e 9c e1 de 9a e1 ae 7c eb 6d f7 e1 ae f7 e5 ae 37 e7 9e fd e1 de bd e7 9d f7 e7 6e 35 dd dd dd ]<span style="color:#FFF">
+    <span style="color:#42a5f5">base64<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">hex[ c7 bc 67 9b b9 f9 ]<span style="color:#FFF">
+        <span style="color:#42a5f5">unicode-chardet<span style="color:#FFF"><span style="color:#1976d2">(Windows-1252)<span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#ffeb3b">Ç¼g›¹ù<span style="color:#FFF">
+    <span style="color:#78909c">]base64_urlsafe -> same as base64
+<span style="color:#FFF">    <span style="color:#42a5f5">unicode-chardet<span style="color:#FFF"><span style="color:#1976d2">(Windows-1251)<span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">б®xлЋ7б®xгЮэл^;з®члn;ЯОњбЮљгЮњбЭфгћњбЮљг^њбЮљб®|лmчб®че®7зћэбЮЅзќчзn5ЭЭЭ<span style="color:#FFF">
+        <span style="color:#78909c">]base64 -> (seen before) hex[ c7 bc 67 9b b9 f9 ]
+<span style="color:#FFF">        <span style="color:#78909c">]base64_urlsafe -> (seen before) hex[ c7 bc 67 9b b9 f9 ]
+<span style="color:#FFF"><span style="color:#78909c">]base64_urlsafe -> same as base64
+<span style="color:#FFF"><span style="color:#42a5f5">hex<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">b'JTdCJTIyaGVsbG8lMjIlM0ElMjAlMjJXb3JsZCUyMiU3RA=='<span style="color:#FFF">
+    <span style="color:#42a5f5">base64<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">b'%7B%22hello%22%3A%20%22World%22%7D'<span style="color:#FFF">
+        <span style="color:#42a5f5">url<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">b'{"hello": "World"}'<span style="color:#FFF">
+            <span style="color:#42a5f5">unicode-utf8<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#ffeb3b">{"hello": "World"}<span style="color:#FFF">
+            <span style="color:#78909c">]unicode-chardet(ascii) -> same as unicode-utf8
+<span style="color:#FFF">        <span style="color:#42a5f5">unicode-utf8<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">%7B%22hello%22%3A%20%22World%22%7D<span style="color:#FFF">
+            <span style="color:#78909c">]url -> (seen before) {"hello": "World"}
+<span style="color:#FFF">        <span style="color:#78909c">]unicode-chardet(ascii) -> same as unicode-utf8
+<span style="color:#FFF">    <span style="color:#78909c">]base64_urlsafe -> same as base64
+<span style="color:#FFF">    <span style="color:#42a5f5">unicode-utf8<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">JTdCJTIyaGVsbG8lMjIlM0ElMjAlMjJXb3JsZCUyMiU3RA==<span style="color:#FFF">
+        <span style="color:#78909c">]base64 -> (seen before) b'%7B%22hello%22%3A%20%22World%22%7D'
+<span style="color:#FFF">        <span style="color:#78909c">]base64_urlsafe -> (seen before) b'%7B%22hello%22%3A%20%22World%22%7D'
+<span style="color:#FFF">    <span style="color:#78909c">]unicode-chardet(ascii) -> same as unicode-utf8
+<span style="color:#FFF"><span style="color:#42a5f5">unicode-utf8<span style="color:#FFF"><span style="color:#1976d2"><span style="color:#FFF"><span style="color:#4caf50"> -> <span style="color:#FFF"><span style="color:#8bc34a">4a5464434a544979614756736247386c4d6a496c4d30456c4d6a416c4d6a4a5862334a735a4355794d69553352413d3d<span style="color:#FFF">
+    <span style="color:#78909c">]base64 -> (seen before) hex[ e1 ae 78 eb 8e 37 e1 ae 78 e3 de fd eb 5e 3b e7 ae f7 eb 6e 3b df ce 9c e1 de 9a e3 de 9c e1 dd f4 e3 9e 9c e1 de 9a e3 5e 9c e1 de 9a e1 ae 7c eb 6d f7 e1 ae f7 e5 ae 37 e7 9e fd e1 de bd e7 9d f7 e7 6e 35 dd dd dd ]
+<span style="color:#FFF">    <span style="color:#78909c">]base64_urlsafe -> (seen before) hex[ e1 ae 78 eb 8e 37 e1 ae 78 e3 de fd eb 5e 3b e7 ae f7 eb 6e 3b df ce 9c e1 de 9a e3 de 9c e1 dd f4 e3 9e 9c e1 de 9a e3 5e 9c e1 de 9a e1 ae 7c eb 6d f7 e1 ae f7 e5 ae 37 e7 9e fd e1 de bd e7 9d f7 e7 6e 35 dd dd dd ]
+<span style="color:#FFF">    <span style="color:#78909c">]hex -> (seen before) b'JTdCJTIyaGVsbG8lMjIlM0ElMjAlMjJXb3JsZCUyMiU3RA=='
+<span style="color:#FFF"><span style="color:#78909c">]unicode-chardet(ascii) -> same as unicode-utf8
+<span style="color:#FFF"></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>
+</pre>
+
+As you can see, the program tried various encodings recursively, which lead to two possible solutions.
+The first one appears to be a false positive, leading to some garbled text.
+The second one definitely looks more promising, applying `hex -> base64 -> url -> utf-8` decoding to obtain some JSON string.
+
+Duplicate paths using different encodings have also been detected and skipped.
+
+
+
+### As a Python library
+
+``` python
+from multidecoder import multidecode, display_result
+
+results = multidecode(text, max_depth=10)
+display_result(results, sys.stdout)
+```
+
+## How does it work?
+
+the `multidecode()` function will go through a list of decoders,
+attempting the decode the input text with each one in turn.
+
+If the decoder output is equal to the input, or the decoder errors
+out, the "branch" is going to be skipped.
+
+Otherwise, a `Result` is yielded for each successful decoding
+operation, with the following fields:
+
+- `decoder_id`: internal identifier for the decoder
+- `value`: return value from the decoder
+- `args`: list of strings, used by decoders to return extra
+  information about the decode process. A common example is the
+  `chardet` decoder, which will attempt to automatically guess what
+  unicode encoding was used to encode some text.
+- `is_new_path`: flag indicating whether this result `value` has been
+  seen before. Display and search algorithm might want to use this to
+  avoid descending the same branch twice unnecessarily, or possibly
+  ending in an infinite loop.
+- `sub_results`: iterator of `Result`s obtained by recursively decoding
+  this result.

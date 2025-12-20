@@ -27,7 +27,8 @@
     --syntax-tab-size: 2;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Only support dark colors for now */
+/* @media (prefers-color-scheme: dark) { */
     :root {
         --color-gray-20: #e0e0e0;
         --color-gray-50: #c0c0c0;
@@ -44,7 +45,7 @@
 
         --background-color: #263238;
     }
-}
+/* } */
 
 /* Global stylesheet */
 * {
@@ -72,6 +73,7 @@ html {
 }
 body {
     max-width: calc(80 * var(--chw));
+    width: calc(100vw - (2 * var(--chw)));
 }
 
 /* https://www.a11yproject.com/posts/how-to-hide-content/ */
