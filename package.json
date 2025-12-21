@@ -26,8 +26,13 @@
         "@11ty/eleventy-navigation": "^1.0.4",
         "@11ty/eleventy-plugin-rss": "^2.0.4",
         "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
+        "@csstools/postcss-minify": "^2.0.4",
+        "clean-css": "^5.3.3",
         "cross-env": "^7.0.3",
+        "html-minifier-terser": "^7.2.0",
         "luxon": "^3.6.1",
+        "postcss": "^8.5.6",
+        "postcss-nested": "^7.0.2",
         "prismjs": "^1.30.0",
         "zod": "^3.25.67",
         "zod-validation-error": "^3.5.2"

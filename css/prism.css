@@ -146,8 +146,8 @@ pre[class*="language-"] {
 }
 
 .token.entity {
-	color: 	color: var(--c-solarized-base0);
-	background: color: var(--c-solarized-base02);
+	color: var(--c-solarized-base0);
+	background: var(--c-solarized-base02);
 }
 
 .token.atrule,

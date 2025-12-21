@@ -7,6 +7,11 @@ import { feedPlugin } from "@11ty/eleventy-plugin-rss";
 import pluginSyntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import pluginNavigation from "@11ty/eleventy-navigation";
 import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
+import htmlmin from "html-minifier-terser";
+import CleanCSS from "clean-css";
+import postcss from "postcss";
+import postcssNested from "postcss-nested";
+import postcssMinify from "@csstools/postcss-minify";
 
 import pluginFilters from "./_config/filters.js";
 
@@ -46,6 +51,17 @@ export default async function (eleventyConfig) {
         // Add all <style> content to `css` bundle (use <style eleventy:ignore> to opt-out)
         // Supported selectors: https://www.npmjs.com/package/posthtml-match-helper
         bundleHtmlContentFromSelector: "style",
+        transforms: [
+            async function (content) {
+                // type contains the bundle name.
+                let { type, page } = this;
+                let result = await postcss([
+                    postcssNested,
+                    postcssMinify,
+                ]).process(content, { from: page.inputPath, to: null });
+                return result.css;
+            },
+        ],
     });
 
     // Bundle <script> content and adds a {% js %} paired shortcode
@@ -54,6 +70,10 @@ export default async function (eleventyConfig) {
         // Add all <script> content to the `js` bundle (use <script eleventy:ignore> to opt-out)
         // Supported selectors: https://www.npmjs.com/package/posthtml-match-helper
         bundleHtmlContentFromSelector: "script",
+    });
+
+    eleventyConfig.addFilter("cssmin", function (code) {
+        return new CleanCSS({}).minify(code).styles;
     });
 
     // Official plugins
@@ -131,6 +151,22 @@ export default async function (eleventyConfig) {
     // https://www.11ty.dev/docs/copy/#emulate-passthrough-copy-during-serve
 
     // eleventyConfig.setServerPassthroughCopyBehavior("passthrough");
+
+    eleventyConfig.addTransform("htmlmin", function (content) {
+        console.log("HTMLMIN", this.page.outputPath);
+        if ((this.page.outputPath || "").endsWith(".html")) {
+            let minified = htmlmin.minify(content, {
+                useShortDoctype: true,
+                removeComments: true,
+                collapseWhitespace: true,
+            });
+
+            return minified;
+        }
+
+        // If not an HTML output, return content as-is
+        return content;
+    });
 }
 
 export const config = {
