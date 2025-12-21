@@ -256,6 +256,10 @@ header {
     padding: 0;
     line-height: 1em;
     color: var(--text-color-accent);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--chw);
 
     a[href],
     a[href]:link,
