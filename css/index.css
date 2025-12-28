@@ -25,6 +25,9 @@
     --text-color-accent: #f4511e;
 
     --syntax-tab-size: 2;
+
+    --callout-background-color: #37474F;
+    --callout-border-color: #455A64;
 }
 
 /* Only support dark colors for now */
@@ -364,6 +367,31 @@ ul.postlist li {
     }
     h6:before {
         content: ">>>>>> ";
+    }
+
+    .note, .success, .warning, .danger {
+        padding: .5em calc(var(--chw) * 1);
+        margin: 1em 0;
+        background: var(--callout-background-color);
+        border: solid 1px var(--callout-border-color);
+
+        > h1,h2,h3,h4,h5,h6 {
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+    }
+    .success {
+        border-color: #2E7D32;
+        border-top-width: calc(var(--chw) * 2);
+    }
+    .warning {
+        border-color: #F9A825;
+        border-top-width: calc(var(--chw) * 2);
+    }
+    .danger {
+        border-color: #C62828;
+        border-top-width: calc(var(--chw) * 2);
     }
 }
 

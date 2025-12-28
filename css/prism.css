@@ -82,11 +82,9 @@ code[class*="language-"]::selection, code[class*="language-"] ::selection {
 
 /* Code blocks */
 pre[class*="language-"] {
-
+    border: solid 1px var(--c-solarized-base01);
     padding: .5em calc(var(--chw) * 1);
-    /* margin: -.5em 0; */
 	overflow: auto;
-	border-radius: 0.3em;
 }
 
 :not(pre) > code,

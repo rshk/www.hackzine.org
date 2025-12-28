@@ -12,6 +12,7 @@ import CleanCSS from "clean-css";
 import postcss from "postcss";
 import postcssNested from "postcss-nested";
 import postcssMinify from "@csstools/postcss-minify";
+import markdown_it_container from "markdown-it-container";
 
 import pluginFilters from "./_config/filters.js";
 
@@ -166,6 +167,13 @@ export default async function (eleventyConfig) {
 
         // If not an HTML output, return content as-is
         return content;
+    });
+
+    eleventyConfig.amendLibrary("md", (mdLib) => {
+        mdLib.use(markdown_it_container, "note");
+        mdLib.use(markdown_it_container, "success");
+        mdLib.use(markdown_it_container, "warning");
+        mdLib.use(markdown_it_container, "danger");
     });
 }
 
