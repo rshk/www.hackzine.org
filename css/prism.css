@@ -85,6 +85,8 @@ pre[class*="language-"] {
     border: solid 1px var(--c-solarized-base01);
     padding: .5em calc(var(--chw) * 1);
 	overflow: auto;
+    scrollbar-color: var(--c-solarized-base00) var(--c-solarized-base02);
+    scrollbar-width: thin;
 }
 
 :not(pre) > code,
