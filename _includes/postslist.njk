@@ -3,9 +3,9 @@
         {% set index = collections.posts | getCollectionItemIndex(post) %}
 	    <li class="postlist-item{% if post.url == url %} postlist-item-active{% endif %}">
             {{index|hexNum}}
+		    <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate("yyyy-LL-dd") }}</time>
 		    <a href="{{ post.url }}" class="postlist-link">{% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
             {% if post.data.draft %}<span class="marker-draft">DRAFT</span>{% endif %}
-		    <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate("yyyy-LL-dd") }}</time>
 	    </li>
     {%- endfor %}
 </ul>
