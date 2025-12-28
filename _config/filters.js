@@ -1,4 +1,6 @@
 import { DateTime } from "luxon";
+import nunjucks from "nunjucks";
+const { lib, runtime } = nunjucks;
 
 export default function (eleventyConfig) {
     eleventyConfig.addFilter("readableDate", (dateObj, format, zone) => {
@@ -46,7 +48,56 @@ export default function (eleventyConfig) {
         (strings || []).sort((b, a) => b.localeCompare(a)),
     );
 
-    eleventyConfig.addFilter("hexNum", (number, length = 2) =>
-        "0x"+("0".repeat(length) + number.toString(16)).slice(-length),
+    eleventyConfig.addFilter(
+        "hexNum",
+        (number, length = 2) =>
+            "0x" + ("0".repeat(length) + number.toString(16)).slice(-length),
     );
+
+    eleventyConfig.addFilter("rightalign", (str, width) => {
+        const NBSP = " ";
+        str = normalize(str.toString(), "");
+        width = width || 80;
+
+        if (str.length >= width) {
+            return str;
+        }
+
+        const spaces = width - str.length;
+        const pre = lib.repeat(NBSP, spaces);
+        return runtime.copySafeness(str, pre + str);
+    });
+
+    eleventyConfig.addFilter("readableBytes", (num, width) => {
+        const KB = 1024;
+        const MB = KB * KB;
+        const GB = MB * KB;
+        const TB = GB * KB;
+        const PB = TB * KB;
+
+        if (num >= PB) {
+            return `${Math.floor(num / PB)}P`;
+        }
+        if (num >= TB) {
+            return `${Math.floor(num / TB)}T`;
+        }
+        if (num >= GB) {
+            return `${Math.floor(num / GB)}G`;
+        }
+        if (num >= MB) {
+            return `${Math.floor(num / MB)}M`;
+        }
+        if (num >= KB) {
+            return `${Math.floor(num / KB)}k`;
+        }
+        return `${num}`;
+    });
+}
+
+// From nunjucks/src/filters.js
+function normalize(value, defaultValue) {
+    if (value === null || value === undefined || value === false) {
+        return defaultValue;
+    }
+    return value;
 }
