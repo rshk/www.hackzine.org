@@ -11,6 +11,9 @@ const eleventyNavigation = {
 
 Blog about computers, technology, engineering, and other fun stuff.
 
-Written by **Sam Santi**, Software engineer. Bad at regularly updating blogs.
+Written by **Sam Santi**, Software engineer. Bad at regularly updating
+blogs, but trying to make an effort.
 
 Check my GitHub: [@rshk](https://github.com/rshk)
+
+For feedback, send an email to `redshadow` at this site's domain.
