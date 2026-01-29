@@ -434,34 +434,34 @@ ul.postlist li {
             display: block;
             margin: -.5em calc(var(--chw) * -1) .5em;
             padding: 0 calc(var(--chw) * 1);
-            text-align: center;
+            text-align: left;
         }
     }
 
     .note {
         &::before {
-            content: "[ NOTE ]";
+            content: "[*] NOTE";
             background: #37474F;
         }
         border-color: #37474F;
     }
     .info {
         &::before {
-            content: "( INFO )";
+            content: "[?] INFO";
             background: #01579B;
         }
         border-color: #01579B;
     }
     .success {
         &::before {
-            content: "> SUCCESS <";
+            content: "[✔] SUCCESS";
             background: #2E7D32;
         }
         border-color: #2E7D32;
     }
     .warning {
         &::before {
-            content: ">> [ WARNING ] <<";
+            content: "<!> WARNING";
             background: #FFC107;
             color: #000;
         }
@@ -469,7 +469,7 @@ ul.postlist li {
     }
     .danger {
         &::before {
-            content: "-!!!- [ DANGER ] -!!!-";
+            content: "[!] DANGER";
             background: #C62828;
         }
         border-color: #C62828;
