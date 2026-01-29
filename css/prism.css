@@ -1,5 +1,5 @@
 /**
- * Gruvbox dark theme
+ * CUSTOMIZED Gruvbox dark theme
  *
  * Adapted from a theme based on:
  * Vim Gruvbox dark Theme (https://github.com/morhetz/gruvbox)
@@ -66,7 +66,7 @@ pre[class*="language-"] {
 .token.comment,
 .token.prolog,
 .token.cdata {
-	color: #a89984; /* fg4 / gray1 */
+	color: var(--aqua-dim);
 }
 
 .token.delimiter,
@@ -181,16 +181,10 @@ pre[class*="language-"] {
 
 code[class*="language-"],
 pre[class*="language-"] {
-    scrollbar-color: var(--bg4) var(--bg0);
+    scrollbar-color: var(--bg3) var(--bg0);
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-    border: solid 1px var(--bg0);
-}
-
-.token.comment,
-.token.prolog,
-.token.cdata {
-	color: var(--aqua-dim);
+    border: solid 1px var(--bg3);
 }

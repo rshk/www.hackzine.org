@@ -171,6 +171,7 @@ export default async function (eleventyConfig) {
 
     eleventyConfig.amendLibrary("md", (mdLib) => {
         mdLib.use(markdown_it_container, "note");
+        mdLib.use(markdown_it_container, "info");
         mdLib.use(markdown_it_container, "success");
         mdLib.use(markdown_it_container, "warning");
         mdLib.use(markdown_it_container, "danger");
