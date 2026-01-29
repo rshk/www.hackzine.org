@@ -1,63 +1,22 @@
-/*
- Solarized Color Schemes originally by Ethan Schoonover
- http://ethanschoonover.com/solarized
-
- Ported for PrismJS by Hector Matos
- Website: https://krakendev.io
- Twitter Handle: https://twitter.com/allonsykraken)
-*/
-
-/*
-SOLARIZED HEX
---------- -------
-base03    #002b36
-base02    #073642
-base01    #586e75
-base00    #657b83
-base0     #839496
-base1     #93a1a1
-base2     #eee8d5
-base3     #fdf6e3
-yellow    #b58900
-orange    #cb4b16
-red       #dc322f
-magenta   #d33682
-violet    #6c71c4
-blue      #268bd2
-cyan      #2aa198
-green     #859900
-*/
-
-:root {
-    --c-solarized-base03:    #002b36;
-    --c-solarized-base02:    #073642;
-    --c-solarized-base01:    #586e75;
-    --c-solarized-base00:    #657b83;
-    --c-solarized-base0:     #839496;
-    --c-solarized-base1:     #93a1a1;
-    --c-solarized-base2:     #eee8d5;
-    --c-solarized-base3:     #fdf6e3;
-    --c-solarized-yellow:    #b58900;
-    --c-solarized-orange:    #cb4b16;
-    --c-solarized-red:       #dc322f;
-    --c-solarized-magenta:   #d33682;
-    --c-solarized-violet:    #6c71c4;
-    --c-solarized-blue:      #268bd2;
-    --c-solarized-cyan:      #2aa198;
-    --c-solarized-green:     #859900;
-}
+/**
+ * Gruvbox dark theme
+ *
+ * Adapted from a theme based on:
+ * Vim Gruvbox dark Theme (https://github.com/morhetz/gruvbox)
+ *
+ * @author Azat S. <to@azat.io>
+ * @version 1.0
+ */
 
 code[class*="language-"],
 pre[class*="language-"] {
-	color: var(--c-solarized-base0);
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	font-size: 1em;
+	color: var(--fg1);
+	font-family: Consolas, Monaco, "Andale Mono", monospace;
+	direction: ltr;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
 	word-break: normal;
-	word-wrap: normal;
-
 	line-height: 1.5;
 
 	-moz-tab-size: 4;
@@ -70,115 +29,168 @@ pre[class*="language-"] {
 	hyphens: none;
 }
 
-pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
-code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
-	background: var(--c-solarized-base2);
+pre[class*="language-"]::-moz-selection,
+pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection {
+	color: #fbf1c7; /* fg0 */
+	background: #7c6f64; /* bg4 */
 }
 
-pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
-code[class*="language-"]::selection, code[class*="language-"] ::selection {
-	background: var(--c-solarized-base2);
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection,
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection {
+	color: #fbf1c7; /* fg0 */
+	background: #7c6f64; /* bg4 */
 }
 
 /* Code blocks */
 pre[class*="language-"] {
-    border: solid 1px var(--c-solarized-base01);
-    padding: .5em calc(var(--chw) * 1);
+	padding: 1em;
+	margin: 0.5em 0;
 	overflow: auto;
-    scrollbar-color: var(--c-solarized-base00) var(--c-solarized-base02);
-    scrollbar-width: thin;
 }
 
-:not(pre) > code,
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-	background-color: var(--c-solarized-base03);
-}
-
-:not(pre) > code:not([class*="language-"]) {
-    color: var(--c-solarized-orange);
-    padding: .2em;
+	background: #1d2021; /* bg0_h */
 }
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
-	padding: .1em;
-	border-radius: .3em;
+	padding: 0.1em;
+	border-radius: 0.3em;
 }
 
 .token.comment,
 .token.prolog,
-.token.doctype,
 .token.cdata {
-	color: var(--c-solarized-base01);
+	color: #a89984; /* fg4 / gray1 */
 }
 
-.token.punctuation {
-	color: var(--c-solarized-base1);
+.token.delimiter,
+.token.boolean,
+.token.keyword,
+.token.selector,
+.token.important,
+.token.atrule {
+	color: #fb4934; /* red2 */
 }
 
-.token.namespace {
-	opacity: .7;
+.token.operator,
+.token.punctuation,
+.token.attr-name {
+	color: var(--bg4);
+}
+
+.token.tag,
+.token.tag .punctuation,
+.token.doctype,
+.token.builtin {
+	color: #fabd2f; /* yellow2 */
+}
+
+.token.entity,
+.token.number,
+.token.symbol {
+	color: #d3869b; /* purple2 */
 }
 
 .token.property,
-.token.tag,
-.token.boolean,
-.token.number,
 .token.constant,
-.token.symbol,
-.token.deleted {
-	color: var(--c-solarized-blue);
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.url,
-.token.inserted {
-	color: var(--c-solarized-cyan);
-}
-
-.token.builtin {
-    font-weight: bold;
-	color: var(--c-solarized-magenta);
-}
-
-.token.entity {
-	color: var(--c-solarized-base0);
-	background: var(--c-solarized-base02);
-}
-
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-	color: var(--c-solarized-green);
-}
-
-.token.function,
-.token.class-name {
-	color: var(--c-solarized-blue);
-}
-
-.token.regex,
-.token.important,
 .token.variable {
-	color: var(--c-solarized-orange);
+	color: #fb4934; /* red2 */
 }
 
-.token.important,
+.token.string,
+.token.char {
+	color: #b8bb26; /* green2 */
+}
+
+.token.attr-value,
+.token.attr-value .punctuation {
+	color: var(--bg4); /* fg4 / gray1 */
+}
+
+.token.url {
+	color: #b8bb26; /* green2 */
+	text-decoration: underline;
+}
+
+.token.function {
+	color: #fabd2f; /* yellow2 */
+}
+
+.token.regex {
+	background: #b8bb26; /* green2 */
+}
+
 .token.bold {
 	font-weight: bold;
 }
+
 .token.italic {
 	font-style: italic;
 }
 
-.token.entity {
-	cursor: help;
+.token.inserted {
+	background: #a89984; /* fg4 / gray1 */
 }
 
-.token.annotation {
-	color: var(--c-solarized-yellow);
+.token.deleted {
+	background: #fb4934; /* red2 */
+}
+
+
+/*** CUSTOM *********************************************************/
+
+:root {
+    --bg_h: #1d2021;
+    --bg0:  #282828;
+    --bg_s: #32302f;
+    --bg1:  #3c3836;
+    --bg2:  #504945;
+    --bg3:  #665c54;
+    --bg4:  #7c6f64;
+
+    --fg0: #fbf1c7;
+    --fg1: #ebdbb2;
+    --fg2: #d5c4a1;
+    --fg3: #bdae93;
+    --fg4: #a89984;
+
+    --red:    #fb4934;
+    --green:  #b8bb26;
+    --yellow: #fabd2f;
+    --blue:   #83a598;
+    --purple: #d3869b;
+    --aqua:   #8ec07c;
+    --gray:   #928374;
+    --orange: #fe8019;
+
+    --red-dim:    #cc2412;
+    --green-dim:  #98971a;
+    --yellow-dim: #d79921;
+    --blue-dim:   #458588;
+    --purple-dim: #b16286;
+    --aqua-dim:   #689d6a;
+    --gray-dim:   #a89984;
+    --orange-dim: #d65d0e;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+    scrollbar-color: var(--bg4) var(--bg0);
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    border: solid 1px var(--bg0);
+}
+
+.token.comment,
+.token.prolog,
+.token.cdata {
+	color: var(--aqua-dim);
 }
