@@ -419,6 +419,7 @@ ul.postlist li {
             background: var(--callout-border-color);
             color: var(--callout-title-color);
             padding: 0 calc(var(--chw) * 1);
+            text-transform: uppercase;
         }
         & > .callout-body {
             padding: .5em calc(var(--chw) * 1);
@@ -438,6 +439,7 @@ ul.postlist li {
         }
         &.callout-warning {
             --callout-border-color: #FFC107;
+            --callout-title-color: #000;
         }
         &.callout-danger {
             --callout-border-color: #C62828;
