@@ -28,6 +28,7 @@
 
     --callout-background-color: color-mix(in srgb, #263238, #000 20%);
     --callout-border-color: #78909C;
+    --callout-title-color: #263238;
 }
 
 /* Only support dark colors for now */
@@ -413,66 +414,35 @@ ul.postlist li {
         color: #90A4AE;
     }
 
-    .note, .info, .success, .warning, .danger {
-        padding: .5em calc(var(--chw) * 1);
+    .callout {
+        & > .callout-header {
+            background: var(--callout-border-color);
+            color: var(--callout-title-color);
+            padding: 0 calc(var(--chw) * 1);
+        }
+        & > .callout-body {
+            padding: .5em calc(var(--chw) * 1);
+        }
         margin: 1em 0;
         background: var(--callout-background-color);
-        border: solid 1px var(--callout-border-color);
+        border-bottom: solid 1px var(--callout-border-color);
 
-        > h1,h2,h3,h4,h5,h6 {
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
+        &.callout-info, &.callout-help {
+            --callout-border-color: #01579B;
+            --callout-title-color: var(--color-gray-20);
         }
-    }
-    .note, .info, .success, .warning, .danger {
-        &::before {
-            content: "NOTE";
-            background: var(--callout-border-color);
-            border-color: var(--callout-border-color);
-            color: var(--text-color);
-            display: block;
-            margin: -.5em calc(var(--chw) * -1) .5em;
-            padding: 0 calc(var(--chw) * 1);
-            text-align: left;
+        &.callout-success {
+            --callout-border-color: #2E7D32;
+            --callout-title-color: #E8F5E9;
+            /* --callout-background-color: #1B5E20; */
         }
-    }
-
-    .note {
-        &::before {
-            content: "[*] NOTE";
-            background: #37474F;
+        &.callout-warning {
+            --callout-border-color: #FFC107;
         }
-        border-color: #37474F;
-    }
-    .info {
-        &::before {
-            content: "[?] INFO";
-            background: #01579B;
+        &.callout-danger {
+            --callout-border-color: #C62828;
+            --callout-title-color: var(--color-gray-20);
         }
-        border-color: #01579B;
-    }
-    .success {
-        &::before {
-            content: "[✔] SUCCESS";
-            background: #2E7D32;
-        }
-        border-color: #2E7D32;
-    }
-    .warning {
-        &::before {
-            content: "<!> WARNING";
-            background: #FFC107;
-            color: #000;
-        }
-        border-color: #FFC107;
-    }
-    .danger {
-        &::before {
-            content: "[!] DANGER";
-            background: #C62828;
-        }
-        border-color: #C62828;
     }
 }
 

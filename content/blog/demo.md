@@ -26,6 +26,19 @@ This is an info message
 This is a note message
 :::
 
+:::info Custom title
+foobar
+:::
+
+:::info [~] Custom title and symbol
+foobar
+:::
+
+:::help
+This is some helpful help text
+:::
+
+
 ``` python
 import os
 
