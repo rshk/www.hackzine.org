@@ -3,9 +3,18 @@ import nunjucks from "nunjucks";
 const { lib, runtime } = nunjucks;
 
 export default function (eleventyConfig) {
+
+    function parseDate(obj) {
+        console.log("PARSE DATE", obj);
+        if (typeof obj == "string") {
+            return DateTime.fromISO(obj);
+        }
+        return DateTime.fromJSDate(obj);
+    }
+
     eleventyConfig.addFilter("readableDate", (dateObj, format, zone) => {
         // Formatting tokens for Luxon: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-        return DateTime.fromJSDate(dateObj, { zone: zone || "utc" }).toFormat(
+        return parseDate(dateObj, { zone: zone || "utc" }).toFormat(
             format || "yyyy-LL-dd T",
         );
     });
@@ -13,7 +22,7 @@ export default function (eleventyConfig) {
     eleventyConfig.addFilter("htmlDateString", (dateObj) => {
         // dateObj input: https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-date-string
         // https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-        return DateTime.fromJSDate(dateObj, { zone: "utc" }).toISO();
+        return parseDate(dateObj, { zone: "utc" }).toISO();
     });
 
     // Get the first `n` elements of a collection.
