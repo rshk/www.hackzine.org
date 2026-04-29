@@ -6,7 +6,7 @@ const eleventyNavigation = {
 ---
 
 <div style="text-align:center">
-    <img src="../public/img/icon.png" alt="" eleventy:widths="256,512" />
+    <img src="/img/icon.png" alt="" eleventy:widths="256,512" />
 </div>
 
 Blog about computers, technology, engineering, and other fun stuff.
